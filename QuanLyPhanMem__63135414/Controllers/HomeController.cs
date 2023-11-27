@@ -8,6 +8,7 @@ namespace QuanLyPhanMem__63135414.Controllers
 {
     public class HomeController : Controller
     {
+        [Authorize]
         public ActionResult Index()
         {
             return View();
