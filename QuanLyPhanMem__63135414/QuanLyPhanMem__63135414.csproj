@@ -144,6 +144,7 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Extension\User.cs" />
+    <Compile Include="Models\Extension\UserLogin.cs" />
     <Compile Include="Models\Extension\Utils.cs" />
     <Compile Include="Models\History.cs">
       <DependentUpon>Model1.tt</DependentUpon>
@@ -265,6 +266,7 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Customer63135414\VerifyAccount.cshtml" />
     <Content Include="Views\Customer63135414\Register.cshtml" />
+    <Content Include="Views\Customer63135414\Login.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
