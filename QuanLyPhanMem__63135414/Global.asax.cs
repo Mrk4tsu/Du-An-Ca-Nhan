@@ -6,7 +6,7 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 
-namespace QuanLyPhanMem_63135414
+namespace QuanLyPhanMem__63135414
 {
     public class MvcApplication : System.Web.HttpApplication
     {

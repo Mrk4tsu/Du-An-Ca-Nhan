@@ -1,7 +1,7 @@
 ﻿using System.Web;
 using System.Web.Mvc;
 
-namespace QuanLyPhanMem_63135414
+namespace QuanLyPhanMem__63135414
 {
     public class FilterConfig
     {

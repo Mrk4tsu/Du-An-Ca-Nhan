@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34202.233
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuanLyPhanMem_63135414", "QuanLyPhanMem_63135414\QuanLyPhanMem_63135414.csproj", "{819BEAB3-BA68-4E33-A80D-5EB3AD257691}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuanLyPhanMem__63135414", "QuanLyPhanMem__63135414\QuanLyPhanMem__63135414.csproj", "{E5C04E0C-596D-4781-AC61-0B396B40629C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +11,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{819BEAB3-BA68-4E33-A80D-5EB3AD257691}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{819BEAB3-BA68-4E33-A80D-5EB3AD257691}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{819BEAB3-BA68-4E33-A80D-5EB3AD257691}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{819BEAB3-BA68-4E33-A80D-5EB3AD257691}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E5C04E0C-596D-4781-AC61-0B396B40629C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5C04E0C-596D-4781-AC61-0B396B40629C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5C04E0C-596D-4781-AC61-0B396B40629C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5C04E0C-596D-4781-AC61-0B396B40629C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

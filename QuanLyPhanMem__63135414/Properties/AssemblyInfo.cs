@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("QuanLyPhanMem_63135414")]
+[assembly: AssemblyTitle("QuanLyPhanMem__63135414")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("QuanLyPhanMem_63135414")]
+[assembly: AssemblyProduct("QuanLyPhanMem__63135414")]
 [assembly: AssemblyCopyright("Copyright ©  2023")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("ec939434-5d3d-4db0-b19f-35079274f529")]
+[assembly: Guid("e49c5696-6f3f-46b8-aca1-da234bb47128")]
 
 // Version information for an assembly consists of the following four values:
 //
