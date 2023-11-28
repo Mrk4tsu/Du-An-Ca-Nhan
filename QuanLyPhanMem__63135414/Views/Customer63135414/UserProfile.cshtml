@@ -1,17 +1,19 @@
 ﻿@model QuanLyPhanMem__63135414.Models.Extension.UserViewModel
 @{
     ViewBag.Title = "UserProfile";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    var user = (QuanLyPhanMem__63135414.Models.Extension.UserViewModel)Session["User"];
 }
 
 <div class="container">
     <div class="row">
         <!-- Nội dung phía trên ảnh -->
         <div class="position-relative">
-            <img src="~/Assets/images/users/wallpaper/defaultwallpaper.png" alt="Background Image" class="img-fluid rounded-5" style="max-height: 300px; width:100%;" />
+            <img src="~/Assets/images/userwallpaper/defaultwallpaper.png" alt="Background Image" class="img-fluid rounded-5" style="max-height: 300px; width:100%;" />
 
             <!-- Ảnh dạng tròn đè lên ảnh -->
             <div class="position-absolute top-150 start-50 translate-middle">
-                <img src="~/Assets/images/users/@Model.userAvatar" alt="Circular Image" class="rounded-circle" style="width:150px; height:150px; border: 5px solid #fff;" />
+                <img src="~/Assets/images/users/@user.userAvatar" alt="Circular Image" class="rounded-circle" style="width:150px; height:150px; border: 5px solid #fff;" />
             </div>
 
         </div>
@@ -33,16 +35,16 @@
                 }
 
             </div>
-            <h4 class="text-linkedin d-block">@Model.firstname @Model.lastname</h4>
+            <h4 class="text-linkedin d-block">@user.firstname @Model.lastname</h4>
             <hr />
             <div class="card">
                 <div class="mt-4 p-4 bg-gradient-success rounded-3">
                     <h3 class="text-uppercase">Thông Tin Mô Tả</h3>
-                    @if (!string.IsNullOrEmpty(Model.bio))
+                    @if (!string.IsNullOrEmpty(user.bio))
                     {
                         <p>@Html.DisplayFor(model => model.bio)</p>
                     }
-                    @if (string.IsNullOrEmpty(Model.bio))
+                    @if (string.IsNullOrEmpty(user.bio))
                     {
                         <p>Không có mô tả giới thiệu về bản thân</p>
                     }
@@ -53,19 +55,19 @@
                             <label class="control-label text-twitter fw-semibold">
                                 <i class="mx-2 fa-solid fa-envelope"></i>Địa chỉ Email:
                             </label>
-                            <span class="text-secondary mx-auto">@Model.email</span>
+                            <span class="text-secondary mx-auto">@user.email</span>
                         </div>
                         <div class="form-group border-0">
                             <label class="control-label text-twitter fw-semibold">
                                 <i class="fa-solid fa-briefcase mx-2"></i>Vai trò:
                             </label>
-                            <span class="text-secondary mx-auto">@Model.UserRole.roleName</span>
+                            <span class="text-secondary mx-auto">@user.UserRole.roleName</span>
                         </div>
                         <div class="form-group border-0">
                             <label class="control-label text-twitter fw-semibold">
                                 <i class="fa-solid fa-boxes-packing mx-2"></i>Sản phẩm đang treo:
                             </label>
-                            <span class="text-secondary mx-auto">@Html.DisplayFor(model => model.quantityProject)</span>
+                            <span class="text-secondary mx-auto">@user.quantityProject</span>
                         </div>
                     </div>
 
@@ -77,16 +79,16 @@
                                 <i class="fa-solid fa-calendar-days mx-2"></i>Ngày sinh:
                             </label>
 
-                            @if (Model.birthday == null)
+                            @if (user.birthday == null)
                             {
                                 <span class="text-secondary mx-auto">
                                     Chưa có thông tin
                                 </span>
                             }
-                            @if (Model.birthday != null)
+                            @if (user.birthday != null)
                             {
                                 <span class="text-secondary mx-auto">
-                                    @Model.birthday
+                                    @user.birthday
                                 </span>
                             }
                         </div>
@@ -94,16 +96,16 @@
                             <label class="control-label text-twitter fw-semibold">
                                 <i class="fa-solid fa-location-dot mx-2"></i>Địa chỉ:
                             </label>
-                            @if (Model.address == null)
+                            @if (user.address == null)
                             {
                                 <span class="text-secondary mx-auto">
                                     Chưa có thông tin
                                 </span>
                             }
-                            @if (Model.address != null)
+                            @if (user.address != null)
                             {
                                 <span class="text-secondary mx-auto">
-                                   @Model.address
+                                   @user.address
                                 </span>
                             }
                         </div>
@@ -111,16 +113,16 @@
                             <label class="control-label text-twitter fw-semibold">
                                 <i class="fa-solid fa-phone mx-2"></i>Số điện thoại:
                             </label>
-                            @if (Model.phoneNumber == null)
+                            @if (user.phoneNumber == null)
                             {
                                 <span class="text-secondary mx-auto">
                                     Chưa có thông tin
                                 </span>
                             }
-                            @if (Model.phoneNumber != null)
+                            @if (user.phoneNumber != null)
                             {
                                 <span class="text-secondary mx-auto">
-                                    @Model.phoneNumber
+                                    @user.phoneNumber
                                 </span>
                             }
                         </div>
@@ -129,11 +131,11 @@
                         <label class="control-label text-twitter fw-semibold">
                             <i class="fa-solid fa-user mx-2"></i>ID Người dùng:
                         </label>
-                        <span class="text-secondary mx-auto">@Model.userId</span>
+                        <span class="text-secondary mx-auto">@user.userId</span>
                     </div>
                 </div>
                 <div class="card-footer">
-                    @if (Model.isActive == false)
+                    @if (user.isActive == false)
                     {
                         <div class="d-flex">
                             <p class="text-secondary mx-auto">

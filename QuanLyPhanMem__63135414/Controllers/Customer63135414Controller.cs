@@ -37,9 +37,7 @@ namespace QuanLyPhanMem__63135414.Controllers
                 user.userAvatar = fileName;
             }
             else
-            {
                 user.userAvatar = "avatardefault.png";
-            }
             //Model Validation
             if (ModelState.IsValid)
             {
@@ -82,9 +80,7 @@ namespace QuanLyPhanMem__63135414.Controllers
                 #endregion
             }
             else
-            {
                 message = "Yêu cầu không hợp lệ!";
-            }
 
             ViewBag.Message = message;
             ViewBag.Status = status;
@@ -252,5 +248,10 @@ namespace QuanLyPhanMem__63135414.Controllers
             };
         }
         #endregion
+        [Authorize]
+        public ActionResult Home()
+        {
+            return View();
+        }
     }
 }

@@ -1,0 +1,112 @@
+﻿@model IEnumerable<QuanLyPhanMem__63135414.Models.User>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.email)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.password)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.firstname)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.lastname)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.userAvatar)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.userWallpaper)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.birthday)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.address)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.phoneNumber)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.quantityProject)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.bio)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.codeActive)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.isActive)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UserRole.roleName)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.email)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.password)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.firstname)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.lastname)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.userAvatar)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.userWallpaper)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.birthday)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.address)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.phoneNumber)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.quantityProject)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.bio)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.codeActive)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.isActive)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.UserRole.roleName)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.userId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.userId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.userId })
+        </td>
+    </tr>
+}
+
+</table>
