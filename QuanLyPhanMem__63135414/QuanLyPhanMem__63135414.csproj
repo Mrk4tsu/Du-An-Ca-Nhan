@@ -145,6 +145,7 @@
     </Compile>
     <Compile Include="Models\Extension\User.cs" />
     <Compile Include="Models\Extension\UserLogin.cs" />
+    <Compile Include="Models\Extension\UserViewModel.cs" />
     <Compile Include="Models\Extension\Utils.cs" />
     <Compile Include="Models\History.cs">
       <DependentUpon>Model1.tt</DependentUpon>
@@ -197,6 +198,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="assets\images\users\avatardefault.png" />
+    <Content Include="assets\images\userwallpaper\defaultwallpaper.png" />
     <Content Include="Content\bootstrap-grid.css" />
     <Content Include="Content\bootstrap-grid.min.css" />
     <Content Include="Content\bootstrap-grid.rtl.css" />
@@ -267,6 +270,7 @@
     <Content Include="Views\Customer63135414\VerifyAccount.cshtml" />
     <Content Include="Views\Customer63135414\Register.cshtml" />
     <Content Include="Views\Customer63135414\Login.cshtml" />
+    <Content Include="Views\Customer63135414\UserProfile.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
