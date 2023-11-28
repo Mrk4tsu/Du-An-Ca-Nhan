@@ -806,7 +806,7 @@
           <End Role="Product" Type="Self.Product" Multiplicity="*" />
           <End Role="Promotion" Type="Self.Promotion" Multiplicity="*" />
         </Association>
-        <EntityContainer Name="QLPM63135414Entities" annotation:LazyLoadingEnabled="true">
+        <EntityContainer Name="QLPM_63135414Entities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Carts" EntityType="Self.Cart" />
           <EntitySet Name="CartDetails" EntityType="Self.CartDetail" />
           <EntitySet Name="Categories" EntityType="Self.Category" />
@@ -887,7 +887,7 @@
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="QLPM63135414ModelStoreContainer" CdmEntityContainer="QLPM63135414Entities">
+        <EntityContainerMapping StorageEntityContainer="QLPM63135414ModelStoreContainer" CdmEntityContainer="QLPM_63135414Entities">
           <EntitySetMapping Name="Carts">
             <EntityTypeMapping TypeName="QLPM63135414Model.Cart">
               <MappingFragment StoreEntitySet="Cart">

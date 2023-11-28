@@ -1,10 +1,9 @@
-﻿using QuanLyPhanMem__63135414.Models.Extension;
-using QuanLyPhanMem__63135414.Models;
+﻿using QuanLyPhanMem__63135414.Models;
+using QuanLyPhanMem__63135414.Models.Extension;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Net.Mail;
 using System.Net;
+using System.Net.Mail;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
@@ -13,7 +12,7 @@ namespace QuanLyPhanMem__63135414.Controllers
 {
     public class Customer63135414Controller : Controller
     {
-        //Register Action
+        #region[Register]
         [HttpGet]
         public ActionResult Register()
         {
@@ -26,7 +25,19 @@ namespace QuanLyPhanMem__63135414.Controllers
         {
             bool status = false;
             string message = "";
+            //System.Web.HttpPostedFileBase Avatar;
+            var imgNV = Request.Files["Avatar"];
+            if (imgNV != null && imgNV.ContentLength > 0)
+            {
+                // Lưu hình đại diện về Server
+                var fileName = System.IO.Path.GetFileName(imgNV.FileName);
+                var path = Server.MapPath("/assets/images/users/" + fileName);
+                imgNV.SaveAs(path);
 
+                user.userAvatar = fileName;
+            }
+            else
+                user.userAvatar = "avatardefault.png";
             //Model Validation
             if (ModelState.IsValid)
             {
@@ -47,37 +58,41 @@ namespace QuanLyPhanMem__63135414.Controllers
                 user.password = Utils.Hash(user.password);
                 user.confirmPassword = Utils.Hash(user.confirmPassword);
                 #endregion
+
+                #region[Thiết lập 1 số thông tin mặc định]
                 user.userId = Utils.getUserId();
                 user.isActive = false;
                 user.roleId = "R03";//Set mặc định là khách hàng
+                user.userWallpaper = "defaultwallpaper.png";
+                #endregion
+
                 #region Save to Database
-                using (QLPM63135414Entities db = new QLPM63135414Entities())
+                using (QLPM_63135414Entities db = new QLPM_63135414Entities())
                 {
                     db.Users.Add(user);
                     db.SaveChanges();
 
                     //Send Email to User
-                    SendVerificationLinkEmail(user.email, user.codeActive.ToString());
+                    sendVerificationLinkEmail(user.email, user.codeActive.ToString());
                     message = "Đăng ký được thực hiện thành công. Liên kết kích hoạt tài khoản đã được gửi đến id email của bạn: " + user.email;
                     status = true;
                 }
                 #endregion
             }
             else
-            {
                 message = "Yêu cầu không hợp lệ!";
-            }
 
             ViewBag.Message = message;
             ViewBag.Status = status;
             return View(user);
         }
-        //Verify Email
+        #endregion
+        #region [Verify Email]
         [HttpGet]
         public ActionResult VerifyAccount(string id)
         {
             bool status = false;
-            using (QLPM63135414Entities db = new QLPM63135414Entities())
+            using (QLPM_63135414Entities db = new QLPM_63135414Entities())
             {
                 //Dòng này thêm vào đây để tránh xác nhận mật khẩu không khớp với vấn đề khi lưu thay đổi
                 db.Configuration.ValidateOnSaveEnabled = false;
@@ -97,8 +112,8 @@ namespace QuanLyPhanMem__63135414.Controllers
             ViewBag.Status = status;
             return View();
         }
-        
-        //Login
+        #endregion
+        #region[Login]
         [HttpGet]
         public ActionResult Login()
         {
@@ -110,62 +125,76 @@ namespace QuanLyPhanMem__63135414.Controllers
         public ActionResult Login(UserLogin user, string returnUrl = "")
         {
             string message = "";
-            using (QLPM63135414Entities db = new QLPM63135414Entities())
+            using (QLPM_63135414Entities db = new QLPM_63135414Entities())
             {
                 var v = db.Users.Where(em => em.email == user.email).FirstOrDefault();
                 if (v != null)
                 {
                     if (string.Compare(Utils.Hash(user.password), v.password) == 0)
                     {
+                        //Dặt thời gian hết hạn của vé xác thực dựa trên việc người dùng có tick remember me
                         int timeOut = user.rememberMe ? 5256000 : 1; //5256000 phút = 1 năm
+                        //Tạo một vé xác thực Forms mới với địa chỉ email của người dùng
                         var ticket = new FormsAuthenticationTicket(user.email, user.rememberMe, timeOut);
 
+                        //Mã hóa vé xác thực
                         string encrypted = FormsAuthentication.Encrypt(ticket);
                         var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, encrypted);
 
+                        //Đặt thời gian hết hạn của cookie thành thời gian hết hạn của vé xác thực
                         cookie.Expires = DateTime.Now.AddMinutes(timeOut);
+                        //Đặt HttpOnly = true ngăn cookie được truy cập bởi mã JavaScript
                         cookie.HttpOnly = true;
-                        Response.Cookies.Add(cookie);
 
+                        //Gửi cookie đến trình duyệt của người dùng. Lưu cookie vào máy tính của người dùng khi web nhận cookies
+                        Response.Cookies.Add(cookie);
+                        var userViewModel = getUserViewModel(v);
+
+                        // Lưu thông tin người dùng vào Session để sử dụng trong các request tiếp theo nếu cần
+                        Session["User"] = userViewModel;
+
+                        //Nếu ở trang chủ (địa chỉ set mặc định)
                         if (Url.IsLocalUrl(returnUrl))
                         {
                             return Redirect(returnUrl);
                         }
-                        else
-                        {
-                            return RedirectToAction("Index", "Home");
-                        }
+                        else return RedirectToAction("Index", "Home");
                     }
-                    else
-                    {
-                        message = "Yêu cầu chứng chỉ không hợp lệ!";
-                    }
+                    else message = "Tài khoản hoặc mật khẩu không chính xác!";
                 }
                 else
-                {
-                    message = "Yêu cầu chứng chỉ không hợp lệ!";
-                }
+                    message = "Tài khoản hoặc mật khẩu không chính xác!";
             }
-                return View(user);
+            ViewBag.Message = message;
+            return View(user);
         }
-        //Logout
+        #endregion
         [Authorize]
         public ActionResult LogOut()
         {
             FormsAuthentication.SignOut();
             return RedirectToAction("Login", "Customer63135414");
         }
+        [HttpGet]
+        public ActionResult UserProfile(string email)
+        {
+            UserViewModel userViewModel = (UserViewModel)Session["User"];
+
+            // Pass thông tin người dùng đến View
+            return View(userViewModel);
+        }
+        #region[Phương thức hỗ trợ]
         [NonAction]
         private bool isEmailExist(string email)
         {
-            using (QLPM63135414Entities db = new QLPM63135414Entities())
+            using (QLPM_63135414Entities db = new QLPM_63135414Entities())
             {
                 var v = db.Users.Where(e => e.email == email).FirstOrDefault();
                 return v != null;
             }
         }
         [NonAction]
-        public void SendVerificationLinkEmail(string emailID, string activationCode)
+        public void sendVerificationLinkEmail(string emailID, string activationCode)
         {
             var verifyUrl = "/Customer63135414/VerifyAccount/" + activationCode;
             var link = Request.Url.AbsoluteUri.Replace(Request.Url.PathAndQuery, verifyUrl);
@@ -194,6 +223,35 @@ namespace QuanLyPhanMem__63135414.Controllers
                 IsBodyHtml = true
             })
                 smtp.Send(message);
+        }
+        [NonAction]
+        private UserViewModel getUserViewModel(User user)
+        {
+            return new UserViewModel
+            {
+                userId = user.userId,
+                roleId = user.roleId,
+                email = user.email,
+                password = user.password,
+                firstname = user.firstname,
+                lastname = user.lastname,
+                userAvatar = user.userAvatar,
+                userWallpaper = user.userWallpaper,
+                birthday = user.birthday,
+                address = user.address,
+                phoneNumber = user.phoneNumber,
+                quantityProject = user.quantityProject,
+                bio = user.bio,
+                codeActive = user.codeActive,
+                isActive = user.isActive,
+                UserRole = user.UserRole
+            };
+        }
+        #endregion
+        [Authorize]
+        public ActionResult Home()
+        {
+            return View();
         }
     }
 }

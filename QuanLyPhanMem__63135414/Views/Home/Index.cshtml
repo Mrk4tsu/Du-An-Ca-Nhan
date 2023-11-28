@@ -1,15 +1,35 @@
-﻿@{
+﻿
+
+@{
     ViewBag.Title = "Home Page";
+    var user = (QuanLyPhanMem__63135414.Models.Extension.UserViewModel)Session["User"];
 }
 
 <main>
     Welcome @HttpContext.Current.User.Identity.Name
 
+    @if (Session["User"] != null)
+    {
+        // Hiển thị thông tin người dùng
+        
+        <div>
+            Welcome @user.firstname @user.lastname
+            @user.UserRole.roleName
+        </div>
+    }
+    else
+    {
+        <text>Welcome Guest</text>
+    }
     @if (Request.IsAuthenticated)
     {
         using (Html.BeginForm("Logout", "Customer63135414", FormMethod.Post, new { id = "logoutForm" }))
         {
             <a href="javascript:document.getElementById('logoutForm').submit()">Logout</a>
         }
+        <a href="@Url.Action("UserProfile", "Customer63135414")" class="btn btn-primary" title="User Profile">
+            <i class="fa fa-eye"></i>
+            User Profile
+        </a>
     }
 </main>

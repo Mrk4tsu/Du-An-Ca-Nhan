@@ -131,72 +131,92 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\Customer63135414Controller.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Cart.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
+      <DependentUpon>Model63135414.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\CartDetail.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
+      <DependentUpon>Model63135414.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Category.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
+      <DependentUpon>Model63135414.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Extension\User.cs" />
     <Compile Include="Models\Extension\UserLogin.cs" />
+    <Compile Include="Models\Extension\UserViewModel.cs" />
     <Compile Include="Models\Extension\Utils.cs" />
     <Compile Include="Models\History.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
+      <DependentUpon>Model63135414.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\HistoryPayment.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
+      <DependentUpon>Model63135414.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\Model1.Context.cs">
+    <Compile Include="Models\Model63135414.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>Model1.Context.tt</DependentUpon>
+      <DependentUpon>Model63135414.Context.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\Model1.cs">
+    <Compile Include="Models\Model63135414.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>Model1.tt</DependentUpon>
+      <DependentUpon>Model63135414.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\Model1.Designer.cs">
+    <Compile Include="Models\Model63135414.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>Model1.edmx</DependentUpon>
+      <DependentUpon>Model63135414.edmx</DependentUpon>
     </Compile>
     <Compile Include="Models\Order.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
+      <DependentUpon>Model63135414.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\OrderDetail.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
+      <DependentUpon>Model63135414.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Payment.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
+      <DependentUpon>Model63135414.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\PaymentMethod.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
+      <DependentUpon>Model63135414.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Product.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
+      <DependentUpon>Model63135414.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ProductImage.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
+      <DependentUpon>Model63135414.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Promotion.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
+      <DependentUpon>Model63135414.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\User.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
+      <DependentUpon>Model63135414.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\UserRole.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
+      <DependentUpon>Model63135414.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="assets\css\style.css" />
+    <Content Include="assets\images\users\avatardefault.png" />
+    <Content Include="assets\images\userwallpaper\defaultwallpaper.png" />
+    <Content Include="assets\js\chart.js" />
+    <Content Include="assets\js\dashboard.js" />
+    <Content Include="assets\js\documentation.js" />
+    <Content Include="assets\js\file-upload.js" />
+    <Content Include="assets\js\hoverable-collapse.js" />
+    <Content Include="assets\js\off-canvas.js" />
+    <Content Include="assets\js\tabs.js" />
+    <Content Include="assets\js\template.js" />
+    <Content Include="assets\js\todolist.js" />
+    <Content Include="assets\js\tooltips.js" />
+    <Content Include="assets\vendors\base\vendor.bundle.base.css" />
+    <Content Include="assets\vendors\base\vendor.bundle.base.js" />
+    <Content Include="assets\vendors\chart.js\Chart.min.js" />
+    <Content Include="assets\vendors\ti-icons\css\themify-icons.css" />
+    <Content Include="assets\vendors\ti-icons\fonts\themify.svg" />
     <Content Include="Content\bootstrap-grid.css" />
     <Content Include="Content\bootstrap-grid.min.css" />
     <Content Include="Content\bootstrap-grid.rtl.css" />
@@ -216,15 +236,15 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="Models\Model1.Context.tt">
+    <Content Include="Models\Model63135414.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Model1.Context.cs</LastGenOutput>
-      <DependentUpon>Model1.edmx</DependentUpon>
+      <DependentUpon>Model63135414.edmx</DependentUpon>
+      <LastGenOutput>Model63135414.Context.cs</LastGenOutput>
     </Content>
-    <Content Include="Models\Model1.tt">
+    <Content Include="Models\Model63135414.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>Model1.edmx</DependentUpon>
-      <LastGenOutput>Model1.cs</LastGenOutput>
+      <DependentUpon>Model63135414.edmx</DependentUpon>
+      <LastGenOutput>Model63135414.cs</LastGenOutput>
     </Content>
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
@@ -232,13 +252,78 @@
     <Content Include="Scripts\bootstrap.esm.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <EntityDeploy Include="Models\Model1.edmx">
+    <EntityDeploy Include="Models\Model63135414.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>Model1.Designer.cs</LastGenOutput>
+      <LastGenOutput>Model63135414.Designer.cs</LastGenOutput>
     </EntityDeploy>
-    <Content Include="Models\Model1.edmx.diagram">
-      <DependentUpon>Model1.edmx</DependentUpon>
+    <Content Include="Models\Model63135414.edmx.diagram">
+      <DependentUpon>Model63135414.edmx</DependentUpon>
     </Content>
+    <Content Include="assets\css\.DS_Store" />
+    <Content Include="assets\css\maps\style.css.map" />
+    <Content Include="assets\fonts\.DS_Store" />
+    <Content Include="assets\fonts\Roboto\.DS_Store" />
+    <Content Include="assets\fonts\Roboto\Roboto-Black.eot" />
+    <Content Include="assets\fonts\Roboto\Roboto-Black.ttf" />
+    <Content Include="assets\fonts\Roboto\Roboto-Black.woff" />
+    <Content Include="assets\fonts\Roboto\Roboto-Black.woff2" />
+    <Content Include="assets\fonts\Roboto\Roboto-Bold.eot" />
+    <Content Include="assets\fonts\Roboto\Roboto-Bold.ttf" />
+    <Content Include="assets\fonts\Roboto\Roboto-Bold.woff" />
+    <Content Include="assets\fonts\Roboto\Roboto-Bold.woff2" />
+    <Content Include="assets\fonts\Roboto\Roboto-Light.eot" />
+    <Content Include="assets\fonts\Roboto\Roboto-Light.ttf" />
+    <Content Include="assets\fonts\Roboto\Roboto-Light.woff" />
+    <Content Include="assets\fonts\Roboto\Roboto-Light.woff2" />
+    <Content Include="assets\fonts\Roboto\Roboto-Medium.eot" />
+    <Content Include="assets\fonts\Roboto\Roboto-Medium.ttf" />
+    <Content Include="assets\fonts\Roboto\Roboto-Medium.woff" />
+    <Content Include="assets\fonts\Roboto\Roboto-Medium.woff2" />
+    <Content Include="assets\fonts\Roboto\Roboto-Regular.eot" />
+    <Content Include="assets\fonts\Roboto\Roboto-Regular.ttf" />
+    <Content Include="assets\fonts\Roboto\Roboto-Regular.woff" />
+    <Content Include="assets\fonts\Roboto\Roboto-Regular.woff2" />
+    <Content Include="assets\js\.DS_Store" />
+    <Content Include="assets\scss\.DS_Store" />
+    <Content Include="assets\scss\components\.DS_Store" />
+    <Content Include="assets\scss\components\_badges.scss" />
+    <Content Include="assets\scss\components\_bootstrap-progress.scss" />
+    <Content Include="assets\scss\components\_buttons.scss" />
+    <Content Include="assets\scss\components\_cards.scss" />
+    <Content Include="assets\scss\components\_checkbox-radio.scss" />
+    <Content Include="assets\scss\components\_dropdown.scss" />
+    <Content Include="assets\scss\components\_forms.scss" />
+    <Content Include="assets\scss\components\_icons.scss" />
+    <Content Include="assets\scss\components\_lists.scss" />
+    <Content Include="assets\scss\components\_tables.scss" />
+    <Content Include="assets\scss\components\_todo-list.scss" />
+    <Content Include="assets\scss\landing-screens\_auth.scss" />
+    <Content Include="assets\scss\mixins\.DS_Store" />
+    <Content Include="assets\scss\mixins\_animation.scss" />
+    <Content Include="assets\scss\mixins\_badges.scss" />
+    <Content Include="assets\scss\mixins\_blockqoute.scss" />
+    <Content Include="assets\scss\mixins\_buttons.scss" />
+    <Content Include="assets\scss\mixins\_cards.scss" />
+    <Content Include="assets\scss\mixins\_misc.scss" />
+    <Content Include="assets\scss\style.scss" />
+    <Content Include="assets\scss\_background.scss" />
+    <Content Include="assets\scss\_demo.scss" />
+    <Content Include="assets\scss\_fonts.scss" />
+    <Content Include="assets\scss\_footer.scss" />
+    <Content Include="assets\scss\_functions.scss" />
+    <Content Include="assets\scss\_layouts.scss" />
+    <Content Include="assets\scss\_misc.scss" />
+    <Content Include="assets\scss\_navbar.scss" />
+    <Content Include="assets\scss\_reset.scss" />
+    <Content Include="assets\scss\_sidebar.scss" />
+    <Content Include="assets\scss\_typography.scss" />
+    <Content Include="assets\scss\_utilities.scss" />
+    <Content Include="assets\scss\_variables.scss" />
+    <Content Include="assets\scss\_vertical-wrapper.scss" />
+    <Content Include="assets\vendors\.DS_Store" />
+    <Content Include="assets\vendors\ti-icons\fonts\themify.eot" />
+    <Content Include="assets\vendors\ti-icons\fonts\themify.ttf" />
+    <Content Include="assets\vendors\ti-icons\fonts\themify.woff" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -267,6 +352,14 @@
     <Content Include="Views\Customer63135414\VerifyAccount.cshtml" />
     <Content Include="Views\Customer63135414\Register.cshtml" />
     <Content Include="Views\Customer63135414\Login.cshtml" />
+    <Content Include="Views\Customer63135414\UserProfile.cshtml" />
+    <Content Include="Views\Shared\_LayoutAdmin.cshtml" />
+    <Content Include="Views\Users\Create.cshtml" />
+    <Content Include="Views\Users\Delete.cshtml" />
+    <Content Include="Views\Users\Details.cshtml" />
+    <Content Include="Views\Users\Edit.cshtml" />
+    <Content Include="Views\Users\Index.cshtml" />
+    <Content Include="Views\Customer63135414\Home.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

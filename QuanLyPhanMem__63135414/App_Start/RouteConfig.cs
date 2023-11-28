@@ -16,7 +16,7 @@ namespace QuanLyPhanMem__63135414
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+                defaults: new { controller = "Customer63135414", action = "Home", id = UrlParameter.Optional }
             );
         }
     }
