@@ -13,10 +13,10 @@ namespace QuanLyPhanMem__63135414.Models
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class QLPM63135414Entities : DbContext
+    public partial class QLPM_63135414Entities : DbContext
     {
-        public QLPM63135414Entities()
-            : base("name=QLPM63135414Entities")
+        public QLPM_63135414Entities()
+            : base("name=QLPM_63135414Entities")
         {
         }
     

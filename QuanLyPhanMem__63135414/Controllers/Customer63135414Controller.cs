@@ -69,7 +69,7 @@ namespace QuanLyPhanMem__63135414.Controllers
                 #endregion
 
                 #region Save to Database
-                using (QLPM63135414Entities db = new QLPM63135414Entities())
+                using (QLPM_63135414Entities db = new QLPM_63135414Entities())
                 {
                     db.Users.Add(user);
                     db.SaveChanges();
@@ -96,7 +96,7 @@ namespace QuanLyPhanMem__63135414.Controllers
         public ActionResult VerifyAccount(string id)
         {
             bool status = false;
-            using (QLPM63135414Entities db = new QLPM63135414Entities())
+            using (QLPM_63135414Entities db = new QLPM_63135414Entities())
             {
                 //Dòng này thêm vào đây để tránh xác nhận mật khẩu không khớp với vấn đề khi lưu thay đổi
                 db.Configuration.ValidateOnSaveEnabled = false;
@@ -129,7 +129,7 @@ namespace QuanLyPhanMem__63135414.Controllers
         public ActionResult Login(UserLogin user, string returnUrl = "")
         {
             string message = "";
-            using (QLPM63135414Entities db = new QLPM63135414Entities())
+            using (QLPM_63135414Entities db = new QLPM_63135414Entities())
             {
                 var v = db.Users.Where(em => em.email == user.email).FirstOrDefault();
                 if (v != null)
@@ -191,7 +191,7 @@ namespace QuanLyPhanMem__63135414.Controllers
         [NonAction]
         private bool isEmailExist(string email)
         {
-            using (QLPM63135414Entities db = new QLPM63135414Entities())
+            using (QLPM_63135414Entities db = new QLPM_63135414Entities())
             {
                 var v = db.Users.Where(e => e.email == email).FirstOrDefault();
                 return v != null;
