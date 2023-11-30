@@ -121,6 +121,7 @@ namespace QuanLyPhanMem__63135414.Controllers
         }
         //Login Post
         [HttpPost]
+        [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public ActionResult Login(UserLogin user, string returnUrl = "")
         {
@@ -153,12 +154,21 @@ namespace QuanLyPhanMem__63135414.Controllers
                         // Lưu thông tin người dùng vào Session để sử dụng trong các request tiếp theo nếu cần
                         Session["User"] = userViewModel;
 
+                        var roleId = v.roleId;// Lấy roleId từ thông tin người dùng
                         //Nếu ở trang chủ (địa chỉ set mặc định)
                         if (Url.IsLocalUrl(returnUrl))
                         {
                             return Redirect(returnUrl);
                         }
-                        else return RedirectToAction("Index", "Home");
+                        else
+                        {
+                            if (roleId.Contains("R03"))
+                            {
+                                return RedirectToAction("Home", "Customer63135414");
+                            }
+                            else
+                                return RedirectToAction("AdminHome", "Admin63135414");
+                        }
                     }
                     else message = "Tài khoản hoặc mật khẩu không chính xác!";
                 }
@@ -173,6 +183,7 @@ namespace QuanLyPhanMem__63135414.Controllers
         public ActionResult LogOut()
         {
             FormsAuthentication.SignOut();
+            Session.Clear();
             return RedirectToAction("Login", "Customer63135414");
         }
         [HttpGet]
@@ -248,6 +259,7 @@ namespace QuanLyPhanMem__63135414.Controllers
             };
         }
         #endregion
+        [HttpGet]
         [Authorize]
         public ActionResult Home()
         {
