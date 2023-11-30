@@ -33,12 +33,25 @@
         @using (Html.BeginForm("ListUser", "Admin63135414", FormMethod.Get))
         {
             <div class="d-flex flex-wrap justify-content-center align-items-center">
-
-                <div class="form-group m-2">
-                    <input type="text" style="width: 300px;" name="search" value="@ViewBag.search" class="form-control" placeholder="Nhập dữ liệu tìm kiếm" />
+                <div class="form-floating mt-3 mb-3">
+                    <input type="text" style="width: 200px;" name="search" value="@ViewBag.search" class="form-control" />
+                    <label>Nhập dữ liệu</label>
+                </div>
+                <div class="form-floating m-2">
+                    <input type="text" style="width: 200px;" name="name" value="@ViewBag.name" class="form-control" />
+                    <label>Tìm họ và tên</label>
                 </div>
 
-                <button type="submit" value="Search" class="btn btn-primary m-2 form-group">Tìm kiếm</button>
+                <div class="form-floating m-2">
+                    <input type="text" style="width: 200px;" name="adress" value="@ViewBag.adress" class="form-control" />
+                    <label>Tìm địa chỉ</label>
+                </div>
+                <!-- DropDownList cho UserRole.roleName -->
+                <div class="form-floating m-2">
+                    @Html.DropDownList("roleName", ViewBag.Roles as SelectList, "Tất cả", new { @class = "form-control", style = "width: 200px;" })
+                    <label>Tìm vai trò</label>
+                </div>
+                <button type="submit" value="Search" class="btn btn-primary m-2">Tìm kiếm</button>
 
             </div>
         }
@@ -50,10 +63,11 @@
                  headerStyle: "grid-header text-center",
                  footerStyle: "pagination pagination-small",
                  columns: new[] {
-grid.Column(columnName: "email", header: "Email"),
-grid.Column(columnName: "firstname", header: "Họ"),
-grid.Column(columnName: "lastname", header: "Tên"),
-grid.Column(format: @<text>
+                        grid.Column("STT", format: item => item.WebGrid.Rows.IndexOf(item) + 1 + Math.Round(Convert.ToDouble(grid.TotalRowCount / grid.PageCount) / grid.RowsPerPage) * grid.RowsPerPage * grid.PageIndex, canSort: false),
+                        grid.Column(columnName: "email", header: "Email"),
+                        grid.Column(columnName: "firstname", header: "Họ"),
+                        grid.Column(columnName: "lastname", header: "Tên"),
+                        grid.Column(format: @<text>
     @if (item.roleId == "R01")
 {
     <div class="badge badge-danger">

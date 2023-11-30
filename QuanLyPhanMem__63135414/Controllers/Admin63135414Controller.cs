@@ -28,7 +28,7 @@ namespace QuanLyPhanMem__63135414.Controllers
             }
         }
         #region[Danh sách người dùng]
-        public async Task<ActionResult> ListUser(int page = 1, string sort = "lastname", string sortDir = "asc", string search = "")
+        public async Task<ActionResult> ListUser(string search = "", string adress = "", string name = "", string roleName = "", int page = 1, string sort = "lastname", string sortDir = "asc")
         {
             //Logic phân trang khi truy vấn danh sách
             int pageSize = 5;
@@ -36,31 +36,35 @@ namespace QuanLyPhanMem__63135414.Controllers
             if (page < 1) page = 1;
             int skip = (page * pageSize) - pageSize;
 
+            //Lấy danh sách Roles để hiển thị trong DropDownList
+            ViewBag.Roles = new SelectList(db.UserRoles, "roleName", "roleName");
+
             //Gọi phương thức getUserAsync và nhận kết quả về
-            var dataResult = await getUserAsync(search, sort, sortDir, skip, pageSize);
+            var dataResult = await getUserAsync(search, adress, name, roleName, sort, sortDir, skip, pageSize);
 
             // Trích xuất dữ liệu và số lượng bản ghi từ kết quả
             var data = dataResult.Item1;
             totalRecord = dataResult.Item2;
 
-            // Thêm điều kiện kiểm tra và thiết lập đường dẫn ảnh
-            var uSERS = db.Users.Include(u => u.UserRole);
             ViewBag.TotalRows = totalRecord;
             return View(data);
         }
-        public async Task<(List<User>, int)> getUserAsync(string search, string sort, string sortDir, int skip, int pageSize)
+        public async Task<(List<User>, int)> getUserAsync(string search, string adress, string name, string roleName, string sort, string sortDir, int skip, int pageSize)
         {
             var v = (from a in db.Users
                      where
-                     a.firstname.Contains(search) ||
-                     a.lastname.Contains(search) ||
-                     a.email.Contains(search) ||
-                     a.address.Contains(search) ||
-                     a.UserRole.roleName.Contains(search)||
-                     a.bio.Contains(search)||
-                     a.userWallpaper.Contains(search)||
-                     a.userAvatar.Contains(search)||
-                     a.phoneNumber.Contains(search)
+                     (a.email.Contains(search) ||
+                      a.address.Contains(search) ||
+                      a.UserRole.roleName.Contains(search) ||
+                      a.bio.Contains(search) ||
+                      a.userWallpaper.Contains(search) ||
+                      a.userAvatar.Contains(search) ||
+                      a.lastname.Contains(search) ||
+                      a.firstname.Contains(search) ||
+                      a.phoneNumber.Contains(search)) &&
+                      (string.IsNullOrEmpty(name) || a.lastname.Contains(name) || a.firstname.Contains(name)) &&
+                      (string.IsNullOrEmpty(adress) || a.address.Contains(adress)) &&
+                      (string.IsNullOrEmpty(roleName) || a.UserRole.roleName.Contains(roleName))
                      select a);
             //Đếm tổng số lượng bản ghi
             int totalRecord = await v.CountAsync();
