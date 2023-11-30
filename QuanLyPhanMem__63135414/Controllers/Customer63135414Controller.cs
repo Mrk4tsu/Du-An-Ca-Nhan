@@ -62,7 +62,7 @@ namespace QuanLyPhanMem__63135414.Controllers
                 #region[Thiết lập 1 số thông tin mặc định]
                 user.userId = Utils.getUserId();
                 user.isActive = false;
-                user.roleId = "R03";//Set mặc định là khách hàng
+                user.roleId = "R02";//Set mặc định là khách hàng
                 user.userWallpaper = "defaultwallpaper.png";
                 #endregion
 
@@ -121,6 +121,7 @@ namespace QuanLyPhanMem__63135414.Controllers
         }
         //Login Post
         [HttpPost]
+        [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public ActionResult Login(UserLogin user, string returnUrl = "")
         {
