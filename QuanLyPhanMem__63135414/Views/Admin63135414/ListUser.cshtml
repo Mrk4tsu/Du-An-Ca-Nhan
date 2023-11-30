@@ -32,7 +32,9 @@
     <div class="py-2">
         @using (Html.BeginForm("ListUser", "Admin63135414", FormMethod.Get))
         {
+
             <div class="d-flex flex-wrap justify-content-center align-items-center">
+
                 <div class="form-floating mt-3 mb-3">
                     <input type="text" style="width: 200px;" name="search" value="@ViewBag.search" class="form-control" />
                     <label>Nhập dữ liệu</label>
@@ -51,6 +53,12 @@
                     @Html.DropDownList("roleName", ViewBag.Roles as SelectList, "Tất cả", new { @class = "form-control", style = "width: 200px;" })
                     <label>Tìm vai trò</label>
                 </div>
+
+                <script>
+                    function changePageSize() {
+                        document.getElementById('listUserForm').submit();
+                    }
+                </script>
                 <button type="submit" value="Search" class="btn btn-primary m-2">Tìm kiếm</button>
 
             </div>
@@ -63,7 +71,7 @@
                  headerStyle: "grid-header text-center",
                  footerStyle: "pagination pagination-small",
                  columns: new[] {
-                        grid.Column("STT", format: item => item.WebGrid.Rows.IndexOf(item) + 1 + Math.Round(Convert.ToDouble(grid.TotalRowCount / grid.PageCount) / grid.RowsPerPage) * grid.RowsPerPage * grid.PageIndex, canSort: false),
+                       grid.Column("STT", format: item => item.WebGrid.Rows.IndexOf(item) + 1 + Math.Round(Convert.ToDouble(grid.TotalRowCount / grid.PageCount) / grid.RowsPerPage) * grid.RowsPerPage * grid.PageIndex, canSort: false),
                         grid.Column(columnName: "email", header: "Email"),
                         grid.Column(columnName: "firstname", header: "Họ"),
                         grid.Column(columnName: "lastname", header: "Tên"),
@@ -86,25 +94,34 @@
         @item.UserRole.roleName
     </div>
 }
-</text>, header: "Vai trò", canSort:true),
+                        </text>, header: "Vai trò", canSort:true),
 grid.Column(format:
-@<text>
-    <div class="text-center">
-        <a href="@Url.Action("Edit", new {id = item.userId})" class="btn btn-sm btn-warning" title="Cập nhật dữ liệu">
-            <i class="fas fa-user-edit"></i>
-        </a>
-        <a href="@Url.Action("Details", new {id = item.userId})" class="btn btn-sm btn-primary" title="Chi tiết người dùng">
-            <i class="fa fa-id-card"></i>
-        </a>
-        <a href="@Url.Action("Delete", new {id = item.userId})" class="btn btn-sm btn-danger" title="Xóa người dùng">
-            <i class="fa fa-trash"></i>
-        </a>
-    </div>
+                        @<text>
+                            <div class="text-center">
+                                <a href="@Url.Action("Edit", new {id = item.userId})" class="btn btn-sm btn-warning" title="Cập nhật dữ liệu">
+                                    <i class="fas fa-user-edit"></i>
+                                </a>
+                                <a href="@Url.Action("Details", new {id = item.userId})" class="btn btn-sm btn-primary" title="Chi tiết người dùng">
+                                    <i class="fa fa-id-card"></i>
+                                </a>
+                                <a href="@Url.Action("Delete", new {id = item.userId})" class="btn btn-sm btn-danger" title="Xóa người dùng">
+                                    <i class="fa fa-trash"></i>
+                                </a>
+                            </div>
 
-</text>, header: "Chức năng")
+                        </text>, header: "Chức năng")
 })
         </div>
     </div>
+    @using (Html.BeginForm("ListUser", "Admin63135414", FormMethod.Get, new { id = "listUserForm" }))
+    {
+        <!-- Thêm dropdown list cho việc chọn pageSize -->
+        <div class="form-floating col-1 mx-2">
+            @Html.DropDownList("pageSize", (SelectList)ViewBag.PageSizeList, new { @class = "form-control", onchange = "changePageSize()" })
+            <label class="mx-2">Item/page</label>
+        </div>
+    }
+    <br />
     <div class="card-footer">
         <div class="row">
             <div class="pagination d-flex justify-content-center mx-auto">

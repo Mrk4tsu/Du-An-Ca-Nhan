@@ -28,16 +28,19 @@ namespace QuanLyPhanMem__63135414.Controllers
             }
         }
         #region[Danh sách người dùng]
-        public async Task<ActionResult> ListUser(string search = "", string adress = "", string name = "", string roleName = "", int page = 1, string sort = "lastname", string sortDir = "asc")
-        {
+        public async Task<ActionResult> ListUser(string search = "", string adress = "", string name = "", string roleName = "", int page = 1, string sort = "lastname", string sortDir = "asc", int pageSize = 5) 
+        { 
             //Logic phân trang khi truy vấn danh sách
-            int pageSize = 5;
             int totalRecord = 0;
             if (page < 1) page = 1;
             int skip = (page * pageSize) - pageSize;
 
             //Lấy danh sách Roles để hiển thị trong DropDownList
             ViewBag.Roles = new SelectList(db.UserRoles, "roleName", "roleName");
+
+            // Tạo danh sách cho DropDownList chọn pageSize
+            // Lưu ý rằng pageSize được chuyển vào ViewBag.PageSizeList
+            ViewBag.PageSizeList = new SelectList(new List<int> { 5, 10, 15, 20, 25, 50 }, pageSize);
 
             //Gọi phương thức getUserAsync và nhận kết quả về
             var dataResult = await getUserAsync(search, adress, name, roleName, sort, sortDir, skip, pageSize);
@@ -47,6 +50,7 @@ namespace QuanLyPhanMem__63135414.Controllers
             totalRecord = dataResult.Item2;
 
             ViewBag.TotalRows = totalRecord;
+            ViewBag.PageSize = pageSize; // Đưa giá trị pageSize vào ViewBag để sử dụng trong view
             return View(data);
         }
         public async Task<(List<User>, int)> getUserAsync(string search, string adress, string name, string roleName, string sort, string sortDir, int skip, int pageSize)
