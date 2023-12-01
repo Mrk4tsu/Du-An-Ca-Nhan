@@ -1,7 +1,11 @@
-﻿using QuanLyPhanMem__63135414.Models;
+﻿using ImageResizer;
+using QuanLyPhanMem__63135414.Models;
+using QuanLyPhanMem__63135414.Models.Extension;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Linq.Dynamic;
 using System.Net;
@@ -82,6 +86,41 @@ namespace QuanLyPhanMem__63135414.Controllers
         }
         #endregion
         #region[Tạo người dùng]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> CreateUser(UserViewModel model)
+        {
+            // Kiểm tra tính hợp lệ của model
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var newUser = new User
+                    {
+                        userId = Utils.getUserId(),
+                        roleId = model.roleId,
+                        email = model.email,
+                        password = Utils.Hash(model.password),
+                        firstname = model.firstname,
+                        lastname = model.lastname,
+                        phoneNumber = model.phoneNumber,
+                        address = model.phoneNumber,
+                        isActive = false,
+
+                    };
+                    db.Users.Add(newUser);
+                    await db.SaveChangesAsync();
+                    // Redirect đến trang danh sách người dùng hoặc trang chi tiết người dùng mới được tạo
+                    return RedirectToAction("ListUser");
+                }
+                catch
+                {
+                    return View("Error");
+                }
+            }
+            // Nếu có lỗi, trả về view với model để hiển thị thông báo lỗi
+            return View(model);
+        }
         #endregion
         #region[Xem chi tiết người dùng]
         [HttpGet]
@@ -134,6 +173,39 @@ namespace QuanLyPhanMem__63135414.Controllers
         public ActionResult Error()
         {
             return View();
+        }
+        private string SaveUploadedFile(HttpPostedFileBase file, string subFolder)
+        {
+            if (file != null && file.ContentLength > 0)
+            {
+                var fileName = Path.GetFileName(file.FileName);
+                var directoryPath = Server.MapPath($"~/assets/{subFolder}");
+
+                // Tạo thư mục nếu không tồn tại
+                if (!Directory.Exists(directoryPath))
+                {
+                    Directory.CreateDirectory(directoryPath);
+                }
+
+                var filePath = Path.Combine(directoryPath, fileName);
+                // Resize và crop ảnh về kích thước 300x300
+                var settings = new ResizeSettings
+                {
+                    Width = 300,
+                    Height = 300,
+                    Mode = FitMode.Crop,
+                    Scale = ScaleMode.Both,
+                    Anchor = ContentAlignment.MiddleCenter,
+                };
+
+                ImageBuilder.Current.Build(filePath, filePath, settings);
+                // Lưu tệp lên máy chủ
+                file.SaveAs(filePath);
+
+                return filePath;
+            }
+
+            return "avatardefault.png";
         }
     }
 }

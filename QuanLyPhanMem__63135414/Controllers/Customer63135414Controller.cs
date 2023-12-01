@@ -1,6 +1,9 @@
-﻿using QuanLyPhanMem__63135414.Models;
+﻿using ImageResizer;
+using QuanLyPhanMem__63135414.Models;
 using QuanLyPhanMem__63135414.Models.Extension;
 using System;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
@@ -21,23 +24,13 @@ namespace QuanLyPhanMem__63135414.Controllers
         //Register Post Action
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Register([Bind(Exclude = "isActive,codeActive")] User user)
+        public ActionResult Register([Bind(Exclude = "isActive,codeActive")] User user, HttpPostedFileBase userAvatar)
         {
             bool status = false;
             string message = "";
-            //System.Web.HttpPostedFileBase Avatar;
-            var imgNV = Request.Files["Avatar"];
-            if (imgNV != null && imgNV.ContentLength > 0)
-            {
-                // Lưu hình đại diện về Server
-                var fileName = System.IO.Path.GetFileName(imgNV.FileName);
-                var path = Server.MapPath("/assets/images/users/" + fileName);
-                imgNV.SaveAs(path);
+            // Tạo đường dẫn lưu trữ cho ảnh đại diện và ảnh nền
+            var userAvatarPath = Utils.gI.SaveUploadedFile(userAvatar, "avatar");
 
-                user.userAvatar = fileName;
-            }
-            else
-                user.userAvatar = "avatardefault.png";
             //Model Validation
             if (ModelState.IsValid)
             {
@@ -64,6 +57,7 @@ namespace QuanLyPhanMem__63135414.Controllers
                 user.isActive = false;
                 user.roleId = "R03";//Set mặc định là khách hàng
                 user.userWallpaper = "defaultwallpaper.png";
+                user.userAvatar = userAvatarPath;
                 #endregion
 
                 #region Save to Database
@@ -204,7 +198,7 @@ namespace QuanLyPhanMem__63135414.Controllers
         {
             return View();
         }
-        #region[Phương thức hỗ trợ]
+        #region[Phương thức hỗ trợ]      
         [NonAction]
         private bool isEmailExist(string email)
         {
