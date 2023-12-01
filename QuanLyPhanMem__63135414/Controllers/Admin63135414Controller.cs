@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Linq.Dynamic;
+using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -28,8 +29,8 @@ namespace QuanLyPhanMem__63135414.Controllers
             }
         }
         #region[Danh sách người dùng]
-        public async Task<ActionResult> ListUser(string search = "", string adress = "", string name = "", string roleName = "", int page = 1, string sort = "lastname", string sortDir = "asc", int pageSize = 5) 
-        { 
+        public async Task<ActionResult> ListUser(string search = "", string adress = "", string name = "", string roleName = "", int page = 1, string sort = "lastname", string sortDir = "asc", int pageSize = 5)
+        {
             //Logic phân trang khi truy vấn danh sách
             int totalRecord = 0;
             if (page < 1) page = 1;
@@ -80,5 +81,59 @@ namespace QuanLyPhanMem__63135414.Controllers
             return (v.ToList(), totalRecord);
         }
         #endregion
+        #region[Tạo người dùng]
+        #endregion
+        #region[Xem chi tiết người dùng]
+        [HttpGet]
+        public async Task<ActionResult> DetailsUser(string id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            User user = await db.Users.FindAsync(id);
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+            return View(user);
+        }
+        #endregion
+        #region[Xóa người dùng]
+        public ActionResult Delete(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            // Tìm người dùng theo id
+            var userToDelete = db.Users.Find(id);
+
+            if (userToDelete == null)
+            {
+                return HttpNotFound();
+            }
+
+            try
+            {
+                // Xóa người dùng
+                db.Users.Remove(userToDelete);
+                db.SaveChanges();
+
+                return RedirectToAction("ListUser");
+            }
+            catch (Exception ex)
+            {
+                // Xử lý lỗi nếu cần
+                ViewBag.Error = "Không thể xóa người dùng. " + ex.Message;
+                return View("Error");
+            }
+        }
+        #endregion
+        public ActionResult Error()
+        {
+            return View();
+        }
     }
 }

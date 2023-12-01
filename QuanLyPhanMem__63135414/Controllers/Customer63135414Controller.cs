@@ -155,7 +155,7 @@ namespace QuanLyPhanMem__63135414.Controllers
                         Session["User"] = userViewModel;
 
                         var roleId = v.roleId;// Lấy roleId từ thông tin người dùng
-                        //Nếu ở trang chủ (địa chỉ set mặc định)
+
                         if (Url.IsLocalUrl(returnUrl))
                         {
                             return Redirect(returnUrl);
@@ -193,6 +193,16 @@ namespace QuanLyPhanMem__63135414.Controllers
 
             // Pass thông tin người dùng đến View
             return View(userViewModel);
+        }
+        [HttpGet]
+        [Authorize]
+        public ActionResult Home()
+        {
+            return View();
+        }
+        public ActionResult Error()
+        {
+            return View();
         }
         #region[Phương thức hỗ trợ]
         [NonAction]
@@ -259,11 +269,6 @@ namespace QuanLyPhanMem__63135414.Controllers
             };
         }
         #endregion
-        [HttpGet]
-        [Authorize]
-        public ActionResult Home()
-        {
-            return View();
-        }
+        
     }
 }

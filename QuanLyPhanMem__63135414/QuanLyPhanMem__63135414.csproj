@@ -478,6 +478,9 @@
     <Content Include="Views\Admin63135414\AdminHome.cshtml" />
     <Content Include="Views\Shared\_LayoutCustomer.cshtml" />
     <Content Include="Views\Admin63135414\ListUser.cshtml" />
+    <Content Include="Views\Customer63135414\Error.cshtml" />
+    <Content Include="Views\Admin63135414\DetailsUser.cshtml" />
+    <Content Include="Views\Admin63135414\Error.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
