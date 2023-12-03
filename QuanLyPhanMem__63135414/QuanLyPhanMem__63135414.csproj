@@ -148,13 +148,12 @@
     <Compile Include="Models\CartDetail.cs">
       <DependentUpon>Model63135414.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\Category.cs">
-      <DependentUpon>Model63135414.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\Catalog\UserSystem\User.cs" />
     <Compile Include="Models\Catalog\UserSystem\UserLogin.cs" />
     <Compile Include="Models\Catalog\UserSystem\UserViewModel.cs" />
-    <Compile Include="Models\Utils.cs" />
+    <Compile Include="Models\Category.cs">
+      <DependentUpon>Model63135414.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\History.cs">
       <DependentUpon>Model63135414.tt</DependentUpon>
     </Compile>
@@ -197,12 +196,22 @@
     <Compile Include="Models\Promotion.cs">
       <DependentUpon>Model63135414.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\sp_helpdiagramdefinition_Result.cs">
+      <DependentUpon>Model63135414.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_helpdiagrams_Result.cs">
+      <DependentUpon>Model63135414.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sysdiagram.cs">
+      <DependentUpon>Model63135414.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\User.cs">
       <DependentUpon>Model63135414.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\UserRole.cs">
       <DependentUpon>Model63135414.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Utils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WebGridExtensions.cs" />
   </ItemGroup>
@@ -343,13 +352,6 @@
     <Content Include="Scripts\bootstrap.esm.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <EntityDeploy Include="Models\Model63135414.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>Model63135414.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <Content Include="Models\Model63135414.edmx.diagram">
-      <DependentUpon>Model63135414.edmx</DependentUpon>
-    </Content>
     <Content Include="assets\admin\css\.DS_Store" />
     <Content Include="assets\admin\css\maps\style.css.map" />
     <Content Include="assets\admin\fonts\.DS_Store" />
@@ -442,6 +444,13 @@
     <Content Include="assets\customer\sass\_shoping-cart.scss" />
     <Content Include="assets\customer\sass\_sidebar.scss" />
     <Content Include="assets\customer\sass\_variable.scss" />
+    <EntityDeploy Include="Models\Model63135414.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>Model63135414.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\Model63135414.edmx.diagram">
+      <DependentUpon>Model63135414.edmx</DependentUpon>
+    </Content>
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -472,11 +481,6 @@
     <Content Include="Views\Customer63135414\Login.cshtml" />
     <Content Include="Views\Customer63135414\UserProfile.cshtml" />
     <Content Include="Views\Shared\_LayoutAdmin.cshtml" />
-    <Content Include="Views\Users\Create.cshtml" />
-    <Content Include="Views\Users\Delete.cshtml" />
-    <Content Include="Views\Users\Details.cshtml" />
-    <Content Include="Views\Users\Edit.cshtml" />
-    <Content Include="Views\Users\Index.cshtml" />
     <Content Include="Views\Customer63135414\Home.cshtml" />
     <Content Include="Views\Admin63135414\AdminHome.cshtml" />
     <Content Include="Views\Shared\_LayoutCustomer.cshtml" />
@@ -484,6 +488,13 @@
     <Content Include="Views\Customer63135414\Error.cshtml" />
     <Content Include="Views\Admin63135414\DetailsUser.cshtml" />
     <Content Include="Views\Admin63135414\Error.cshtml" />
+    <Content Include="Views\Admin63135414\Edit.cshtml" />
+    <Content Include="Views\Users\Create.cshtml" />
+    <Content Include="Views\Users\Delete.cshtml" />
+    <Content Include="Views\Users\Details.cshtml" />
+    <Content Include="Views\Users\Edit.cshtml" />
+    <Content Include="Views\Users\Index.cshtml" />
+    <Content Include="Views\Admin63135414\CreateUser.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

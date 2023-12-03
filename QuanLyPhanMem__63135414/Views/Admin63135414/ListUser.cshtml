@@ -138,9 +138,16 @@ else
                     <div class="modal-body bg-opacity-25">
                         <!-- Hiển thị thông tin người dùng -->
                         <img src="~/assets/avatar/@user.userAvatar" alt="Circular Image" class="rounded-circle" style="width:150px; height:150px; border: 5px solid #fff;" />
-                        <div class="py-2">
+                        @*<div class="py-2">
+                            @if (@item.UserRole.roleName != null)
+                            {
                             <p class="badge badge-success">@item.UserRole.roleName</p>
-                        </div>
+                            }
+                            @if (@item.UserRole.roleName == null)
+    {
+                            <p class="badge badge-success">Không có</p>
+    }
+                        </div>*@
                         <p class="text-pinterest"> @item.firstname @item.lastname </p>
                         <p>Email: @item.email</p>
                         <p>User Id: @item.userId</p>

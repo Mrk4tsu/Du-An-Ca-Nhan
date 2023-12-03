@@ -15,7 +15,6 @@ namespace QuanLyPhanMem__63135414.Models.Extension
         public Nullable<System.DateTime> birthday { get; set; }
         public string address { get; set; }
         public string phoneNumber { get; set; }
-        public int quantityProject { get; set; }
         public string bio { get; set; }
         public string codeActive { get; set; }
         public Nullable<bool> isActive { get; set; }

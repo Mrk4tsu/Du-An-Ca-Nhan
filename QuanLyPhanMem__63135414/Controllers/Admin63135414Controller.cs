@@ -4,6 +4,7 @@ using QuanLyPhanMem__63135414.Models.Extension;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Validation;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -17,13 +18,13 @@ namespace QuanLyPhanMem__63135414.Controllers
 {
     public class Admin63135414Controller : Controller
     {
-        private QLPM_63135414Entities db = new QLPM_63135414Entities();
+        private QLPM63135414_Entities db = new QLPM63135414_Entities();
         // GET: Admin63135414
         [HttpGet]
         [Authorize]
         public async Task<ActionResult> AdminHome()
         {
-            using (QLPM_63135414Entities db = new QLPM_63135414Entities())
+            using (QLPM63135414_Entities db = new QLPM63135414_Entities())
             {
                 ViewBag.TotalUsers = await db.Users.CountAsync();
                 ViewBag.TotalCategories = await db.Categories.CountAsync();
@@ -86,40 +87,60 @@ namespace QuanLyPhanMem__63135414.Controllers
         }
         #endregion
         #region[Tạo người dùng]
+        public ActionResult CreateUser()
+        {
+            ViewBag.USERID = Utils.gI.getNewGuid();
+            //Lấy danh sách Roles để hiển thị trong DropDownList
+            ViewBag.Roles = new SelectList(db.UserRoles, "roleId", "roleName");
+            ViewBag.CodeActive = Utils.gI.getNewGuid();
+            return View();
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> CreateUser(UserViewModel model)
+        public ActionResult CreateUser(User user, HttpPostedFileBase userAvatar, HttpPostedFileBase userWallpaper)
         {
-            // Kiểm tra tính hợp lệ của model
+            var userAvt = Utils.gI.SaveUploadedFile(userAvatar, "avatar", Utils.defaultAvatar);
+            var userWpp = Utils.gI.SaveUploadedFile(userWallpaper, "wallpaper", Utils.defaultWallpaper);
             if (ModelState.IsValid)
             {
                 try
                 {
-                    var newUser = new User
+                    if (Utils.isEmailExist(user.email))
                     {
-                        userId = Utils.getUserId(),
-                        roleId = model.roleId,
-                        email = model.email,
-                        password = Utils.Hash(model.password),
-                        firstname = model.firstname,
-                        lastname = model.lastname,
-                        phoneNumber = model.phoneNumber,
-                        address = model.phoneNumber,
-                        isActive = false,
-
-                    };
-                    db.Users.Add(newUser);
-                    await db.SaveChangesAsync();
-                    // Redirect đến trang danh sách người dùng hoặc trang chi tiết người dùng mới được tạo
-                    return RedirectToAction("ListUser");
+                        ModelState.AddModelError("EmailExist", "Email đã tồn tại");
+                        return View(user);
+                    }
+                    // Gọi private phương thức để xử lý logic tạo mới người dùng
+                    // Thêm logic xử lý mật khẩu, mã hóa mật khẩu trước khi lưu vào database, v.v.
+                    user.userId = Utils.gI.getNewGuid();
+                    user.password = Utils.Hash(user.password);
+                    user.confirmPassword = Utils.Hash(user.confirmPassword);
+                    user.codeActive = Utils.gI.getNewGuid();
+                    user.userAvatar = userAvt;
+                    user.userWallpaper = userWpp;
+                    // Thêm logic tạo mới người dùng
+                    user.isActive = false; // Hoặc giá trị mặc định tùy thuộc vào yêu cầu của bạn
+                    db.Users.Add(user);
+                    db.SaveChanges();
                 }
-                catch
+                catch (DbEntityValidationException ex)
                 {
-                    return View("Error");
+                    foreach (var validationErrors in ex.EntityValidationErrors)
+                    {
+                        foreach (var validationError in validationErrors.ValidationErrors)
+                        {
+                            Console.WriteLine($"Property: {validationError.PropertyName} Error: {validationError.ErrorMessage}");
+                        }
+                    }
                 }
+
+                return RedirectToAction("ListUser"); // Chuyển hướng đến trang chính sau khi tạo mới
             }
-            // Nếu có lỗi, trả về view với model để hiển thị thông báo lỗi
-            return View(model);
+            //Lấy danh sách Roles để hiển thị trong DropDownList
+            ViewBag.Roles = new SelectList(db.UserRoles, "roleId", "roleName");
+            //ViewBag.UserRoles = db.UserRoles.ToList();
+            return View(user);
         }
         #endregion
         #region[Xem chi tiết người dùng]
@@ -170,42 +191,27 @@ namespace QuanLyPhanMem__63135414.Controllers
             }
         }
         #endregion
+        #region[Sửa thông tin người dùng]
+        public async Task<ActionResult> Edit(string id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            User user = await db.Users.FindAsync(id);
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+            ViewBag.AVARTAR = user.userAvatar;
+            ViewBag.USERID = user.userId;
+            ViewBag.roleId = new SelectList(db.UserRoles, "roleId", "roleName", user.roleId);
+            return View(user);
+        }
+        #endregion
         public ActionResult Error()
         {
             return View();
-        }
-        private string SaveUploadedFile(HttpPostedFileBase file, string subFolder)
-        {
-            if (file != null && file.ContentLength > 0)
-            {
-                var fileName = Path.GetFileName(file.FileName);
-                var directoryPath = Server.MapPath($"~/assets/{subFolder}");
-
-                // Tạo thư mục nếu không tồn tại
-                if (!Directory.Exists(directoryPath))
-                {
-                    Directory.CreateDirectory(directoryPath);
-                }
-
-                var filePath = Path.Combine(directoryPath, fileName);
-                // Resize và crop ảnh về kích thước 300x300
-                var settings = new ResizeSettings
-                {
-                    Width = 300,
-                    Height = 300,
-                    Mode = FitMode.Crop,
-                    Scale = ScaleMode.Both,
-                    Anchor = ContentAlignment.MiddleCenter,
-                };
-
-                ImageBuilder.Current.Build(filePath, filePath, settings);
-                // Lưu tệp lên máy chủ
-                file.SaveAs(filePath);
-
-                return filePath;
-            }
-
-            return "avatardefault.png";
         }
     }
 }

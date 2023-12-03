@@ -29,7 +29,7 @@ namespace QuanLyPhanMem__63135414.Controllers
             bool status = false;
             string message = "";
             // Tạo đường dẫn lưu trữ cho ảnh đại diện và ảnh nền
-            var userAvatarPath = Utils.gI.SaveUploadedFile(userAvatar, "avatar");
+            var userAvatarPath = SaveUploadedFile(userAvatar, "avatar");
 
             //Model Validation
             if (ModelState.IsValid)
@@ -53,7 +53,7 @@ namespace QuanLyPhanMem__63135414.Controllers
                 #endregion
 
                 #region[Thiết lập 1 số thông tin mặc định]
-                user.userId = Utils.getUserId();
+                user.userId = Utils.gI.getNewGuid();
                 user.isActive = false;
                 user.roleId = "R03";//Set mặc định là khách hàng
                 user.userWallpaper = "defaultwallpaper.png";
@@ -61,7 +61,7 @@ namespace QuanLyPhanMem__63135414.Controllers
                 #endregion
 
                 #region Save to Database
-                using (QLPM_63135414Entities db = new QLPM_63135414Entities())
+                using (QLPM63135414_Entities db = new QLPM63135414_Entities())
                 {
                     db.Users.Add(user);
                     db.SaveChanges();
@@ -86,7 +86,7 @@ namespace QuanLyPhanMem__63135414.Controllers
         public ActionResult VerifyAccount(string id)
         {
             bool status = false;
-            using (QLPM_63135414Entities db = new QLPM_63135414Entities())
+            using (QLPM63135414_Entities db = new QLPM63135414_Entities())
             {
                 //Dòng này thêm vào đây để tránh xác nhận mật khẩu không khớp với vấn đề khi lưu thay đổi
                 db.Configuration.ValidateOnSaveEnabled = false;
@@ -120,7 +120,7 @@ namespace QuanLyPhanMem__63135414.Controllers
         public ActionResult Login(UserLogin user, string returnUrl = "")
         {
             string message = "";
-            using (QLPM_63135414Entities db = new QLPM_63135414Entities())
+            using (QLPM63135414_Entities db = new QLPM63135414_Entities())
             {
                 var v = db.Users.Where(em => em.email == user.email).FirstOrDefault();
                 if (v != null)
@@ -198,11 +198,47 @@ namespace QuanLyPhanMem__63135414.Controllers
         {
             return View();
         }
-        #region[Phương thức hỗ trợ]      
+        #region[Phương thức hỗ trợ]
+        [NonAction]
+        private string SaveUploadedFile(HttpPostedFileBase file, string subFolder)
+        {
+            if (file != null && file.ContentLength > 0)
+            {
+                var fileName = Path.GetFileName(file.FileName);
+                var directoryPath = Server.MapPath($"~/assets/{subFolder}");
+
+                // Tạo thư mục nếu không tồn tại
+                if (!Directory.Exists(directoryPath))
+                {
+                    Directory.CreateDirectory(directoryPath);
+                }
+
+                var filePath = Path.Combine(directoryPath, fileName);
+
+                // Lưu tệp lên máy chủ
+                file.SaveAs(filePath);
+
+                // Resize và crop ảnh về kích thước 300x300
+                var settings = new ResizeSettings
+                {
+                    Width = 300,
+                    Height = 300,
+                    Mode = FitMode.Crop,
+                    Scale = ScaleMode.Both,
+                    Anchor = ContentAlignment.MiddleCenter,
+                };
+
+                ImageBuilder.Current.Build(filePath, filePath, settings);
+
+                return fileName;
+            }
+
+            return "avatardefault.png";
+        }
         [NonAction]
         private bool isEmailExist(string email)
         {
-            using (QLPM_63135414Entities db = new QLPM_63135414Entities())
+            using (QLPM63135414_Entities db = new QLPM63135414_Entities())
             {
                 var v = db.Users.Where(e => e.email == email).FirstOrDefault();
                 return v != null;
@@ -255,7 +291,6 @@ namespace QuanLyPhanMem__63135414.Controllers
                 birthday = user.birthday,
                 address = user.address,
                 phoneNumber = user.phoneNumber,
-                quantityProject = user.quantityProject,
                 bio = user.bio,
                 codeActive = user.codeActive,
                 isActive = user.isActive,

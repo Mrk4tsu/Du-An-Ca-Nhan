@@ -2,6 +2,7 @@
 using System;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
@@ -10,9 +11,19 @@ namespace QuanLyPhanMem__63135414.Models.Extension
 {
     public class Utils : Controller
     {
+        public static readonly string defaultAvatar = "avatardefault.png";
+        public static readonly string defaultWallpaper = "defaultwallpaper.png";
         //Singleton
         public static Utils gI { get; } = new Utils();
-        public static string getUserId()
+        public static bool isEmailExist(string email)
+        {
+            using (QLPM63135414_Entities db = new QLPM63135414_Entities())
+            {
+                var v = db.Users.Where(e => e.email == email).FirstOrDefault();
+                return v != null;
+            }
+        }
+        public string getNewGuid()
         {
             Guid guid = Guid.NewGuid();
             return guid.ToString();
@@ -21,7 +32,7 @@ namespace QuanLyPhanMem__63135414.Models.Extension
         {
             return Convert.ToBase64String(System.Security.Cryptography.SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes(value)));
         }
-        public string SaveUploadedFile(HttpPostedFileBase file, string subFolder)
+        public string SaveUploadedFile(HttpPostedFileBase file, string subFolder, string fail)
         {
             if (file != null && file.ContentLength > 0)
             {
@@ -54,7 +65,7 @@ namespace QuanLyPhanMem__63135414.Models.Extension
                 return fileName;
             }
 
-            return "avatardefault.png";
+            return fail;
         }
     }
 }
