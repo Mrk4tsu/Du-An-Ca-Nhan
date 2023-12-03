@@ -4,7 +4,7 @@
     ViewBag.Title = "ListUser";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 
-    var grid = new WebGrid(canPage: true, rowsPerPage: 5);
+    var grid = new WebGrid(canPage: true, rowsPerPage: ViewBag.PageSize);
     grid.Bind(source: Model, rowCount: ViewBag.TotalRows, autoSortAndPage: false);
 
     var user = (QuanLyPhanMem__63135414.Models.Extension.UserViewModel)Session["User"];
@@ -138,16 +138,9 @@ else
                     <div class="modal-body bg-opacity-25">
                         <!-- Hiển thị thông tin người dùng -->
                         <img src="~/assets/avatar/@user.userAvatar" alt="Circular Image" class="rounded-circle" style="width:150px; height:150px; border: 5px solid #fff;" />
-                        @*<div class="py-2">
-                            @if (@item.UserRole.roleName != null)
-                            {
+                        <div class="py-2">
                             <p class="badge badge-success">@item.UserRole.roleName</p>
-                            }
-                            @if (@item.UserRole.roleName == null)
-    {
-                            <p class="badge badge-success">Không có</p>
-    }
-                        </div>*@
+                        </div>
                         <p class="text-pinterest"> @item.firstname @item.lastname </p>
                         <p>Email: @item.email</p>
                         <p>User Id: @item.userId</p>

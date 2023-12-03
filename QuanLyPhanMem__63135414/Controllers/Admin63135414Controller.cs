@@ -43,11 +43,10 @@ namespace QuanLyPhanMem__63135414.Controllers
 
             //Lấy danh sách Roles để hiển thị trong DropDownList
             ViewBag.Roles = new SelectList(db.UserRoles, "roleName", "roleName");
-
+           
             // Tạo danh sách cho DropDownList chọn pageSize
             // Lưu ý rằng pageSize được chuyển vào ViewBag.PageSizeList
             ViewBag.PageSizeList = new SelectList(new List<int> { 5, 10, 15, 20, 25, 50 }, pageSize);
-
             //Gọi phương thức getUserAsync và nhận kết quả về
             var dataResult = await getUserAsync(search, adress, name, roleName, sort, sortDir, skip, pageSize);
 
