@@ -28,7 +28,7 @@ namespace QuanLyPhanMem__63135414.Models
 
         //birthday
         [DataType(DataType.Date)]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime birthday { get; set; }
     }
 }

@@ -141,6 +141,7 @@ namespace QuanLyPhanMem__63135414.Controllers
             //ViewBag.UserRoles = db.UserRoles.ToList();
             return View(user);
         }
+
         #endregion
         #region[Xem chi tiết người dùng]
         [HttpGet]
@@ -203,6 +204,7 @@ namespace QuanLyPhanMem__63135414.Controllers
                 return HttpNotFound();
             }
             ViewBag.AVARTAR = user.userAvatar;
+            ViewBag.WALLPAPER = user.userWallpaper;
 
             ViewBag.USERID = user.userId;
             ViewBag.CurrentPass = user.password;
@@ -212,53 +214,43 @@ namespace QuanLyPhanMem__63135414.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(string newPassword, [Bind(Include = "userId, roleId, email, password, firstname, lastname, userAvatar, userWallpaper, address, birthday, codeActive, isActive, phoneNumber, bio")] User user)
+        public async Task<ActionResult> Edit(string newPassword, HttpPostedFileBase userAvatar, HttpPostedFileBase userWallpaper, [Bind(Include = "userId, roleId, email, password, firstname, lastname, userAvatar, userWallpaper, address, birthday, codeActive, isActive, phoneNumber, bio")] User user)
         {
-            var imgNV = Request.Files["Avatar"];
-            var fileName = System.IO.Path.GetFileName(imgNV.FileName);
-            try
-            {
-                if (imgNV != null && imgNV.ContentLength > 0)
-                {
-                    // Lưu hình đại diện về Server
-
-                    var path = Server.MapPath("/assets/images/users/" + fileName);
-                    imgNV.SaveAs(path);
-
-                    // Resize và crop ảnh về kích thước 300x300
-                    var settings = new ResizeSettings
-                    {
-                        Width = 300,
-                        Height = 300,
-                        Mode = FitMode.Crop,
-                        Scale = ScaleMode.Both,
-                        Anchor = ContentAlignment.MiddleCenter,
-                    };
-
-                    ImageBuilder.Current.Build(path, path, settings);
-                }
-            }
-            catch { }
+            string newAvatar = SaveUploadedFile(userAvatar, "avatar", null);
+            string newWallpaper = SaveUploadedFile(userWallpaper, "wallpaper", null);
             if (ModelState.IsValid)
             {
+                #region[Mật khẩu]
                 var currentPass = user.password;
                 // Kiểm tra nếu newPassword được nhập và nếu nó khác với mật khẩu cũ
                 if (newPassword != currentPass)
-                {
-                    // Thực hiện các thao tác cần thiết với mật khẩu mới
-                    // Ví dụ: Hash mật khẩu mới trước khi lưu vào database
                     user.password = Utils.Hash(newPassword);
-                }
                 else
-                {
                     user.password = currentPass;
-                }
+                #endregion
+                var currentWpp = user.userWallpaper;
+                var currentAvt = user.userAvatar;
+                check(newAvatar, newWallpaper, currentWpp, currentAvt, user);
                 db.Entry(user).State = EntityState.Modified;
                 await db.SaveChangesAsync();
                 return RedirectToAction("ListUser");
             }
             ViewBag.roleId = new SelectList(db.UserRoles, "roleId", "roleName", user.roleId);
             return View(user);
+        }
+        public void check(string newAvatar, string newWallpaper, string currentWpp, string currentAvt, User user)
+        {
+            // Kiểm tra newAvatar có khác null và có khác với giá trị mặc định không
+            if (!string.IsNullOrEmpty(newAvatar) && newAvatar != currentAvt)
+            {
+                user.userAvatar = newAvatar;
+            }
+
+            // Kiểm tra newWallpaper có khác null và có khác với giá trị mặc định không
+            if (!string.IsNullOrEmpty(newWallpaper) && newWallpaper != currentWpp)
+            {
+                user.userWallpaper = newWallpaper;
+            }
         }
         #endregion
         public ActionResult Error()
