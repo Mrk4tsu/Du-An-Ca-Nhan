@@ -1,0 +1,113 @@
+﻿@model IEnumerable<QuanLyPhanMem__63135414.Models.Category>
+
+@{
+    ViewBag.Title = "ListCategory";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+
+    var user = (QuanLyPhanMem__63135414.Models.Extension.UserViewModel)Session["User"];
+
+    var grid = new WebGrid(canPage: true, rowsPerPage: ViewBag.PageSize);
+    grid.Bind(source: Model, rowCount: ViewBag.TotalRows, autoSortAndPage: false);
+
+    <script>
+        function confirmDelete(userId) {
+            // Xác nhận xóa người dùng bằng cách gửi form
+            document.getElementById('deleteCategoryForm_' + userId).submit();
+        }
+    </script>
+}
+
+<div class="card">
+    <div class="card-header py-3">
+        <h4 class="m-0 font-weight-bold text-primary">
+            DANH SÁCH QUẢN LÝ NGƯỜI DÙNG
+        </h4>
+        <br />
+
+        <a href="@Url.Action("CreateUser")" class="btn btn-success d-block mx-auto" style="width: 50%">
+            Thêm danh mục
+        </a>
+    </div>
+    <div class="py-2">
+        @using (Html.BeginForm("ListCategory", "Category63135414", FormMethod.Get))
+        {
+
+            <div class="d-flex justify-content-center align-items-center">
+
+                <div class="form-floating  mt-3 mb-3">
+                    <input type="text" style="width: 350px;" name="search" value="@ViewBag.search" class="form-control" />
+                    <label>Nhập dữ liệu</label>
+                </div>
+
+
+                <button type="submit" value="Search" class="btn btn-primary m-2">Tìm kiếm</button>
+
+            </div>
+        }
+    </div>
+    <div class="card-body text-center">
+        <div class="table-responsive">
+            @grid.Table(
+                 tableStyle: "table table-bordered table-hover",
+                 headerStyle: "grid-header text-center",
+                 footerStyle: "pagination pagination-small",
+                 columns: new[] {
+                        grid.Column("STT", format: item => item.WebGrid.Rows.IndexOf(item) + 1 + Math.Round(Convert.ToDouble(grid.TotalRowCount / grid.PageCount) / grid.RowsPerPage) * grid.RowsPerPage * grid.PageIndex, canSort: false),
+                        grid.Column(format:@<text> <img class="img-fluid" src="~/assets/category/@item.categoryImage" title="@item.categoryName" style="width:40px; height:40px;" /></text>, header: "Ảnh minh họa"),
+grid.Column(columnName: "categoryName", header: "Tên danh mục"),
+grid.Column(format:@<text>
+                            <div class="text-center">
+                                <a href="@Url.Action("Edit", new {id = item.Id})" class="btn btn-sm btn-warning" title="Cập nhật dữ liệu">
+                                    <i class="fas fa-user-edit"></i>
+                                </a>
+                                <a href="#" data-toggle="modal" data-target="#deleteCategoryModal_@item.Id" class="btn btn-sm btn-danger" title="Xóa danh mục">
+                                    <i class="fa fa-trash"></i>
+                                </a>
+                                <!-- Modal -->
+                                <div class="modal fade" id="deleteCategoryModal_@item.Id" tabindex="-1" role="dialog" aria-labelledby="deleteCategoryModalLabel_@item.Id" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="deleteCategoryModalLabel_@item.Id">Xóa Người Dùng</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body bg-opacity-25">
+                                                <!-- Hiển thị thông tin người dùng -->
+                                                <img src="~/assets/avatar/@item.categoryImage" alt="Circular Image" class="rounded-circle" style="width:150px; height:150px; border: 5px solid #fff;" />
+                                                <p class="text-pinterest"> @item.categoryName </p>
+                                                <form id="deleteCategoryForm_@item.id" method="post" action="@Url.Action("Delete", "Category63135414", new { id = item.id })">
+                                                    @Html.AntiForgeryToken()
+                                                    <input type="hidden" name="id" value="@item.id" />
+                                                </form>
+                                            </div>
+                                            <div class="modal-footer">
+
+                                                <!-- Nút xác nhận xóa -->
+                                                <button type="button" class="btn btn-danger" onclick="confirmDelete('@item.id')">Xóa Danh mục</button>
+                                                <!-- Nút hủy -->
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+</text>, header: "Chức năng")
+})
+        </div>
+    </div>
+    <br />
+    <div class="card-footer">
+        <div class="row">
+            <div class="pagination d-flex justify-content-center mx-auto">
+                @grid.PagerList(mode: WebGridPagerModes.Numeric)
+            </div>
+        </div>
+
+        @Html.Hidden("dir", grid.SortDirection)
+        @Html.Hidden("col", grid.SortColumn)
+    </div>
+</div>
+

@@ -10,6 +10,7 @@ using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Configuration;
 using System.Web.Mvc;
 using System.Web.Security;
 
@@ -252,6 +253,10 @@ namespace QuanLyPhanMem__63135414.Controllers
         [Authorize]
         public ActionResult Home()
         {
+            using (QLPM63135414_Entities db = new QLPM63135414_Entities())
+            {
+                ViewBag.Categories = db.Categories.ToList();
+            }
             return View();
         }
         public ActionResult Error()

@@ -136,9 +136,8 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\Admin63135414Controller.cs" />
+    <Compile Include="Controllers\Category63135414Controller.cs" />
     <Compile Include="Controllers\Customer63135414Controller.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -218,6 +217,8 @@
   <ItemGroup>
     <Content Include="assets\admin\css\style.css" />
     <Content Include="assets\avatar\avatardefault.png" />
+    <Content Include="assets\banner\banner-1.jpg" />
+    <Content Include="assets\banner\banner-2.jpg" />
     <Content Include="assets\wallpaper\defaultwallpaper.png" />
     <Content Include="assets\admin\js\chart.js" />
     <Content Include="assets\admin\js\dashboard.js" />
@@ -244,8 +245,6 @@
     <Content Include="assets\customer\css\style.css" />
     <Content Include="assets\customer\fonts\ElegantIcons.svg" />
     <Content Include="assets\customer\fonts\fontawesome-webfont.svg" />
-    <Content Include="assets\customer\img\banner\banner-1.jpg" />
-    <Content Include="assets\customer\img\banner\banner-2.jpg" />
     <Content Include="assets\customer\img\blog\blog-1.jpg" />
     <Content Include="assets\customer\img\blog\blog-2.jpg" />
     <Content Include="assets\customer\img\blog\blog-3.jpg" />
@@ -473,9 +472,6 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Home\Contact.cshtml" />
-    <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Customer63135414\VerifyAccount.cshtml" />
     <Content Include="Views\Customer63135414\Register.cshtml" />
     <Content Include="Views\Customer63135414\Login.cshtml" />
@@ -488,20 +484,18 @@
     <Content Include="Views\Customer63135414\Error.cshtml" />
     <Content Include="Views\Admin63135414\DetailsUser.cshtml" />
     <Content Include="Views\Admin63135414\Error.cshtml" />
-    <Content Include="Views\Users\Create.cshtml" />
-    <Content Include="Views\Users\Delete.cshtml" />
-    <Content Include="Views\Users\Details.cshtml" />
-    <Content Include="Views\Users\Edit.cshtml" />
-    <Content Include="Views\Users\Index.cshtml" />
     <Content Include="Views\Admin63135414\CreateUser.cshtml" />
     <Content Include="Views\Admin63135414\Edit.cshtml" />
     <Content Include="Views\Customer63135414\ChangePassword.cshtml" />
+    <Content Include="Views\Category63135414\ListCategory.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="assets\admin\images\test\" />
     <Folder Include="assets\admin\images\users\" />
     <Folder Include="assets\admin\images\userwallpaper\" />
+    <Folder Include="assets\category\" />
+    <Folder Include="assets\customer\img\banner\" />
     <Folder Include="Models\Catalog\ProductSystem\" />
   </ItemGroup>
   <ItemGroup>
