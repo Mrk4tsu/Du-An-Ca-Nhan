@@ -43,7 +43,7 @@
                         var user = (QuanLyPhanMem__63135414.Models.Extension.UserViewModel)Session["User"];
                         <li class="nav-item nav-profile dropdown">
                             <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
-                                <img src="~/assets/admin/images/users/@user.userAvatar" alt="profile" />
+                                <img src="~/assets/avatar/@user.userAvatar" alt="profile" />
                             </a>
                             <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
                                 @using (Html.BeginForm("UserProfile", "Customer63135414", FormMethod.Get, new { id = "profileForm" }))
@@ -177,25 +177,21 @@
 
     <script>
         function previewImage(input) {
-            var preview = document.getElementById('imagePreview');
-            while (preview.firstChild) {
-                preview.removeChild(preview.firstChild);
-            }
+            var previewId = "#" + input.id + "-preview";
+            var preview = $(previewId)[0];
+            var file = input.files[0];
+            var reader = new FileReader();
 
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
+            reader.onloadend = function () {
+                preview.src = reader.result;
+            };
 
-                reader.onload = function (e) {
-                    var image = document.createElement('img');
-                    image.src = e.target.result;
-                    image.className = 'img-fluid rounded'; // Optional: Make the image responsive
-                    preview.appendChild(image);
-                };
-
-                reader.readAsDataURL(input.files[0]);
+            if (file) {
+                reader.readAsDataURL(file);
+            } else {
+                preview.src = "";
             }
         }
-
     </script>
     @RenderSection("Scripts", false)
     <!-- container-scroller -->

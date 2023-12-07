@@ -1,9 +1,14 @@
-﻿using QuanLyPhanMem__63135414.Models;
+﻿using ImageResizer;
+using QuanLyPhanMem__63135414.Models;
 using QuanLyPhanMem__63135414.Models.Extension;
 using System;
+using System.Data.Entity;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
@@ -21,23 +26,13 @@ namespace QuanLyPhanMem__63135414.Controllers
         //Register Post Action
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Register([Bind(Exclude = "isActive,codeActive")] User user)
+        public ActionResult Register([Bind(Exclude = "isActive,codeActive")] User user, HttpPostedFileBase userAvatar, string newPassword, string confirmPassword)
         {
             bool status = false;
             string message = "";
-            //System.Web.HttpPostedFileBase Avatar;
-            var imgNV = Request.Files["Avatar"];
-            if (imgNV != null && imgNV.ContentLength > 0)
-            {
-                // Lưu hình đại diện về Server
-                var fileName = System.IO.Path.GetFileName(imgNV.FileName);
-                var path = Server.MapPath("/assets/images/users/" + fileName);
-                imgNV.SaveAs(path);
+            // Tạo đường dẫn lưu trữ cho ảnh đại diện và ảnh nền
+            var userAvatarPath = SaveUploadedFile(userAvatar, "avatar");
 
-                user.userAvatar = fileName;
-            }
-            else
-                user.userAvatar = "avatardefault.png";
             //Model Validation
             if (ModelState.IsValid)
             {
@@ -55,19 +50,39 @@ namespace QuanLyPhanMem__63135414.Controllers
                 #endregion
 
                 #region Password Hashing
-                user.password = Utils.Hash(user.password);
-                user.confirmPassword = Utils.Hash(user.confirmPassword);
+                if (!string.IsNullOrEmpty(newPassword) && !string.IsNullOrEmpty(confirmPassword))
+                {
+                    // Only update password if both new password and confirm password are provided
+                    if (newPassword.Length < 6)
+                    {
+                        ModelState.AddModelError("newPassword", "Mật khẩu ít nhất phải có 6 ký tự!");
+                    }
+                    else if (newPassword != confirmPassword)
+                    {
+                        ModelState.AddModelError("confirmPassword", "Mật khẩu không khớp, vui lòng kiểm tra lại!");
+                    }
+                    else
+                    {
+                        // Update password if validation passes
+                        user.password = Utils.Hash(newPassword);
+                        user.confirmPassword = Utils.Hash(confirmPassword);
+                    }
+                }
                 #endregion
 
-                #region[Thiết lập 1 số thông tin mặc định]
-                user.userId = Utils.getUserId();
+                #region[Thiết lập thông tin mặc định sau khi đăng kí]
+                user.userId = Utils.instance.getNewGuid();
                 user.isActive = false;
                 user.roleId = "R03";//Set mặc định là khách hàng
                 user.userWallpaper = "defaultwallpaper.png";
+                user.userAvatar = userAvatarPath;
+                user.address = "Chưa thiết lập";
+                user.birthday = DateTime.Now;
+                user.bio = string.Empty;
                 #endregion
 
                 #region Save to Database
-                using (QLPM_63135414Entities db = new QLPM_63135414Entities())
+                using (QLPM63135414_Entities db = new QLPM63135414_Entities())
                 {
                     db.Users.Add(user);
                     db.SaveChanges();
@@ -92,7 +107,7 @@ namespace QuanLyPhanMem__63135414.Controllers
         public ActionResult VerifyAccount(string id)
         {
             bool status = false;
-            using (QLPM_63135414Entities db = new QLPM_63135414Entities())
+            using (QLPM63135414_Entities db = new QLPM63135414_Entities())
             {
                 //Dòng này thêm vào đây để tránh xác nhận mật khẩu không khớp với vấn đề khi lưu thay đổi
                 db.Configuration.ValidateOnSaveEnabled = false;
@@ -126,7 +141,7 @@ namespace QuanLyPhanMem__63135414.Controllers
         public ActionResult Login(UserLogin user, string returnUrl = "")
         {
             string message = "";
-            using (QLPM_63135414Entities db = new QLPM_63135414Entities())
+            using (QLPM63135414_Entities db = new QLPM63135414_Entities())
             {
                 var v = db.Users.Where(em => em.email == user.email).FirstOrDefault();
                 if (v != null)
@@ -155,7 +170,7 @@ namespace QuanLyPhanMem__63135414.Controllers
                         Session["User"] = userViewModel;
 
                         var roleId = v.roleId;// Lấy roleId từ thông tin người dùng
-                        //Nếu ở trang chủ (địa chỉ set mặc định)
+
                         if (Url.IsLocalUrl(returnUrl))
                         {
                             return Redirect(returnUrl);
@@ -179,6 +194,45 @@ namespace QuanLyPhanMem__63135414.Controllers
             return View(user);
         }
         #endregion
+        #region[Change Password]
+        public ActionResult ChangePassword()
+        {
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ChangePassword([Bind(Include = "password")] User user, string oldPassword, string newPassword)
+        {
+            bool status = false;
+            string message = "";
+            string newP = Utils.Hash(newPassword);
+            string oldP = Utils.Hash(oldPassword);
+            if (ModelState.IsValid)
+            {
+                using (QLPM63135414_Entities db = new QLPM63135414_Entities())
+                {
+                    user = (User)Session["User"];
+                    if (!oldP.Contains(user.password))
+                    {
+                        message = "Mật khẩu cũ nhập không đúng";
+                        return View(user);
+                    }
+                    if (oldP.Contains(newP))
+                    {
+                        message = "Mật khẩu này đã được sử dụng, vui lòng nhập mật khẩu khác!";
+                        return View(user);
+                    }
+                    db.Users.Add(user);
+                    await db.SaveChangesAsync();
+                    message = "Mật khẩu của bạn đã được thay đổi thành công!";
+                    status = true;
+                }
+            }
+            ViewBag.Message = message;
+            ViewBag.Status = status;
+            return View(user);
+        }
+        #endregion
         [Authorize]
         public ActionResult LogOut()
         {
@@ -194,17 +248,87 @@ namespace QuanLyPhanMem__63135414.Controllers
             // Pass thông tin người dùng đến View
             return View(userViewModel);
         }
+        [HttpGet]
+        [Authorize]
+        public ActionResult Home()
+        {
+            return View();
+        }
+        public ActionResult Error()
+        {
+            return View();
+        }
         #region[Phương thức hỗ trợ]
+        [NonAction]
+        private string SaveUploadedFile(HttpPostedFileBase file, string subFolder)
+        {
+            if (file != null && file.ContentLength > 0)
+            {
+                var fileName = Path.GetFileName(file.FileName);
+                var directoryPath = Server.MapPath($"~/assets/{subFolder}");
+
+                // Tạo thư mục nếu không tồn tại
+                if (!Directory.Exists(directoryPath))
+                {
+                    Directory.CreateDirectory(directoryPath);
+                }
+
+                var filePath = Path.Combine(directoryPath, fileName);
+
+                // Lưu tệp lên máy chủ
+                file.SaveAs(filePath);
+
+                // Resize và crop ảnh về kích thước 300x300
+                var settings = new ResizeSettings
+                {
+                    Width = 300,
+                    Height = 300,
+                    Mode = FitMode.Crop,
+                    Scale = ScaleMode.Both,
+                    Anchor = ContentAlignment.MiddleCenter,
+                };
+
+                ImageBuilder.Current.Build(filePath, filePath, settings);
+
+                return fileName;
+            }
+
+            return "avatardefault.png";
+        }
         [NonAction]
         private bool isEmailExist(string email)
         {
-            using (QLPM_63135414Entities db = new QLPM_63135414Entities())
+            using (QLPM63135414_Entities db = new QLPM63135414_Entities())
             {
                 var v = db.Users.Where(e => e.email == email).FirstOrDefault();
                 return v != null;
             }
         }
         [NonAction]
+        private UserViewModel getUserViewModel(User user)
+        {
+            return new UserViewModel
+            {
+                userId = user.userId,
+                roleId = user.roleId,
+                email = user.email,
+                password = user.password,
+                firstname = user.firstname,
+                lastname = user.lastname,
+                userAvatar = user.userAvatar,
+                userWallpaper = user.userWallpaper,
+                birthday = user.birthday,
+                address = user.address,
+                phoneNumber = user.phoneNumber,
+                bio = user.bio,
+                codeActive = user.codeActive,
+                isActive = user.isActive,
+                UserRole = user.UserRole
+            };
+        }
+        #endregion
+        [NonAction]
+        //Gửi email xác nhận link
         public void sendVerificationLinkEmail(string emailID, string activationCode)
         {
             var verifyUrl = "/Customer63135414/VerifyAccount/" + activationCode;
@@ -234,36 +358,6 @@ namespace QuanLyPhanMem__63135414.Controllers
                 IsBodyHtml = true
             })
                 smtp.Send(message);
-        }
-        [NonAction]
-        private UserViewModel getUserViewModel(User user)
-        {
-            return new UserViewModel
-            {
-                userId = user.userId,
-                roleId = user.roleId,
-                email = user.email,
-                password = user.password,
-                firstname = user.firstname,
-                lastname = user.lastname,
-                userAvatar = user.userAvatar,
-                userWallpaper = user.userWallpaper,
-                birthday = user.birthday,
-                address = user.address,
-                phoneNumber = user.phoneNumber,
-                quantityProject = user.quantityProject,
-                bio = user.bio,
-                codeActive = user.codeActive,
-                isActive = user.isActive,
-                UserRole = user.UserRole
-            };
-        }
-        #endregion
-        [HttpGet]
-        [Authorize]
-        public ActionResult Home()
-        {
-            return View();
         }
     }
 }
