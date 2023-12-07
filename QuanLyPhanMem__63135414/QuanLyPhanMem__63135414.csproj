@@ -488,13 +488,15 @@
     <Content Include="Views\Customer63135414\Error.cshtml" />
     <Content Include="Views\Admin63135414\DetailsUser.cshtml" />
     <Content Include="Views\Admin63135414\Error.cshtml" />
-    <Content Include="Views\Admin63135414\Edit.cshtml" />
+    <Content Include="Views\Admin63135414\Edit1.cshtml" />
     <Content Include="Views\Users\Create.cshtml" />
     <Content Include="Views\Users\Delete.cshtml" />
     <Content Include="Views\Users\Details.cshtml" />
     <Content Include="Views\Users\Edit.cshtml" />
     <Content Include="Views\Users\Index.cshtml" />
     <Content Include="Views\Admin63135414\CreateUser.cshtml" />
+    <Content Include="Views\Admin63135414\Edit.cshtml" />
+    <Content Include="Views\Customer63135414\ChangePassword.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

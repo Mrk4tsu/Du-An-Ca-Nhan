@@ -90,17 +90,13 @@
                             <label class="control-label text-twitter fw-semibold">
                                 <i class="fa-solid fa-location-dot mx-2"></i>Địa chỉ:
                             </label>
-                            @if (Model.address == null)
+                            @if (!string.IsNullOrEmpty(Model.address))
                             {
-                                <span class="text-secondary mx-auto">
-                                    Chưa có thông tin
-                                </span>
+                                <span class="text-secondary mx-auto">@Html.DisplayFor(model => model.address)</span>
                             }
-                            @if (Model.address != null)
+                            else
                             {
-                                <span class="text-secondary mx-auto">
-                                    @Model.address
-                                </span>
+                                <span class="text-secondary mx-auto">Không có thông tin</span>
                             }
                         </div>
                         <div class="form-group border-0">
@@ -147,7 +143,7 @@
                         <a href="@Url.Action("ListUser")" class="btn btn-facebook btn-rounded col-md-5 mx-auto">
                             Quay lại danh sách
                         </a>
-                        <a href="@Url.Action("Edit", new { id = Model.userId })" class="btn btn-google btn-rounded col-md-5 mx-auto">
+                        <a href="@Url.Action("Edit", new {id = Model.userId})" class="btn btn-google btn-rounded col-md-5 mx-auto">
                             Chỉnh sửa thông tin
                         </a>
                     </div>

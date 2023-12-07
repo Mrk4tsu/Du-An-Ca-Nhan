@@ -3,25 +3,6 @@
 @{
     ViewBag.Title = "CreateUser";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
-
-    <script>
-        function previewImage(input) {
-            var previewId = "#" + input.id + "-preview";
-            var preview = $(previewId)[0];
-            var file = input.files[0];
-            var reader = new FileReader();
-
-            reader.onloadend = function () {
-                preview.src = reader.result;
-            };
-
-            if (file) {
-                reader.readAsDataURL(file);
-            } else {
-                preview.src = "";
-            }
-        }
-    </script>
 }
 
 @using (Html.BeginForm("CreateUser", "Admin63135414", FormMethod.Post, new { enctype = "multipart/form-data" }))

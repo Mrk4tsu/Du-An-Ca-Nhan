@@ -2,11 +2,13 @@
 using QuanLyPhanMem__63135414.Models;
 using QuanLyPhanMem__63135414.Models.Extension;
 using System;
+using System.Data.Entity;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
@@ -24,7 +26,7 @@ namespace QuanLyPhanMem__63135414.Controllers
         //Register Post Action
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Register([Bind(Exclude = "isActive,codeActive")] User user, HttpPostedFileBase userAvatar)
+        public ActionResult Register([Bind(Exclude = "isActive,codeActive")] User user, HttpPostedFileBase userAvatar, string newPassword, string confirmPassword)
         {
             bool status = false;
             string message = "";
@@ -48,16 +50,35 @@ namespace QuanLyPhanMem__63135414.Controllers
                 #endregion
 
                 #region Password Hashing
-                user.password = Utils.Hash(user.password);
-                user.confirmPassword = Utils.Hash(user.confirmPassword);
+                if (!string.IsNullOrEmpty(newPassword) && !string.IsNullOrEmpty(confirmPassword))
+                {
+                    // Only update password if both new password and confirm password are provided
+                    if (newPassword.Length < 6)
+                    {
+                        ModelState.AddModelError("newPassword", "Mật khẩu ít nhất phải có 6 ký tự!");
+                    }
+                    else if (newPassword != confirmPassword)
+                    {
+                        ModelState.AddModelError("confirmPassword", "Mật khẩu không khớp, vui lòng kiểm tra lại!");
+                    }
+                    else
+                    {
+                        // Update password if validation passes
+                        user.password = Utils.Hash(newPassword);
+                        user.confirmPassword = Utils.Hash(confirmPassword);
+                    }
+                }
                 #endregion
 
-                #region[Thiết lập 1 số thông tin mặc định]
-                user.userId = Utils.gI.getNewGuid();
+                #region[Thiết lập thông tin mặc định sau khi đăng kí]
+                user.userId = Utils.instance.getNewGuid();
                 user.isActive = false;
                 user.roleId = "R03";//Set mặc định là khách hàng
                 user.userWallpaper = "defaultwallpaper.png";
                 user.userAvatar = userAvatarPath;
+                user.address = "Chưa thiết lập";
+                user.birthday = DateTime.Now;
+                user.bio = string.Empty;
                 #endregion
 
                 #region Save to Database
@@ -173,6 +194,45 @@ namespace QuanLyPhanMem__63135414.Controllers
             return View(user);
         }
         #endregion
+        #region[Change Password]
+        public ActionResult ChangePassword()
+        {
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ChangePassword([Bind(Include = "password")] User user, string oldPassword, string newPassword)
+        {
+            bool status = false;
+            string message = "";
+            string newP = Utils.Hash(newPassword);
+            string oldP = Utils.Hash(oldPassword);
+            if (ModelState.IsValid)
+            {
+                using (QLPM63135414_Entities db = new QLPM63135414_Entities())
+                {
+                    user = (User)Session["User"];
+                    if (!oldP.Contains(user.password))
+                    {
+                        message = "Mật khẩu cũ nhập không đúng";
+                        return View(user);
+                    }
+                    if (oldP.Contains(newP))
+                    {
+                        message = "Mật khẩu này đã được sử dụng, vui lòng nhập mật khẩu khác!";
+                        return View(user);
+                    }
+                    db.Users.Add(user);
+                    await db.SaveChangesAsync();
+                    message = "Mật khẩu của bạn đã được thay đổi thành công!";
+                    status = true;
+                }
+            }
+            ViewBag.Message = message;
+            ViewBag.Status = status;
+            return View(user);
+        }
+        #endregion
         [Authorize]
         public ActionResult LogOut()
         {
@@ -245,6 +305,30 @@ namespace QuanLyPhanMem__63135414.Controllers
             }
         }
         [NonAction]
+        private UserViewModel getUserViewModel(User user)
+        {
+            return new UserViewModel
+            {
+                userId = user.userId,
+                roleId = user.roleId,
+                email = user.email,
+                password = user.password,
+                firstname = user.firstname,
+                lastname = user.lastname,
+                userAvatar = user.userAvatar,
+                userWallpaper = user.userWallpaper,
+                birthday = user.birthday,
+                address = user.address,
+                phoneNumber = user.phoneNumber,
+                bio = user.bio,
+                codeActive = user.codeActive,
+                isActive = user.isActive,
+                UserRole = user.UserRole
+            };
+        }
+        #endregion
+        [NonAction]
+        //Gửi email xác nhận link
         public void sendVerificationLinkEmail(string emailID, string activationCode)
         {
             var verifyUrl = "/Customer63135414/VerifyAccount/" + activationCode;
@@ -275,29 +359,5 @@ namespace QuanLyPhanMem__63135414.Controllers
             })
                 smtp.Send(message);
         }
-        [NonAction]
-        private UserViewModel getUserViewModel(User user)
-        {
-            return new UserViewModel
-            {
-                userId = user.userId,
-                roleId = user.roleId,
-                email = user.email,
-                password = user.password,
-                firstname = user.firstname,
-                lastname = user.lastname,
-                userAvatar = user.userAvatar,
-                userWallpaper = user.userWallpaper,
-                birthday = user.birthday,
-                address = user.address,
-                phoneNumber = user.phoneNumber,
-                bio = user.bio,
-                codeActive = user.codeActive,
-                isActive = user.isActive,
-                UserRole = user.UserRole
-            };
-        }
-        #endregion
-        
     }
 }

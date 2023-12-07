@@ -43,7 +43,7 @@ namespace QuanLyPhanMem__63135414.Controllers
 
             //Lấy danh sách Roles để hiển thị trong DropDownList
             ViewBag.Roles = new SelectList(db.UserRoles, "roleName", "roleName");
-           
+
             // Tạo danh sách cho DropDownList chọn pageSize
             // Lưu ý rằng pageSize được chuyển vào ViewBag.PageSizeList
             ViewBag.PageSizeList = new SelectList(new List<int> { 5, 10, 15, 20, 25, 50 }, pageSize);
@@ -88,10 +88,10 @@ namespace QuanLyPhanMem__63135414.Controllers
         #region[Tạo người dùng]
         public ActionResult CreateUser()
         {
-            ViewBag.USERID = Utils.gI.getNewGuid();
+            ViewBag.USERID = Utils.instance.getNewGuid();
             //Lấy danh sách Roles để hiển thị trong DropDownList
             ViewBag.Roles = new SelectList(db.UserRoles, "roleId", "roleName");
-            ViewBag.CodeActive = Utils.gI.getNewGuid();
+            ViewBag.CodeActive = Utils.instance.getNewGuid();
             return View();
         }
 
@@ -99,23 +99,23 @@ namespace QuanLyPhanMem__63135414.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult CreateUser(User user, HttpPostedFileBase userAvatar, HttpPostedFileBase userWallpaper)
         {
-            var userAvt = Utils.gI.SaveUploadedFile(userAvatar, "avatar", Utils.defaultAvatar);
-            var userWpp = Utils.gI.SaveUploadedFile(userWallpaper, "wallpaper", Utils.defaultWallpaper);
+            var userAvt = SaveUploadedFile(userAvatar, "avatar", Utils.AVATAR_DEFAULT);
+            var userWpp = SaveUploadedFile(userWallpaper, "wallpaper", Utils.WALLPAPER_DEFAULT);
             if (ModelState.IsValid)
             {
                 try
                 {
-                    if (Utils.isEmailExist(user.email))
+                    if (Utils.instance.isEmailExist(user.email))
                     {
                         ModelState.AddModelError("EmailExist", "Email đã tồn tại");
                         return View(user);
                     }
                     // Gọi private phương thức để xử lý logic tạo mới người dùng
                     // Thêm logic xử lý mật khẩu, mã hóa mật khẩu trước khi lưu vào database, v.v.
-                    user.userId = Utils.gI.getNewGuid();
+                    user.userId = Utils.instance.getNewGuid();
                     user.password = Utils.Hash(user.password);
                     user.confirmPassword = Utils.Hash(user.confirmPassword);
-                    user.codeActive = Utils.gI.getNewGuid();
+                    user.codeActive = Utils.instance.getNewGuid();
                     user.userAvatar = userAvt;
                     user.userWallpaper = userWpp;
                     // Thêm logic tạo mới người dùng
@@ -203,7 +203,60 @@ namespace QuanLyPhanMem__63135414.Controllers
                 return HttpNotFound();
             }
             ViewBag.AVARTAR = user.userAvatar;
+
             ViewBag.USERID = user.userId;
+            ViewBag.CurrentPass = user.password;
+            ViewBag.CodeActive = user.codeActive;
+            ViewBag.roleId = new SelectList(db.UserRoles, "roleId", "roleName", user.roleId);
+            return View(user);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Edit(string newPassword, [Bind(Include = "userId, roleId, email, password, firstname, lastname, userAvatar, userWallpaper, address, birthday, codeActive, isActive, phoneNumber, bio")] User user)
+        {
+            var imgNV = Request.Files["Avatar"];
+            var fileName = System.IO.Path.GetFileName(imgNV.FileName);
+            try
+            {
+                if (imgNV != null && imgNV.ContentLength > 0)
+                {
+                    // Lưu hình đại diện về Server
+
+                    var path = Server.MapPath("/assets/images/users/" + fileName);
+                    imgNV.SaveAs(path);
+
+                    // Resize và crop ảnh về kích thước 300x300
+                    var settings = new ResizeSettings
+                    {
+                        Width = 300,
+                        Height = 300,
+                        Mode = FitMode.Crop,
+                        Scale = ScaleMode.Both,
+                        Anchor = ContentAlignment.MiddleCenter,
+                    };
+
+                    ImageBuilder.Current.Build(path, path, settings);
+                }
+            }
+            catch { }
+            if (ModelState.IsValid)
+            {
+                var currentPass = user.password;
+                // Kiểm tra nếu newPassword được nhập và nếu nó khác với mật khẩu cũ
+                if (newPassword != currentPass)
+                {
+                    // Thực hiện các thao tác cần thiết với mật khẩu mới
+                    // Ví dụ: Hash mật khẩu mới trước khi lưu vào database
+                    user.password = Utils.Hash(newPassword);
+                }
+                else
+                {
+                    user.password = currentPass;
+                }
+                db.Entry(user).State = EntityState.Modified;
+                await db.SaveChangesAsync();
+                return RedirectToAction("ListUser");
+            }
             ViewBag.roleId = new SelectList(db.UserRoles, "roleId", "roleName", user.roleId);
             return View(user);
         }
@@ -211,6 +264,42 @@ namespace QuanLyPhanMem__63135414.Controllers
         public ActionResult Error()
         {
             return View();
+        }
+        [NonAction]
+        public string SaveUploadedFile(HttpPostedFileBase file, string subFolder, string fail)
+        {
+            if (file != null && file.ContentLength > 0)
+            {
+                var fileName = Path.GetFileName(file.FileName);
+                var directoryPath = Server.MapPath($"~/assets/{subFolder}");
+
+                // Tạo thư mục nếu không tồn tại
+                if (!Directory.Exists(directoryPath))
+                {
+                    Directory.CreateDirectory(directoryPath);
+                }
+
+                var filePath = Path.Combine(directoryPath, fileName);
+
+                // Lưu tệp lên máy chủ
+                file.SaveAs(filePath);
+
+                // Resize và crop ảnh về kích thước 300x300
+                var settings = new ResizeSettings
+                {
+                    Width = 300,
+                    Height = 300,
+                    Mode = FitMode.Crop,
+                    Scale = ScaleMode.Both,
+                    Anchor = ContentAlignment.MiddleCenter,
+                };
+
+                ImageBuilder.Current.Build(filePath, filePath, settings);
+
+                return fileName;
+            }
+
+            return fail;
         }
     }
 }

@@ -3,6 +3,8 @@ using System;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
@@ -11,11 +13,11 @@ namespace QuanLyPhanMem__63135414.Models.Extension
 {
     public class Utils : Controller
     {
-        public static readonly string defaultAvatar = "avatardefault.png";
-        public static readonly string defaultWallpaper = "defaultwallpaper.png";
+        public static readonly string AVATAR_DEFAULT = "avatardefault.png";
+        public static readonly string WALLPAPER_DEFAULT = "defaultwallpaper.png";
         //Singleton
-        public static Utils gI { get; } = new Utils();
-        public static bool isEmailExist(string email)
+        public static Utils instance { get; } = new Utils();
+        public bool isEmailExist(string email)
         {
             using (QLPM63135414_Entities db = new QLPM63135414_Entities())
             {
@@ -32,40 +34,19 @@ namespace QuanLyPhanMem__63135414.Models.Extension
         {
             return Convert.ToBase64String(System.Security.Cryptography.SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes(value)));
         }
-        public string SaveUploadedFile(HttpPostedFileBase file, string subFolder, string fail)
+        public void cropAndResizeImage(string path)
         {
-            if (file != null && file.ContentLength > 0)
+            var settings = new ResizeSettings
             {
-                var fileName = Path.GetFileName(file.FileName);
-                var directoryPath = Server.MapPath($"~/assets/{subFolder}");
+                Width = 300,
+                Height = 300,
+                Mode = FitMode.Crop,
+                Scale = ScaleMode.Both,
+                Anchor = ContentAlignment.MiddleCenter,
+            };
 
-                // Tạo thư mục nếu không tồn tại
-                if (!Directory.Exists(directoryPath))
-                {
-                    Directory.CreateDirectory(directoryPath);
-                }
-
-                var filePath = Path.Combine(directoryPath, fileName);
-
-                // Lưu tệp lên máy chủ
-                file.SaveAs(filePath);
-
-                // Resize và crop ảnh về kích thước 300x300
-                var settings = new ResizeSettings
-                {
-                    Width = 300,
-                    Height = 300,
-                    Mode = FitMode.Crop,
-                    Scale = ScaleMode.Both,
-                    Anchor = ContentAlignment.MiddleCenter,
-                };
-
-                ImageBuilder.Current.Build(filePath, filePath, settings);
-
-                return fileName;
-            }
-
-            return fail;
+            ImageBuilder.Current.Build(path, path, settings);
         }
+
     }
 }

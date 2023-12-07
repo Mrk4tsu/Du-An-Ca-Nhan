@@ -175,28 +175,24 @@
         </div>
     </div>
 
-    @*<script>
+    <script>
         function previewImage(input) {
-            var preview = document.getElementById('imagePreview');
-            while (preview.firstChild) {
-                preview.removeChild(preview.firstChild);
-            }
+            var previewId = "#" + input.id + "-preview";
+            var preview = $(previewId)[0];
+            var file = input.files[0];
+            var reader = new FileReader();
 
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
+            reader.onloadend = function () {
+                preview.src = reader.result;
+            };
 
-                reader.onload = function (e) {
-                    var image = document.createElement('img');
-                    image.src = e.target.result;
-                    image.className = 'img-fluid rounded'; // Optional: Make the image responsive
-                    preview.appendChild(image);
-                };
-
-                reader.readAsDataURL(input.files[0]);
+            if (file) {
+                reader.readAsDataURL(file);
+            } else {
+                preview.src = "";
             }
         }
-
-    </script>*@
+    </script>
     @RenderSection("Scripts", false)
     <!-- container-scroller -->
     <!-- plugins:js -->

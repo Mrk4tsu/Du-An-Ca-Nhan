@@ -18,17 +18,6 @@ namespace QuanLyPhanMem__63135414.Models
         [DataType(DataType.EmailAddress)]
         public string email { get; set; }
 
-        //password
-        [DataType(DataType.Password)]
-        [MinLength(6, ErrorMessage = "Mật khẩu ít nhất phải có 6 kí tự!")]
-        public string password { get; set; }
-
-
-        //confirmPassword
-        [DataType(DataType.Password)]
-        [Compare("password", ErrorMessage = "Mật khẩu không khớp, vui lòng kiểm tra lại!")]
-        public string confirmPassword { get; set; }
-
         //firstname
         [Required(AllowEmptyStrings = false, ErrorMessage = "Họ vui lòng không được để trống!")]
         public string firstname { get; set; }
@@ -39,7 +28,7 @@ namespace QuanLyPhanMem__63135414.Models
 
         //birthday
         [DataType(DataType.Date)]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime birthday { get; set; }
     }
 }
