@@ -2,7 +2,6 @@
 using QuanLyPhanMem__63135414.Models;
 using QuanLyPhanMem__63135414.Models.Extension;
 using System;
-using System.Data.Entity;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -10,7 +9,6 @@ using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
 using System.Web;
-using System.Web.Configuration;
 using System.Web.Mvc;
 using System.Web.Security;
 
@@ -65,14 +63,14 @@ namespace QuanLyPhanMem__63135414.Controllers
                     else
                     {
                         // Update password if validation passes
-                        user.password = Utils.Hash(newPassword);
-                        user.confirmPassword = Utils.Hash(confirmPassword);
+                        user.password = Utilities.Hash(newPassword);
+                        user.confirmPassword = Utilities.Hash(confirmPassword);
                     }
                 }
                 #endregion
 
                 #region[Thiết lập thông tin mặc định sau khi đăng kí]
-                user.userId = Utils.instance.getNewGuid();
+                user.userId = Utilities.instance.getNewGuid();
                 user.isActive = false;
                 user.roleId = "R03";//Set mặc định là khách hàng
                 user.userWallpaper = "defaultwallpaper.png";
@@ -147,7 +145,7 @@ namespace QuanLyPhanMem__63135414.Controllers
                 var v = db.Users.Where(em => em.email == user.email).FirstOrDefault();
                 if (v != null)
                 {
-                    if (string.Compare(Utils.Hash(user.password), v.password) == 0)
+                    if (string.Compare(Utilities.Hash(user.password), v.password) == 0)
                     {
                         //Dặt thời gian hết hạn của vé xác thực dựa trên việc người dùng có tick remember me
                         int timeOut = user.rememberMe ? 5256000 : 1; //5256000 phút = 1 năm
@@ -206,8 +204,8 @@ namespace QuanLyPhanMem__63135414.Controllers
         {
             bool status = false;
             string message = "";
-            string newP = Utils.Hash(newPassword);
-            string oldP = Utils.Hash(oldPassword);
+            string newP = Utilities.Hash(newPassword);
+            string oldP = Utilities.Hash(oldPassword);
             if (ModelState.IsValid)
             {
                 using (QLPM63135414_Entities db = new QLPM63135414_Entities())

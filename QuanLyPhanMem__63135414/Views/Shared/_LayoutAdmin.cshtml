@@ -46,13 +46,11 @@
                                 <img src="~/assets/avatar/@user.userAvatar" alt="profile" />
                             </a>
                             <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
-                                @using (Html.BeginForm("UserProfile", "Customer63135414", FormMethod.Get, new { id = "profileForm" }))
-                                {
-                                    <a href="javascript:document.getElementById('profileForm').submit()" class="dropdown-item">
-                                        <i class="ti-user text-primary"></i>
-                                        @user.firstname @user.lastname
-                                    </a>
-                                }
+
+                                <a href="@Url.Action("DetailsUser", "Admin63135414", new {id = user.userId})" class="dropdown-item">
+                                    <i class="ti-user text-primary"></i>
+                                    @user.firstname @user.lastname
+                                </a>
 
                                 <a class="dropdown-item">
                                     <i class="ti-settings text-primary"></i>
@@ -100,7 +98,7 @@
                     <li class="nav-item">
                         <a class="nav-link" href="@Url.Action("ListProject", "Projects63135414")">
                             <i class="ti-package menu-icon"></i>
-                            <span class="menu-title">Dự án</span>
+                            <span class="menu-title">Sản phẩm</span>
                         </a>
                     </li>
                     <li class="nav-item">
@@ -125,7 +123,7 @@
                             <ul class="nav flex-column sub-menu">
                                 <li class="nav-item"> <a class="nav-link" href="@Url.Action("CreateUser", "Admin63135414")"> Người dùng </a></li>
                                 <li class="nav-item"> <a class="nav-link" href="@Url.Action("CreateProject", "Projects63135414")"> Dự án </a></li>
-                                <li class="nav-item"> <a class="nav-link" href="@Url.Action("CreateCategory", "Categories63135414" )"> Danh mục </a></li>
+                                <li class="nav-item"> <a class="nav-link" href="@Url.Action("CreateCategory", "Category63135414" )"> Danh mục </a></li>
                                 <li class="nav-item"> <a class="nav-link" href="@Url.Action("CreateImage", "Images63135414" )"> Hình ảnh </a></li>
                             </ul>
                         </div>
