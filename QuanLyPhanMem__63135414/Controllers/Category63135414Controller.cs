@@ -2,12 +2,14 @@
 using ImageResizer.Util;
 using QuanLyPhanMem__63135414.Models;
 using QuanLyPhanMem__63135414.Models.Extension;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Linq.Dynamic;
+using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -75,6 +77,38 @@ namespace QuanLyPhanMem__63135414.Controllers
                 return RedirectToAction("ListCategory");
             }
             return View(category);
+        }
+        #endregion
+        #region[Xóa danh mục]
+        public ActionResult Delete(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            // Tìm người dùng theo id
+            var categoriesToDelete = db.Categories.Find(id);
+
+            if (categoriesToDelete == null)
+            {
+                return HttpNotFound();
+            }
+
+            try
+            {
+                // Xóa người dùng
+                db.Categories.Remove(categoriesToDelete);
+                db.SaveChanges();
+
+                return RedirectToAction("ListCategory");
+            }
+            catch (Exception ex)
+            {
+                // Xử lý lỗi nếu cần
+                ViewBag.Error = "Không thể xóa danh mục. " + ex.Message;
+                return View("Error");
+            }
         }
         #endregion
         private string SaveUploadedFile(HttpPostedFileBase file, string subFolder)
