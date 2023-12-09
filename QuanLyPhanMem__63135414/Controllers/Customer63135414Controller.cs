@@ -2,6 +2,7 @@
 using QuanLyPhanMem__63135414.Models;
 using QuanLyPhanMem__63135414.Models.Extension;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -25,7 +26,7 @@ namespace QuanLyPhanMem__63135414.Controllers
         //Register Post Action
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Register([Bind(Exclude = "isActive,codeActive")] User user, HttpPostedFileBase userAvatar, string newPassword, string confirmPassword)
+        public ActionResult Register([Bind(Exclude = "isActive,codeActive")] User user, HttpPostedFileBase userAvatar, string password, string confirmPassword)
         {
             bool status = false;
             string message = "";
@@ -49,21 +50,21 @@ namespace QuanLyPhanMem__63135414.Controllers
                 #endregion
 
                 #region Password Hashing
-                if (!string.IsNullOrEmpty(newPassword) && !string.IsNullOrEmpty(confirmPassword))
+                if (!string.IsNullOrEmpty(password) && !string.IsNullOrEmpty(confirmPassword))
                 {
                     // Only update password if both new password and confirm password are provided
-                    if (newPassword.Length < 6)
+                    if (password.Length < 6)
                     {
                         ModelState.AddModelError("newPassword", "Mật khẩu ít nhất phải có 6 ký tự!");
                     }
-                    else if (newPassword != confirmPassword)
+                    else if (password.Equals(confirmPassword))
                     {
                         ModelState.AddModelError("confirmPassword", "Mật khẩu không khớp, vui lòng kiểm tra lại!");
                     }
                     else
                     {
                         // Update password if validation passes
-                        user.password = Utilities.Hash(newPassword);
+                        user.password = Utilities.Hash(password);
                         user.confirmPassword = Utilities.Hash(confirmPassword);
                     }
                 }
@@ -253,7 +254,7 @@ namespace QuanLyPhanMem__63135414.Controllers
         {
             using (QLPM63135414_Entities db = new QLPM63135414_Entities())
             {
-                ViewBag.Categories = db.Categories.ToList();
+                ViewBag.Categories = db.Categories.ToList().OrderBy(c => c.categoryName);
             }
             return View();
         }

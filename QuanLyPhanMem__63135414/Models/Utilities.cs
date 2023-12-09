@@ -15,6 +15,8 @@ namespace QuanLyPhanMem__63135414.Models.Extension
     {
         public static readonly string AVATAR_DEFAULT = "avatardefault.png";
         public static readonly string WALLPAPER_DEFAULT = "defaultwallpaper.png";
+        internal static readonly string CATEGORY_DEFAULT = "defaultctg.png";
+
         //Singleton
         public static Utilities instance { get; } = new Utilities();
         public bool isEmailExist(string email)

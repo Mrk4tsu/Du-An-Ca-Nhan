@@ -136,7 +136,6 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\Admin63135414Controller.cs" />
-    <Compile Include="Controllers\CategoriesController.cs" />
     <Compile Include="Controllers\Category63135414Controller.cs" />
     <Compile Include="Controllers\Customer63135414Controller.cs" />
     <Compile Include="Global.asax.cs">
@@ -489,12 +488,8 @@
     <Content Include="Views\Admin63135414\Edit.cshtml" />
     <Content Include="Views\Customer63135414\ChangePassword.cshtml" />
     <Content Include="Views\Category63135414\ListCategory.cshtml" />
-    <Content Include="Views\Categories\Create.cshtml" />
-    <Content Include="Views\Categories\Delete.cshtml" />
-    <Content Include="Views\Categories\Details.cshtml" />
-    <Content Include="Views\Categories\Edit.cshtml" />
-    <Content Include="Views\Categories\Index.cshtml" />
     <Content Include="Views\Category63135414\CreateCategory.cshtml" />
+    <Content Include="Views\Category63135414\EditCategory.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

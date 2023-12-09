@@ -12,6 +12,7 @@ using System.Linq.Dynamic;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Configuration;
 using System.Web.Mvc;
 
 namespace QuanLyPhanMem__63135414.Controllers
@@ -20,7 +21,7 @@ namespace QuanLyPhanMem__63135414.Controllers
     {
         QLPM63135414_Entities db = new QLPM63135414_Entities();
         #region[Danh sách]
-        public async Task<ActionResult> ListCategory(string search = "", int page = 1, string sort = "categoryName", string sortDir = "asc", int pageSize = 5)
+        public async Task<ActionResult> ListCategory(string search = "", int page = 1, string sort = "categoryName", string sortDir = "asc", int pageSize = 10)
         {
             //Logic phân trang khi truy vấn danh sách
             int totalRecord = 0;
@@ -66,7 +67,7 @@ namespace QuanLyPhanMem__63135414.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> CreateCategory([Bind(Include = "id,categoryName,categoryImage")] Category category, HttpPostedFileBase categoryImage)
         {
-            var imgCategory = SaveUploadedFile(categoryImage, "category");
+            var imgCategory = SaveUploadedFile(categoryImage, "category", Utilities.CATEGORY_DEFAULT);
             if (ModelState.IsValid)
             {
                 category.id = Utilities.instance.getIdCategory();
@@ -111,7 +112,45 @@ namespace QuanLyPhanMem__63135414.Controllers
             }
         }
         #endregion
-        private string SaveUploadedFile(HttpPostedFileBase file, string subFolder)
+        #region[Edit]
+        public async Task<ActionResult> EditCategory(string id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Category category = await db.Categories.FindAsync(id);
+            if (category == null)
+            {
+                return HttpNotFound();
+            }
+
+            ViewBag.CategoryID = category.id;
+            ViewBag.CategoryImg = category.categoryImage;
+            return View(category);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> EditCategory([Bind(Include = "id, categoryName, categoryImage")] Category category, HttpPostedFileBase categoryImage)
+        {
+            var newCategoryImg = SaveUploadedFile(categoryImage, "category", null);
+            if (ModelState.IsValid)
+            {
+                db.Entry(category).State = EntityState.Modified;
+
+                var currentImg = category.categoryImage;
+                if (!string.IsNullOrEmpty(newCategoryImg) && newCategoryImg != currentImg)
+                {
+                    category.categoryImage = newCategoryImg;
+                }
+                await db.SaveChangesAsync();
+                return RedirectToAction("ListCategory");
+            }
+            return View(category);
+        }
+        #endregion
+        [NonAction]
+        private string SaveUploadedFile(HttpPostedFileBase file, string subFolder, string fail)
         {
             if (file != null && file.ContentLength > 0)
             {
@@ -144,7 +183,7 @@ namespace QuanLyPhanMem__63135414.Controllers
                 return fileName;
             }
 
-            return "defaultctg.png";
+            return fail;
         }
     }
 }
