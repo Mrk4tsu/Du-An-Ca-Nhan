@@ -88,10 +88,10 @@ namespace QuanLyPhanMem__63135414.Controllers
         #region[Tạo người dùng]
         public ActionResult CreateUser()
         {
-            ViewBag.USERID = Utils.instance.getNewGuid();
+            ViewBag.USERID = Utilities.instance.getNewGuid();
             //Lấy danh sách Roles để hiển thị trong DropDownList
             ViewBag.Roles = new SelectList(db.UserRoles, "roleId", "roleName");
-            ViewBag.CodeActive = Utils.instance.getNewGuid();
+            ViewBag.CodeActive = Utilities.instance.getNewGuid();
             return View();
         }
 
@@ -99,23 +99,23 @@ namespace QuanLyPhanMem__63135414.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult CreateUser(User user, HttpPostedFileBase userAvatar, HttpPostedFileBase userWallpaper)
         {
-            var userAvt = SaveUploadedFile(userAvatar, "avatar", Utils.AVATAR_DEFAULT);
-            var userWpp = SaveUploadedFile(userWallpaper, "wallpaper", Utils.WALLPAPER_DEFAULT);
+            var userAvt = SaveUploadedFile(userAvatar, "avatar", Utilities.AVATAR_DEFAULT);
+            var userWpp = SaveUploadedFile(userWallpaper, "wallpaper", Utilities.WALLPAPER_DEFAULT);
             if (ModelState.IsValid)
             {
                 try
                 {
-                    if (Utils.instance.isEmailExist(user.email))
+                    if (Utilities.instance.isEmailExist(user.email))
                     {
                         ModelState.AddModelError("EmailExist", "Email đã tồn tại");
                         return View(user);
                     }
                     // Gọi private phương thức để xử lý logic tạo mới người dùng
                     // Thêm logic xử lý mật khẩu, mã hóa mật khẩu trước khi lưu vào database, v.v.
-                    user.userId = Utils.instance.getNewGuid();
-                    user.password = Utils.Hash(user.password);
-                    user.confirmPassword = Utils.Hash(user.confirmPassword);
-                    user.codeActive = Utils.instance.getNewGuid();
+                    user.userId = Utilities.instance.getNewGuid();
+                    user.password = Utilities.Hash(user.password);
+                    user.confirmPassword = Utilities.Hash(user.confirmPassword);
+                    user.codeActive = Utilities.instance.getNewGuid();
                     user.userAvatar = userAvt;
                     user.userWallpaper = userWpp;
                     // Thêm logic tạo mới người dùng
@@ -224,7 +224,7 @@ namespace QuanLyPhanMem__63135414.Controllers
                 var currentPass = user.password;
                 // Kiểm tra nếu newPassword được nhập và nếu nó khác với mật khẩu cũ
                 if (newPassword != currentPass)
-                    user.password = Utils.Hash(newPassword);
+                    user.password = Utilities.Hash(newPassword);
                 else
                     user.password = currentPass;
                 #endregion

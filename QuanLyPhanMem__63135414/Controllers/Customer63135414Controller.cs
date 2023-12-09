@@ -2,7 +2,7 @@
 using QuanLyPhanMem__63135414.Models;
 using QuanLyPhanMem__63135414.Models.Extension;
 using System;
-using System.Data.Entity;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -26,7 +26,7 @@ namespace QuanLyPhanMem__63135414.Controllers
         //Register Post Action
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Register([Bind(Exclude = "isActive,codeActive")] User user, HttpPostedFileBase userAvatar, string newPassword, string confirmPassword)
+        public ActionResult Register([Bind(Exclude = "isActive,codeActive")] User user, HttpPostedFileBase userAvatar, string password, string confirmPassword)
         {
             bool status = false;
             string message = "";
@@ -50,28 +50,28 @@ namespace QuanLyPhanMem__63135414.Controllers
                 #endregion
 
                 #region Password Hashing
-                if (!string.IsNullOrEmpty(newPassword) && !string.IsNullOrEmpty(confirmPassword))
+                if (!string.IsNullOrEmpty(password) && !string.IsNullOrEmpty(confirmPassword))
                 {
                     // Only update password if both new password and confirm password are provided
-                    if (newPassword.Length < 6)
+                    if (password.Length < 6)
                     {
                         ModelState.AddModelError("newPassword", "Mật khẩu ít nhất phải có 6 ký tự!");
                     }
-                    else if (newPassword != confirmPassword)
+                    else if (password.Equals(confirmPassword))
                     {
                         ModelState.AddModelError("confirmPassword", "Mật khẩu không khớp, vui lòng kiểm tra lại!");
                     }
                     else
                     {
                         // Update password if validation passes
-                        user.password = Utils.Hash(newPassword);
-                        user.confirmPassword = Utils.Hash(confirmPassword);
+                        user.password = Utilities.Hash(password);
+                        user.confirmPassword = Utilities.Hash(confirmPassword);
                     }
                 }
                 #endregion
 
                 #region[Thiết lập thông tin mặc định sau khi đăng kí]
-                user.userId = Utils.instance.getNewGuid();
+                user.userId = Utilities.instance.getNewGuid();
                 user.isActive = false;
                 user.roleId = "R03";//Set mặc định là khách hàng
                 user.userWallpaper = "defaultwallpaper.png";
@@ -146,7 +146,7 @@ namespace QuanLyPhanMem__63135414.Controllers
                 var v = db.Users.Where(em => em.email == user.email).FirstOrDefault();
                 if (v != null)
                 {
-                    if (string.Compare(Utils.Hash(user.password), v.password) == 0)
+                    if (string.Compare(Utilities.Hash(user.password), v.password) == 0)
                     {
                         //Dặt thời gian hết hạn của vé xác thực dựa trên việc người dùng có tick remember me
                         int timeOut = user.rememberMe ? 5256000 : 1; //5256000 phút = 1 năm
@@ -205,8 +205,8 @@ namespace QuanLyPhanMem__63135414.Controllers
         {
             bool status = false;
             string message = "";
-            string newP = Utils.Hash(newPassword);
-            string oldP = Utils.Hash(oldPassword);
+            string newP = Utilities.Hash(newPassword);
+            string oldP = Utilities.Hash(oldPassword);
             if (ModelState.IsValid)
             {
                 using (QLPM63135414_Entities db = new QLPM63135414_Entities())
@@ -252,6 +252,10 @@ namespace QuanLyPhanMem__63135414.Controllers
         [Authorize]
         public ActionResult Home()
         {
+            using (QLPM63135414_Entities db = new QLPM63135414_Entities())
+            {
+                ViewBag.Categories = db.Categories.ToList().OrderBy(c => c.categoryName);
+            }
             return View();
         }
         public ActionResult Error()

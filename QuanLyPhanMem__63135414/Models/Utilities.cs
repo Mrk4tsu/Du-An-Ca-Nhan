@@ -11,12 +11,14 @@ using System.Web.Mvc;
 
 namespace QuanLyPhanMem__63135414.Models.Extension
 {
-    public class Utils : Controller
+    public class Utilities : Controller
     {
         public static readonly string AVATAR_DEFAULT = "avatardefault.png";
         public static readonly string WALLPAPER_DEFAULT = "defaultwallpaper.png";
+        internal static readonly string CATEGORY_DEFAULT = "defaultctg.png";
+
         //Singleton
-        public static Utils instance { get; } = new Utils();
+        public static Utilities instance { get; } = new Utilities();
         public bool isEmailExist(string email)
         {
             using (QLPM63135414_Entities db = new QLPM63135414_Entities())
@@ -29,6 +31,17 @@ namespace QuanLyPhanMem__63135414.Models.Extension
         {
             Guid guid = Guid.NewGuid();
             return guid.ToString();
+        }
+        public string getIdCategory()
+        {
+            using (QLPM63135414_Entities db = new QLPM63135414_Entities())
+            {
+                var maMax = db.Categories.ToList().Select(n => n.id).Max();
+                //CATE001
+                int maNV = int.Parse(maMax.Substring(4)) + 1;
+                string NV = String.Concat("00", maNV.ToString());
+                return "CATE" + NV.Substring(maNV.ToString().Length - 1);
+            }
         }
         public static string Hash(string value)
         {
