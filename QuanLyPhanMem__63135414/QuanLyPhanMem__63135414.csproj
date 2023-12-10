@@ -138,6 +138,9 @@
     <Compile Include="Controllers\Admin63135414Controller.cs" />
     <Compile Include="Controllers\Category63135414Controller.cs" />
     <Compile Include="Controllers\Customer63135414Controller.cs" />
+    <Compile Include="Controllers\Product63135414Controller.cs" />
+    <Compile Include="Controllers\ProductImagesController.cs" />
+    <Compile Include="Controllers\ProductsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -490,6 +493,17 @@
     <Content Include="Views\Category63135414\ListCategory.cshtml" />
     <Content Include="Views\Category63135414\CreateCategory.cshtml" />
     <Content Include="Views\Category63135414\EditCategory.cshtml" />
+    <Content Include="Views\Products\Create.cshtml" />
+    <Content Include="Views\Products\Delete.cshtml" />
+    <Content Include="Views\Products\Details.cshtml" />
+    <Content Include="Views\Products\Edit.cshtml" />
+    <Content Include="Views\Products\Index.cshtml" />
+    <Content Include="Views\Product63135414\ListProduct.cshtml" />
+    <Content Include="Views\ProductImages\Create.cshtml" />
+    <Content Include="Views\ProductImages\Delete.cshtml" />
+    <Content Include="Views\ProductImages\Details.cshtml" />
+    <Content Include="Views\ProductImages\Edit.cshtml" />
+    <Content Include="Views\ProductImages\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
