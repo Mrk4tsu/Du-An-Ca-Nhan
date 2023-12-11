@@ -15,10 +15,10 @@ namespace QuanLyPhanMem__63135414.Models
     using System.Data.Entity.Core.Objects;
     using System.Linq;
     
-    public partial class QLPM63135414_Entities : DbContext
+    public partial class QLPM_63135414_Entities : DbContext
     {
-        public QLPM63135414_Entities()
-            : base("name=QLPM63135414_Entities")
+        public QLPM_63135414_Entities()
+            : base("name=QLPM_63135414_Entities")
         {
         }
     
@@ -38,6 +38,7 @@ namespace QuanLyPhanMem__63135414.Models
         public virtual DbSet<PaymentMethod> PaymentMethods { get; set; }
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<ProductImage> ProductImages { get; set; }
+        public virtual DbSet<ProductInCategory> ProductInCategories { get; set; }
         public virtual DbSet<Promotion> Promotions { get; set; }
         public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
         public virtual DbSet<UserRole> UserRoles { get; set; }

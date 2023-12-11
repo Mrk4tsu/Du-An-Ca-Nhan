@@ -19,7 +19,7 @@ namespace QuanLyPhanMem__63135414.Controllers
 {
     public class Category63135414Controller : Controller
     {
-        QLPM63135414_Entities db = new QLPM63135414_Entities();
+        QLPM_63135414_Entities db = new QLPM_63135414_Entities();
         #region[Danh sách]
         public async Task<ActionResult> ListCategory(string search = "", int page = 1, string sort = "categoryName", string sortDir = "asc", int pageSize = 10)
         {

@@ -45,7 +45,7 @@
      columns: new[] {
             grid.Column("STT", format: item => item.WebGrid.Rows.IndexOf(item) + 1 + Math.Round(Convert.ToDouble(grid.TotalRowCount / grid.PageCount) / grid.RowsPerPage) * grid.RowsPerPage * grid.PageIndex, canSort: false),
 
-          grid.Column(format:@<text> <a href="@Url.Action("DetailsUser", "Admin63135414", new {id = item.userId})"><img class="rounded-circle" src="~/assets/avatar/@item.userAvatar" style="width:30px;" /></a> </text>, header: "Người đăng"),
+          grid.Column(format:@<text> <a href="@Url.Action("DetailsUser", "Admin63135414", new {id = item.userId})"><img class="img-fluid" src="~/assets/avatar/@item.User.userAvatar" style="width:30px;height:30px;" /></a> </text>, header: "Người đăng"),
 grid.Column(columnName: "id", header: "Mã sản phẩm"),
 grid.Column(columnName: "productName", header: "Tên sản phẩm"),
 grid.Column(columnName: "priceOriginal", header: "Giá gốc"),

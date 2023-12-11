@@ -122,6 +122,7 @@
           </Key>
           <Property Name="categoryId" Type="varchar" MaxLength="10" Nullable="false" />
           <Property Name="productId" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="description" Type="varchar" MaxLength="255" />
         </EntityType>
         <EntityType Name="ProductPromotion">
           <Key>
@@ -534,7 +535,7 @@
           <Property Name="id" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="categoryName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="categoryImage" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="Products" Relationship="Self.ProductInCategory" FromRole="Category" ToRole="Product" />
+          <NavigationProperty Name="ProductInCategories" Relationship="Self.FK__ProductIn__categ__412EB0B6" FromRole="Category" ToRole="ProductInCategory" />
         </EntityType>
         <EntityType Name="History">
           <Key>
@@ -623,7 +624,7 @@
           <NavigationProperty Name="OrderDetails" Relationship="Self.FK__OrderDeta__produ__5812160E" FromRole="Product" ToRole="OrderDetail" />
           <NavigationProperty Name="User" Relationship="Self.FK__Product__userId__3E52440B" FromRole="Product" ToRole="Users" />
           <NavigationProperty Name="ProductImages" Relationship="Self.FK__ProductIm__produ__44FF419A" FromRole="Product" ToRole="ProductImage" />
-          <NavigationProperty Name="Categories" Relationship="Self.ProductInCategory" FromRole="Product" ToRole="Category" />
+          <NavigationProperty Name="ProductInCategories" Relationship="Self.FK__ProductIn__produ__4222D4EF" FromRole="Product" ToRole="ProductInCategory" />
           <NavigationProperty Name="Promotions" Relationship="Self.ProductPromotion" FromRole="Product" ToRole="Promotion" />
         </EntityType>
         <EntityType Name="ProductImage">
@@ -637,6 +638,17 @@
           <Property Name="imgDefault" Type="Boolean" />
           <Property Name="dateCreate" Type="DateTime" Precision="0" />
           <NavigationProperty Name="Product" Relationship="Self.FK__ProductIm__produ__44FF419A" FromRole="ProductImage" ToRole="Product" />
+        </EntityType>
+        <EntityType Name="ProductInCategory">
+          <Key>
+            <PropertyRef Name="categoryId" />
+            <PropertyRef Name="productId" />
+          </Key>
+          <Property Name="categoryId" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="productId" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="description" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Category" Relationship="Self.FK__ProductIn__categ__412EB0B6" FromRole="ProductInCategory" ToRole="Category" />
+          <NavigationProperty Name="Product" Relationship="Self.FK__ProductIn__produ__4222D4EF" FromRole="ProductInCategory" ToRole="Product" />
         </EntityType>
         <EntityType Name="Promotion">
           <Key>
@@ -725,6 +737,18 @@
             </Principal>
             <Dependent Role="CartDetail">
               <PropertyRef Name="productId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ProductIn__categ__412EB0B6">
+          <End Role="Category" Type="Self.Category" Multiplicity="1" />
+          <End Role="ProductInCategory" Type="Self.ProductInCategory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="ProductInCategory">
+              <PropertyRef Name="categoryId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -836,6 +860,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK__ProductIn__produ__4222D4EF">
+          <End Role="Product" Type="Self.Product" Multiplicity="1" />
+          <End Role="ProductInCategory" Type="Self.ProductInCategory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="ProductInCategory">
+              <PropertyRef Name="productId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK__Users__roleId__398D8EEE">
           <End Role="UserRole" Type="Self.UserRole" Multiplicity="0..1" />
           <End Role="Users" Type="Self.User" Multiplicity="*" />
@@ -848,15 +884,11 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="ProductInCategory">
-          <End Role="Category" Type="Self.Category" Multiplicity="*" />
-          <End Role="Product" Type="Self.Product" Multiplicity="*" />
-        </Association>
         <Association Name="ProductPromotion">
           <End Role="Product" Type="Self.Product" Multiplicity="*" />
           <End Role="Promotion" Type="Self.Promotion" Multiplicity="*" />
         </Association>
-        <EntityContainer Name="QLPM63135414_Entities" annotation:LazyLoadingEnabled="true">
+        <EntityContainer Name="QLPM_63135414_Entities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Carts" EntityType="Self.Cart" />
           <EntitySet Name="CartDetails" EntityType="Self.CartDetail" />
           <EntitySet Name="Categories" EntityType="Self.Category" />
@@ -868,6 +900,7 @@
           <EntitySet Name="PaymentMethods" EntityType="Self.PaymentMethod" />
           <EntitySet Name="Products" EntityType="Self.Product" />
           <EntitySet Name="ProductImages" EntityType="Self.ProductImage" />
+          <EntitySet Name="ProductInCategories" EntityType="Self.ProductInCategory" />
           <EntitySet Name="Promotions" EntityType="Self.Promotion" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
           <EntitySet Name="UserRoles" EntityType="Self.UserRole" />
@@ -883,6 +916,10 @@
           <AssociationSet Name="FK__CartDetai__produ__5165187F" Association="Self.FK__CartDetai__produ__5165187F">
             <End Role="Product" EntitySet="Products" />
             <End Role="CartDetail" EntitySet="CartDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ProductIn__categ__412EB0B6" Association="Self.FK__ProductIn__categ__412EB0B6">
+            <End Role="Category" EntitySet="Categories" />
+            <End Role="ProductInCategory" EntitySet="ProductInCategories" />
           </AssociationSet>
           <AssociationSet Name="FK__History__userId__6383C8BA" Association="Self.FK__History__userId__6383C8BA">
             <End Role="Users" EntitySet="Users" />
@@ -920,13 +957,13 @@
             <End Role="Product" EntitySet="Products" />
             <End Role="ProductImage" EntitySet="ProductImages" />
           </AssociationSet>
+          <AssociationSet Name="FK__ProductIn__produ__4222D4EF" Association="Self.FK__ProductIn__produ__4222D4EF">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="ProductInCategory" EntitySet="ProductInCategories" />
+          </AssociationSet>
           <AssociationSet Name="FK__Users__roleId__398D8EEE" Association="Self.FK__Users__roleId__398D8EEE">
             <End Role="UserRole" EntitySet="UserRoles" />
             <End Role="Users" EntitySet="Users" />
-          </AssociationSet>
-          <AssociationSet Name="ProductInCategory" Association="Self.ProductInCategory">
-            <End Role="Category" EntitySet="Categories" />
-            <End Role="Product" EntitySet="Products" />
           </AssociationSet>
           <AssociationSet Name="ProductPromotion" Association="Self.ProductPromotion">
             <End Role="Product" EntitySet="Products" />
@@ -979,7 +1016,7 @@
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="QLPM63135414ModelStoreContainer" CdmEntityContainer="QLPM63135414_Entities">
+        <EntityContainerMapping StorageEntityContainer="QLPM63135414ModelStoreContainer" CdmEntityContainer="QLPM_63135414_Entities">
           <EntitySetMapping Name="Carts">
             <EntityTypeMapping TypeName="QLPM63135414Model.Cart">
               <MappingFragment StoreEntitySet="Cart">
@@ -1101,6 +1138,15 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="ProductInCategories">
+            <EntityTypeMapping TypeName="QLPM63135414Model.ProductInCategory">
+              <MappingFragment StoreEntitySet="ProductInCategory">
+                <ScalarProperty Name="categoryId" ColumnName="categoryId" />
+                <ScalarProperty Name="productId" ColumnName="productId" />
+                <ScalarProperty Name="description" ColumnName="description" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Promotions">
             <EntityTypeMapping TypeName="QLPM63135414Model.Promotion">
               <MappingFragment StoreEntitySet="Promotion">
@@ -1152,14 +1198,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <AssociationSetMapping Name="ProductInCategory" TypeName="QLPM63135414Model.ProductInCategory" StoreEntitySet="ProductInCategory">
-            <EndProperty Name="Category">
-              <ScalarProperty Name="id" ColumnName="categoryId" />
-            </EndProperty>
-            <EndProperty Name="Product">
-              <ScalarProperty Name="id" ColumnName="productId" />
-            </EndProperty>
-          </AssociationSetMapping>
           <AssociationSetMapping Name="ProductPromotion" TypeName="QLPM63135414Model.ProductPromotion" StoreEntitySet="ProductPromotion">
             <EndProperty Name="Product">
               <ScalarProperty Name="id" ColumnName="productId" />

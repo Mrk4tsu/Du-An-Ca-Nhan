@@ -18,13 +18,13 @@ namespace QuanLyPhanMem__63135414.Controllers
 {
     public class Admin63135414Controller : Controller
     {
-        private QLPM63135414_Entities db = new QLPM63135414_Entities();
+        private QLPM_63135414_Entities db = new QLPM_63135414_Entities();
         // GET: Admin63135414
         [HttpGet]
         [Authorize]
         public async Task<ActionResult> AdminHome()
         {
-            using (QLPM63135414_Entities db = new QLPM63135414_Entities())
+            using (QLPM_63135414_Entities db = new QLPM_63135414_Entities())
             {
                 ViewBag.TotalUsers = await db.Users.CountAsync();
                 ViewBag.TotalCategories = await db.Categories.CountAsync();

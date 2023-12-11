@@ -13,7 +13,7 @@ namespace QuanLyPhanMem__63135414.Controllers
 {
     public class ProductImagesController : Controller
     {
-        private QLPM63135414_Entities db = new QLPM63135414_Entities();
+        private QLPM_63135414_Entities db = new QLPM_63135414_Entities();
 
         // GET: ProductImages
         public async Task<ActionResult> Index()

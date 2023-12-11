@@ -21,7 +21,7 @@ namespace QuanLyPhanMem__63135414.Models.Extension
         public static Utilities instance { get; } = new Utilities();
         public bool isEmailExist(string email)
         {
-            using (QLPM63135414_Entities db = new QLPM63135414_Entities())
+            using (QLPM_63135414_Entities db = new QLPM_63135414_Entities())
             {
                 var v = db.Users.Where(e => e.email == email).FirstOrDefault();
                 return v != null;
@@ -34,7 +34,7 @@ namespace QuanLyPhanMem__63135414.Models.Extension
         }
         public string getIdCategory()
         {
-            using (QLPM63135414_Entities db = new QLPM63135414_Entities())
+            using (QLPM_63135414_Entities db = new QLPM_63135414_Entities())
             {
                 var maMax = db.Categories.ToList().Select(n => n.id).Max();
                 //CATE001

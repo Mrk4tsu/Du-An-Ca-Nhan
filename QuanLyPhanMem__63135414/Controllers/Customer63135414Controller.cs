@@ -82,7 +82,7 @@ namespace QuanLyPhanMem__63135414.Controllers
                 #endregion
 
                 #region Save to Database
-                using (QLPM63135414_Entities db = new QLPM63135414_Entities())
+                using (QLPM_63135414_Entities db = new QLPM_63135414_Entities())
                 {
                     db.Users.Add(user);
                     db.SaveChanges();
@@ -107,7 +107,7 @@ namespace QuanLyPhanMem__63135414.Controllers
         public ActionResult VerifyAccount(string id)
         {
             bool status = false;
-            using (QLPM63135414_Entities db = new QLPM63135414_Entities())
+            using (QLPM_63135414_Entities db = new QLPM_63135414_Entities())
             {
                 //Dòng này thêm vào đây để tránh xác nhận mật khẩu không khớp với vấn đề khi lưu thay đổi
                 db.Configuration.ValidateOnSaveEnabled = false;
@@ -141,7 +141,7 @@ namespace QuanLyPhanMem__63135414.Controllers
         public ActionResult Login(UserLogin user, string returnUrl = "")
         {
             string message = "";
-            using (QLPM63135414_Entities db = new QLPM63135414_Entities())
+            using (QLPM_63135414_Entities db = new QLPM_63135414_Entities())
             {
                 var v = db.Users.Where(em => em.email == user.email).FirstOrDefault();
                 if (v != null)
@@ -209,7 +209,7 @@ namespace QuanLyPhanMem__63135414.Controllers
             string oldP = Utilities.Hash(oldPassword);
             if (ModelState.IsValid)
             {
-                using (QLPM63135414_Entities db = new QLPM63135414_Entities())
+                using (QLPM_63135414_Entities db = new QLPM_63135414_Entities())
                 {
                     user = (User)Session["User"];
                     if (!oldP.Contains(user.password))
@@ -252,7 +252,7 @@ namespace QuanLyPhanMem__63135414.Controllers
         [Authorize]
         public ActionResult Home()
         {
-            using (QLPM63135414_Entities db = new QLPM63135414_Entities())
+            using (QLPM_63135414_Entities db = new QLPM_63135414_Entities())
             {
                 ViewBag.Categories = db.Categories.ToList().OrderBy(c => c.categoryName);
             }
@@ -302,7 +302,7 @@ namespace QuanLyPhanMem__63135414.Controllers
         [NonAction]
         private bool isEmailExist(string email)
         {
-            using (QLPM63135414_Entities db = new QLPM63135414_Entities())
+            using (QLPM_63135414_Entities db = new QLPM_63135414_Entities())
             {
                 var v = db.Users.Where(e => e.email == email).FirstOrDefault();
                 return v != null;
