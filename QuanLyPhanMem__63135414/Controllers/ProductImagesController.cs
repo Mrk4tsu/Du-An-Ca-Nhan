@@ -40,7 +40,7 @@ namespace QuanLyPhanMem__63135414.Controllers
         // GET: ProductImages/Create
         public ActionResult Create()
         {
-            ViewBag.productId = new SelectList(db.Products, "id", "userId");
+            ViewBag.productId = new SelectList(db.Products, "id", "productName");
             return View();
         }
 
@@ -58,7 +58,7 @@ namespace QuanLyPhanMem__63135414.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.productId = new SelectList(db.Products, "id", "userId", productImage.productId);
+            ViewBag.productId = new SelectList(db.Products, "id", "productName", productImage.productId);
             return View(productImage);
         }
 

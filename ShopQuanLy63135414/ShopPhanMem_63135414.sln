@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34202.233
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShopPhanMem_63135414", "ShopPhanMem_63135414\ShopPhanMem_63135414.csproj", "{CF4510DF-8CF8-4530-8555-ACEE0AC75FD2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CF4510DF-8CF8-4530-8555-ACEE0AC75FD2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF4510DF-8CF8-4530-8555-ACEE0AC75FD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF4510DF-8CF8-4530-8555-ACEE0AC75FD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF4510DF-8CF8-4530-8555-ACEE0AC75FD2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6B45C50D-7328-41DD-95F4-59A04AAA729E}
+	EndGlobalSection
+EndGlobal

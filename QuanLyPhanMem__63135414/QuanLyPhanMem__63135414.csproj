@@ -138,7 +138,6 @@
     <Compile Include="Controllers\Admin63135414Controller.cs" />
     <Compile Include="Controllers\Category63135414Controller.cs" />
     <Compile Include="Controllers\Customer63135414Controller.cs" />
-    <Compile Include="Controllers\ImageProduct63135414Controller.cs" />
     <Compile Include="Controllers\Product63135414Controller.cs" />
     <Compile Include="Controllers\ProductImagesController.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
@@ -152,6 +151,7 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Catalog\ProductSystem\Product.cs" />
+    <Compile Include="Models\Catalog\ProductSystem\ProductCreateViewModel.cs" />
     <Compile Include="Models\Catalog\ProductSystem\ProductViewModel.cs" />
     <Compile Include="Models\Catalog\UserSystem\User.cs" />
     <Compile Include="Models\Catalog\UserSystem\UserLogin.cs" />
@@ -511,6 +511,8 @@
     <Content Include="Views\ProductImages\Edit.cshtml" />
     <Content Include="Views\ProductImages\Index.cshtml" />
     <Content Include="Views\Product63135414\CreateProduct.cshtml" />
+    <Content Include="Views\Product63135414\CreateImage.cshtml" />
+    <Content Include="Views\Product63135414\CreateProductAndImage.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -519,6 +521,7 @@
     <Folder Include="assets\admin\images\userwallpaper\" />
     <Folder Include="assets\category\" />
     <Folder Include="assets\customer\img\banner\" />
+    <Folder Include="assets\product\" />
     <Folder Include="Views\ImageProduct63135414\" />
   </ItemGroup>
   <ItemGroup>

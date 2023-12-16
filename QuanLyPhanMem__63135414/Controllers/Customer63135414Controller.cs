@@ -2,7 +2,6 @@
 using QuanLyPhanMem__63135414.Models;
 using QuanLyPhanMem__63135414.Models.Extension;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;

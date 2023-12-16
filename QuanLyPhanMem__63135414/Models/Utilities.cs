@@ -30,13 +30,7 @@ namespace QuanLyPhanMem__63135414.Models.Extension
                 return v != null;
             }
         }
-        public bool isLogin()
-        {
-            if (Session["User"]!= null)
-                return true;
-            return false;
-        }
-        public async Task<string> getIdAsync(int length)
+        public string getIdAsync(int length)
         {
             using (QLPM_63135414_Entities db = new QLPM_63135414_Entities())
             {
@@ -50,7 +44,7 @@ namespace QuanLyPhanMem__63135414.Models.Extension
                     first.Append(randomChar);
                 }
 
-                var products = await db.Products.ToListAsync();
+                var products = db.Products.ToList();
                 if (products.Any())
                 {
                     var max = products.Select(p => p.id).Max();

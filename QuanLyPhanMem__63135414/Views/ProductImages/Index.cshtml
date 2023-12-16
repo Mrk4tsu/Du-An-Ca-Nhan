@@ -25,7 +25,7 @@
             @Html.DisplayNameFor(model => model.dateCreate)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Product.userId)
+            @Html.DisplayNameFor(model => model.Product.id)
         </th>
         <th></th>
     </tr>
@@ -45,7 +45,7 @@
             @Html.DisplayFor(modelItem => item.dateCreate)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Product.userId)
+            @Html.DisplayFor(modelItem => item.Product.id)
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.id }) |
