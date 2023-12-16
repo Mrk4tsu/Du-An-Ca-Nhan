@@ -6,6 +6,7 @@
 
     var grid = new WebGrid(canPage: true, rowsPerPage: ViewBag.PageSize);
     grid.Bind(source: Model, rowCount: ViewBag.TotalRows, autoSortAndPage: false);
+
 }
 
 <div class="card">
@@ -51,10 +52,10 @@ grid.Column(columnName: "productName", header: "Tên sản phẩm"),
 grid.Column(columnName: "priceOriginal", header: "Giá gốc"),
 grid.Column(columnName: "price", header: "Giá đang bán"),
 grid.Column(columnName: "viewCount", header: "Lượt xem"),
-grid.Column(columnName: "dateUpload", header: "Ngày đăng"),
-grid.Column(columnName: "dateUpdate", header: "Ngày sửa đổi"),
 grid.Column(columnName: "sellCount", header: "Lượt bán"),
-grid.Column(columnName: "sellCount", header: "Lượt bán"),
+grid.Column(format: @<text>@item.dateUpload.ToString("dd/MM/yyyy")</text>, header: "Ngày đăng"),
+
+grid.Column(format: @<text>@item.dateUpdate.ToString("dd/MM/yyyy")</text>, header: "Ngày sửa đổi"),
 grid.Column(format:@<text>
             <div class="text-center">
                 <a href="@Url.Action("EditCategory", new {id = item.id})" class="btn btn-sm btn-warning" title="Cập nhật dữ liệu">
@@ -64,7 +65,7 @@ grid.Column(format:@<text>
                     <i class="fas fa-user-edit"></i>
                 </a>
             </div>
-</text>, header: "Chức năng")
+        </text>, header: "Chức năng")
 })
         </div>
     </div>

@@ -57,7 +57,7 @@ namespace QuanLyPhanMem__63135414.Controllers
                     {
                         ModelState.AddModelError("newPassword", "Mật khẩu ít nhất phải có 6 ký tự!");
                     }
-                    else if (password.Equals(confirmPassword))
+                    else if (!password.Equals(confirmPassword))
                     {
                         ModelState.AddModelError("confirmPassword", "Mật khẩu không khớp, vui lòng kiểm tra lại!");
                     }

@@ -138,6 +138,7 @@
     <Compile Include="Controllers\Admin63135414Controller.cs" />
     <Compile Include="Controllers\Category63135414Controller.cs" />
     <Compile Include="Controllers\Customer63135414Controller.cs" />
+    <Compile Include="Controllers\ImageProduct63135414Controller.cs" />
     <Compile Include="Controllers\Product63135414Controller.cs" />
     <Compile Include="Controllers\ProductImagesController.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
@@ -150,6 +151,8 @@
     <Compile Include="Models\CartDetail.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Catalog\ProductSystem\Product.cs" />
+    <Compile Include="Models\Catalog\ProductSystem\ProductViewModel.cs" />
     <Compile Include="Models\Catalog\UserSystem\User.cs" />
     <Compile Include="Models\Catalog\UserSystem\UserLogin.cs" />
     <Compile Include="Models\Catalog\UserSystem\UserViewModel.cs" />
@@ -507,6 +510,7 @@
     <Content Include="Views\ProductImages\Details.cshtml" />
     <Content Include="Views\ProductImages\Edit.cshtml" />
     <Content Include="Views\ProductImages\Index.cshtml" />
+    <Content Include="Views\Product63135414\CreateProduct.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -515,7 +519,7 @@
     <Folder Include="assets\admin\images\userwallpaper\" />
     <Folder Include="assets\category\" />
     <Folder Include="assets\customer\img\banner\" />
-    <Folder Include="Models\Catalog\ProductSystem\" />
+    <Folder Include="Views\ImageProduct63135414\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />

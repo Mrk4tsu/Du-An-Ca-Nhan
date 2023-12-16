@@ -1,4 +1,6 @@
 ﻿using QuanLyPhanMem__63135414.Models;
+using QuanLyPhanMem__63135414.Models.Catalog.ProductSystem;
+using QuanLyPhanMem__63135414.Models.Extension;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -13,7 +15,7 @@ namespace QuanLyPhanMem__63135414.Controllers
     public class Product63135414Controller : Controller
     {
         QLPM_63135414_Entities db = new QLPM_63135414_Entities();
-
+        #region[Danh sách sản phẩm]
         public async Task<ActionResult> ListProduct(string search = "", int page = 1, string sort = "productName", string sortDir = "asc", int pageSize = 10)
         {
             //Logic phân trang khi truy vấn danh sách
@@ -50,5 +52,52 @@ namespace QuanLyPhanMem__63135414.Controllers
             }
             return (v.ToList(), totalRecord);
         }
+        #endregion
+        #region[Tạo sản phẩm]
+        public async Task<ActionResult> CreateProduct()
+        {
+            ViewBag.ProductID = await Utilities.instance.getIdAsync(5);
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> CreateProduct(ProductViewModel model)
+        {           
+            if (Session["User"] != null)
+            {
+                var user = (UserViewModel)Session["User"];
+                if (ModelState.IsValid)
+                {
+                    try
+                    {
+                        var product = new Product
+                        {
+                            id = await Utilities.instance.getIdAsync(5),
+                            userId = user.userId,
+                            dateUpload = DateTime.Now,
+                            dateUpdate = DateTime.Now,
+                            productName = model.productName,
+                            description = model.description,
+                            productUrl = model.productUrl,
+                            priceOriginal = model.priceOriginal,
+                            price = model.price,
+                            sellCount = 0,
+                            viewCount = 0,
+                        };
+                        db.Products.Add(product);
+                        await db.SaveChangesAsync();
+                        return RedirectToAction("ListProduct");
+                    }
+                    catch
+                    {
+                        return RedirectToAction("Error", "Admin63135414");
+                    }
+                }
+                return View(model);
+            }
+            else
+                return RedirectToAction("Login", "Customer63135414");
+        }
+        #endregion
     }
 }
