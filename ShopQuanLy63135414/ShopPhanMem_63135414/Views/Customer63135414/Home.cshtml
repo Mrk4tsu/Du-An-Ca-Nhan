@@ -1,4 +1,4 @@
-﻿
+﻿@model List<ShopPhanMem_63135414.Models.Catalog.ProductSystem.ProductAndImageViewModel>
 @{
     ViewBag.Title = "Home";
     Layout = "~/Views/Shared/_LayoutCustomer.cshtml";
@@ -101,6 +101,24 @@
                 </div>
             </div>
             <div class="row featured__filter">
+                @foreach (var product in ViewBag.ProductList)
+                {
+                    <div class="col-lg-3 col-md-4 col-sm-6 mix oranges fresh-meat">
+                        <div class="featured__item">
+                            <div class="featured__item__pic set-bg" data-setbg="../../assets/customer/img/featured/feature-1.jpg">
+                                <ul class="featured__item__pic__hover">
+                                    <li><a href="#"><i class="fa fa-heart"></i></a></li>
+                                    <li><a href="#"><i class="fa fa-retweet"></i></a></li>
+                                    <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                                </ul>
+                            </div>
+                            <div class="featured__item__text">
+                                <h6><a href="@Url.Action("DetailProduct", "Product63135414", new {id = product.Product.productId})">@product.Product.productName</a></h6>
+                                <h5>$@product.Product.price</h5>
+                            </div>
+                        </div>
+                    </div>
+                }
                 <div class="col-lg-3 col-md-4 col-sm-6 mix oranges fresh-meat">
                     <div class="featured__item">
                         <div class="featured__item__pic set-bg" data-setbg="../../assets/customer/img/featured/feature-1.jpg">

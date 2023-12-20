@@ -8,6 +8,7 @@ namespace ShopPhanMem_63135414.Models.Catalog.ProductSystem
     public class ProductViewModel
     {
         public string id { get; set; }
+        public string productId { get; set; }
         public string userId { get; set; }
         public string productName { get; set; }
         public string productUrl { get; set; }

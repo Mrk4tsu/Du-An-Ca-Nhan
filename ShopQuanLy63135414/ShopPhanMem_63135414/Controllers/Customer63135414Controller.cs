@@ -1,8 +1,11 @@
 ﻿using ImageResizer;
 using ShopPhanMem_63135414;
 using ShopPhanMem_63135414.Models;
+using ShopPhanMem_63135414.Models.Catalog.ProductSystem;
 using ShopPhanMem_63135414.Models.Catalog.UserSystem;
 using System;
+using System.Collections.Generic;
+using System.Data.Entity;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -254,10 +257,48 @@ namespace QuanLyPhanMem__63135414.Controllers
         {
             using (QLPM63135414Entities db = new QLPM63135414Entities())
             {
+                // Lấy danh sách sản phẩm từ database
+                List<ProductAndImageViewModel> productList = db.Products
+                    .Select(p => new ProductAndImageViewModel
+                    {
+                        Product = new ProductViewModel
+                        {
+                            productId = p.id,
+                            productName = p.productName,
+                            price = p.price
+                        },
+                        // Không tạo đối tượng ProductImage ở đây
+                    })
+                    .ToList();
+
+                // Tạo đối tượng ProductImage sau khi đã lấy dữ liệu từ database
+                foreach (var product in productList)
+                {
+                    // Bạn có thể thực hiện logic để lấy dữ liệu từ bảng ProductImage tương ứng
+                    // Ví dụ:
+                    var productImage = db.ProductImages.FirstOrDefault(pi => pi.productId == product.Product.id);
+                    if (productImage != null)
+                    {
+                        product.ProductImage = productImage;
+                    }
+                }
+
+                // Lưu danh sách vào ViewBag
+                ViewBag.ProductList = productList;
+
+                
+
+
+
+
+
+                // Lấy danh sách sản phẩm từ database
+                ViewBag.Products = db.Products.ToList();
+
                 ViewBag.Categories = db.Categories.ToList().OrderBy(c => c.categoryName);
             }
             return View();
-        }      
+        }
         public ActionResult Error()
         {
             return View();

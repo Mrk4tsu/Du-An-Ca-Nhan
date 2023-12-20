@@ -18,8 +18,8 @@ namespace ShopPhanMem_63135414.Models
         public string productId { get; set; }
         public string imagePath { get; set; }
         public string caption { get; set; }
-        public Nullable<bool> imgDefault { get; set; }
-        public Nullable<System.DateTime> dateCreate { get; set; }
+        public bool? imgDefault { get; set; }
+        public DateTime? dateCreate { get; set; }
     
         public virtual Product Product { get; set; }
     }

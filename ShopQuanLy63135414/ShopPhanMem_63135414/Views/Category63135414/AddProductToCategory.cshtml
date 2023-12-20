@@ -1,0 +1,18 @@
+﻿@{
+    ViewBag.Title = "AddProductToCategory";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h2>AddProductToCategory</h2>
+<p>@ViewBag.Message</p>
+@using (Html.BeginForm("AddProductToCategory", "Category63135414", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <label for="productId">Product ID:</label>
+    @Html.TextBox("productId", null, new { required = "required" })
+
+    <label for="categoryId">Category ID:</label>
+    @Html.TextBox("categoryId", null, new { required = "required" })
+
+    <input type="submit" value="Add to Category" />
+}

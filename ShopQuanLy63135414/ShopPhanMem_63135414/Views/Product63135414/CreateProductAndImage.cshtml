@@ -43,7 +43,11 @@
             @Html.ValidationMessageFor(model => model.Product.priceOriginal, "", new { @class = "text-danger" })
         </div>
     </div>
+    <div class="form-floating m-2">
+        @Html.DropDownListFor(model => model.SelectedCategoryId, Model.Categories, "Chọn danh mục", new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.SelectedCategoryId, "", new { @class = "text-danger" })
 
+    </div>
     <div class="form-group">
         @Html.LabelFor(model => model.Product.price, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">

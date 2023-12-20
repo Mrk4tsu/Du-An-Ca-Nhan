@@ -12,6 +12,7 @@ using System.Web;
 using System.Web.Mvc;
 using ImageResizer;
 using System.Linq.Dynamic;
+using System.Web.Configuration;
 
 namespace ShopPhanMem_63135414.Controllers
 {
@@ -145,6 +146,54 @@ namespace ShopPhanMem_63135414.Controllers
                 return RedirectToAction("ListCategory");
             }
             return View(category);
+        }
+        #endregion
+        #region[Thêm sản phẩm vào danh mục]
+        public ActionResult AddProductToCategory()
+        {
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> AddProductToCategory(string productId, string categoryId)
+        {
+            // Retrieve the product and category from the database
+            Product product = db.Products.Find(productId);
+            Category category = db.Categories.Find(categoryId);
+
+            if (product != null && category != null)
+            {
+                // Check if the product is already in the category
+                if (db.ProductInCategories.Any(p => p.productId == productId && p.categoryId == categoryId))
+                {
+                    // Product is already in the category, handle accordingly (e.g., show a message)
+                    ViewBag.Message = "Product is already in the category";
+                }
+                else
+                {
+                    // Add the product to the category
+                    ProductInCategory productInCategory = new ProductInCategory
+                    {
+                        categoryId = categoryId,
+                        productId = productId,
+                        description = "Some description" // You can set the description accordingly
+                    };
+
+                    db.ProductInCategories.Add(productInCategory);
+                    await db.SaveChangesAsync();
+
+                    ViewBag.Message = "Product added to the category successfully";
+                }
+            }
+            else
+            {
+                // Product or category not found, handle accordingly (e.g., show an error message)
+                ViewBag.Message = "Product or category not found";
+            }
+
+            // Redirect or return a view
+            return RedirectToAction("AdminHome"); // Redirect to the product list or any other action
+
         }
         #endregion
         [NonAction]

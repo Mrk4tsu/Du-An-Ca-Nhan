@@ -506,6 +506,8 @@
     <Content Include="Views\Product63135414\ListProduct.cshtml" />
     <Content Include="Views\Product63135414\CreateProductAndImage.cshtml" />
     <Content Include="Views\Product63135414\ListImage.cshtml" />
+    <Content Include="Views\Product63135414\DetailProduct.cshtml" />
+    <Content Include="Views\Category63135414\AddProductToCategory.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
