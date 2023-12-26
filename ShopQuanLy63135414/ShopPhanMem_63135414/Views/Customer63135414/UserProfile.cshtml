@@ -1,0 +1,132 @@
+﻿@model ShopPhanMem_63135414.Models.Catalog.UserSystem.UserViewModel
+@{
+    ViewBag.Title = "UserProfile";
+    Layout = "~/Views/Shared/_LayoutCustomer.cshtml";
+
+    var user = (ShopPhanMem_63135414.Models.Catalog.UserSystem.UserViewModel)Session["User"];
+    bool isActive = false;
+    if (user.isActive != null)
+    {
+        isActive = user.isActive.Value;
+    }
+    else
+    {
+        isActive = false;
+    }
+}
+<div class="container">
+    <section class="set-bg" data-setbg="../../assets/customer/img/backg.jpg">
+        <div class="row">
+            <!-- Nội dung phía trên ảnh -->
+            <div class="position-relative">
+                <img src="~/assets/wallpaper/defaultwallpaper.png" alt="Background Image" class="img-fluid rounded-5" style="max-height: 300px; width:100%;" />
+
+                <!-- Ảnh dạng tròn đè lên ảnh -->
+                <div class="position-absolute top-150 start-50 translate-middle">
+                    <img src="~/assets/avatar/@user.userAvatar" alt="Circular Image" class="rounded-circle" style="width:150px; height:150px; border: 5px solid #fff;" />
+                </div>
+
+            </div>
+        </div>
+        <div class="bg-light rounded-5">
+            <div class="mt-3">
+                <br />
+            </div>
+            <div class="row mt-5 text-center">
+                <div class="col-md-12 d-flex align-items-center justify-content-center">
+                    <!-- Nội dung phía dưới ảnh -->
+                    @if (isActive)
+                    {
+                        <p class="badge badge-success mb-2">Đã xác thực</p>
+                    }
+                    else
+                    {
+                        <p class="badge badge-warning mb-2">Chưa xác thực</p>
+                    }
+
+                </div>
+                <h4 class="text-info fw-semibold d-block">@user.firstname @Model.lastname</h4>
+                <hr />
+                <section class="card set-bg" data-setbg="../../assets/customer/img/backg.jpg">
+                    <div class="card-body mt-3 rounded-2" style="background-color: rgba(167, 255, 255, 0.9)">
+                        <div class="mt-4 p-4 bg-gradient-success rounded-3" style="background-color: rgba(143, 4, 84, 0.7)">
+                            <h3 class="text-uppercase font-weight-bolder text-light">Thông Tin Mô Tả</h3>
+                            <p class="text-white">@(!string.IsNullOrEmpty(user.bio) ? user.bio : "Không có mô tả giới thiệu về bản thân")</p>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <div class="form-group border-0">
+                                    <label class="control-label text-info fw-semibold">
+                                        <i class="mx-2 fa-solid fa-envelope"></i>Địa chỉ Email:
+                                    </label>
+                                    <span class="text-secondary mx-auto">@user.email</span>
+                                </div>
+                                <div class="form-group border-0">
+                                    <label class="control-label text-info fw-semibold">
+                                        <i class="fa-solid fa-briefcase mx-2"></i>Vai trò:
+                                    </label>
+                                    <span class="text-secondary mx-auto">@user.UserRole.roleName</span>
+                                </div>
+                            </div>
+
+
+
+                            <div class="col-md-6">
+                                <div class="form-group border-0">
+                                    <label class="control-label text-info fw-semibold">
+                                        <i class="fa-solid fa-calendar-days mx-2"></i>Ngày sinh:
+                                    </label>
+                                    <span class="text-secondary mx-auto">
+                                        @(Model.birthday.HasValue ? Model.birthday.Value.ToString("dd/MM/yyyy") : "N/A")
+                                    </span>
+                                </div>
+                                <div class="form-group border-0">
+                                    <label class="control-label text-info fw-semibold">
+                                        <i class="fa-solid fa-location-dot mx-2"></i>Địa chỉ:
+                                    </label>
+                                    <span class="text-secondary mx-auto">
+                                        @(user.address != null ? user.address : "N/A")
+                                    </span>
+                                </div>
+                                <div class="form-group border-0">
+                                    <label class="control-label text-info fw-semibold">
+                                        <i class="fa-solid fa-phone mx-2"></i>Số điện thoại:
+                                    </label>
+                                    <span class="text-secondary mx-auto">
+                                        @(Model.phoneNumber != null ? Model.phoneNumber : "N/A")
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group border-0">
+                                <label class="control-label text-info fw-semibold">
+                                    <i class="fa-solid fa-user mx-2"></i>ID Người dùng:
+                                </label>
+                                <span class="text-secondary mx-auto">@user.userId</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        @if (!isActive)
+                        {
+                            <div class="d-flex">
+                                <p class="text-secondary mx-auto">
+                                    <span class="text-warning">Lưu ý: </span>Tài khoản này chưa xác nhận mã qua Email. <a href="#" class="text-info">Xác thực ngay</a>
+                                </p>
+                            </div>
+                        }
+                        <div class="row">
+                            <a href="@Url.Action("ListUser")" class="btn col-md-5 mx-auto text-light" style="background-color: rgb(45, 147, 176)">
+                                Quay lại danh sách
+                            </a>
+                            <a href="@Url.Action("Edit", new { id = user.userId })" class="btn col-md-5 mx-auto text-light" style="background-color: rgb(143, 4, 84)">
+                                Chỉnh sửa thông tin
+                            </a>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </section>
+</div>
+
+

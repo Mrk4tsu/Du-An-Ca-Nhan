@@ -1,0 +1,416 @@
+﻿@model List<ShopPhanMem_63135414.Models.Catalog.ProductSystem.ProductViewListVM>
+@{
+    ViewBag.Title = "Products";
+    Layout = "~/Views/Shared/_LayoutCustomer.cshtml";
+}
+
+<section class="product spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-md-5">
+                <div class="sidebar">
+                    <div class="sidebar__item">
+                        <h4>Department</h4>
+                        <ul>
+                            @foreach (var category in ViewBag.Categories)
+                            {
+                                <li><a href="#product-list" class="category-link" data-category-id="@category.id">@category.categoryName</a></li>
+                            }
+                        </ul>
+                    </div>
+
+                    <div class="sidebar__item">
+                        <div class="latest-product__text">
+                            <h4>Latest Products</h4>
+                            <div class="latest-product__slider owl-carousel">
+                                <div class="latest-prdouct__slider__item">
+                                    <a href="#" class="latest-product__item">
+                                        <div class="latest-product__item__pic">
+                                            <img src="img/latest-product/lp-1.jpg" alt="">
+                                        </div>
+                                        <div class="latest-product__item__text">
+                                            <h6>Crab Pool Security</h6>
+                                            <span>$30.00</span>
+                                        </div>
+                                    </a>
+                                    <a href="#" class="latest-product__item">
+                                        <div class="latest-product__item__pic">
+                                            <img src="img/latest-product/lp-2.jpg" alt="">
+                                        </div>
+                                        <div class="latest-product__item__text">
+                                            <h6>Crab Pool Security</h6>
+                                            <span>$30.00</span>
+                                        </div>
+                                    </a>
+                                    <a href="#" class="latest-product__item">
+                                        <div class="latest-product__item__pic">
+                                            <img src="img/latest-product/lp-3.jpg" alt="">
+                                        </div>
+                                        <div class="latest-product__item__text">
+                                            <h6>Crab Pool Security</h6>
+                                            <span>$30.00</span>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="latest-prdouct__slider__item">
+                                    <a href="#" class="latest-product__item">
+                                        <div class="latest-product__item__pic">
+                                            <img src="img/latest-product/lp-1.jpg" alt="">
+                                        </div>
+                                        <div class="latest-product__item__text">
+                                            <h6>Crab Pool Security</h6>
+                                            <span>$30.00</span>
+                                        </div>
+                                    </a>
+                                    <a href="#" class="latest-product__item">
+                                        <div class="latest-product__item__pic">
+                                            <img src="img/latest-product/lp-2.jpg" alt="">
+                                        </div>
+                                        <div class="latest-product__item__text">
+                                            <h6>Crab Pool Security</h6>
+                                            <span>$30.00</span>
+                                        </div>
+                                    </a>
+                                    <a href="#" class="latest-product__item">
+                                        <div class="latest-product__item__pic">
+                                            <img src="img/latest-product/lp-3.jpg" alt="">
+                                        </div>
+                                        <div class="latest-product__item__text">
+                                            <h6>Crab Pool Security</h6>
+                                            <span>$30.00</span>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-9 col-md-7">
+                <!--Khuyến mãi-->
+                <div class="product__discount">
+                    <div class="section-title product__discount__title">
+                        <h2>Sale Off</h2>
+                    </div>
+                    <div class="row">
+                        <div class="product__discount__slider owl-carousel">
+                            <div class="col-lg-4">
+                                <div class="product__discount__item">
+                                    <div class="product__discount__item__pic set-bg"
+                                         data-setbg="../../assets/product/defaultImage.png">
+                                        <div class="product__discount__percent">-20%</div>
+                                        <ul class="product__item__pic__hover">
+                                            <li><a href="#"><i class="fa fa-heart"></i></a></li>
+                                            <li><a href="#"><i class="fa fa-retweet"></i></a></li>
+                                            <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="product__discount__item__text">
+                                        <span>Dried Fruit</span>
+                                        <h5><a href="#">Raisin’n’nuts</a></h5>
+                                        <div class="product__item__price">$30.00 <span>$36.00</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="product__discount__item">
+                                    <div class="product__discount__item__pic set-bg"
+                                         data-setbg="../../assets/product/defaultImage.png">
+                                        <div class="product__discount__percent">-20%</div>
+                                        <ul class="product__item__pic__hover">
+                                            <li><a href="#"><i class="fa fa-heart"></i></a></li>
+                                            <li><a href="#"><i class="fa fa-retweet"></i></a></li>
+                                            <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="product__discount__item__text">
+                                        <span>Vegetables</span>
+                                        <h5><a href="#">Vegetables’package</a></h5>
+                                        <div class="product__item__price">$30.00 <span>$36.00</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="product__discount__item">
+                                    <div class="product__discount__item__pic set-bg"
+                                         data-setbg="../../assets/product/defaultImage.png">
+                                        <div class="product__discount__percent">-20%</div>
+                                        <ul class="product__item__pic__hover">
+                                            <li><a href="#"><i class="fa fa-heart"></i></a></li>
+                                            <li><a href="#"><i class="fa fa-retweet"></i></a></li>
+                                            <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="product__discount__item__text">
+                                        <span>Dried Fruit</span>
+                                        <h5><a href="#">Mixed Fruitss</a></h5>
+                                        <div class="product__item__price">$30.00 <span>$36.00</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="product__discount__item">
+                                    <div class="product__discount__item__pic set-bg"
+                                         data-setbg="../../assets/product/defaultImage.png">
+                                        <div class="product__discount__percent">-20%</div>
+                                        <ul class="product__item__pic__hover">
+                                            <li><a href="#"><i class="fa fa-heart"></i></a></li>
+                                            <li><a href="#"><i class="fa fa-retweet"></i></a></li>
+                                            <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="product__discount__item__text">
+                                        <span>Dried Fruit</span>
+                                        <h5><a href="#">Raisin’n’nuts</a></h5>
+                                        <div class="product__item__price">$30.00 <span>$36.00</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="product__discount__item">
+                                    <div class="product__discount__item__pic set-bg"
+                                         data-setbg="../../assets/product/defaultImage.png">
+                                        <div class="product__discount__percent">-20%</div>
+                                        <ul class="product__item__pic__hover">
+                                            <li><a href="#"><i class="fa fa-heart"></i></a></li>
+                                            <li><a href="#"><i class="fa fa-retweet"></i></a></li>
+                                            <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="product__discount__item__text">
+                                        <span>Dried Fruit</span>
+                                        <h5><a href="#">Raisin’n’nuts</a></h5>
+                                        <div class="product__item__price">$30.00 <span>$36.00</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="product__discount__item">
+                                    <div class="product__discount__item__pic set-bg"
+                                         data-setbg="../../assets/product/defaultImage.png">
+                                        <div class="product__discount__percent">-20%</div>
+                                        <ul class="product__item__pic__hover">
+                                            <li><a href="#"><i class="fa fa-heart"></i></a></li>
+                                            <li><a href="#"><i class="fa fa-retweet"></i></a></li>
+                                            <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="product__discount__item__text">
+                                        <span>Dried Fruit</span>
+                                        <h5><a href="#">Raisin’n’nuts</a></h5>
+                                        <div class="product__item__price">$30.00 <span>$36.00</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="filter__item">
+                    <div class="row">
+                        <div class="col-lg-4 col-md-4">
+                            <div class="filter__sort">
+                                <span>Sort By</span>
+                                <select id="categoryDropdown">
+                                    <option value="all">All</option>
+                                    @foreach (var category in ViewBag.Categories)
+                                    {
+                                        <option value="@category.id">@category.categoryName</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-4">
+                            <div class="filter__sort">
+                                <span>Sort By</span>
+                                <select id="priceRangeDropdown">
+                                    <option value="0-9999999999999">All</option>
+                                    <option value="0-100">0 - 100$</option>
+                                    <option value="101-500">101$ - 500$</option>
+                                    <option value="501-1500">501$ - 1500$</option>
+                                    <option value="1501 - 9999999999999">> 1500$</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-4">
+                            <div class="filter__found">
+                                <h6><span id="product-count">16</span> Products found</h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" id="product-list">
+
+                    @foreach (var productViewModel in Model)
+                    {
+                        <div class="col-lg-4 col-md-6 col-sm-6">
+                            <div class="product__item">
+                                @if (productViewModel.ImagePath != null)
+                                {
+                                    <div class="product__item__pic set-bg" data-setbg="../../assets/product/defaultImage.png">
+                                        <ul class="product__item__pic__hover">
+                                            <li><a href="#"><i class="fa fa-heart"></i></a></li>
+                                            <li><a href="#"><i class="fa fa-retweet"></i></a></li>
+                                            <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                                        </ul>
+                                    </div>
+                                }
+                                <div class="product__item__text">
+                                    @if (productViewModel.CategoryName != null)
+                                    {
+                                        <span class="text-secondary">@productViewModel.CategoryName</span>
+                                    }
+                                    else
+                                    {
+                                        <span>Không có danh mục</span>
+                                    }
+                                    <h5><a href="@Url.Action("DetailsProduct", new { id = productViewModel.Id })" class="text-info text-uppercase">@productViewModel.ProductName</a></h5>
+
+                                    <h5>$@productViewModel.Price</h5>
+
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                </div>
+                <div class="product__pagination">
+                    <a href="#">1</a>
+                    <a href="#">2</a>
+                    <a href="#">3</a>
+                    <a href="#"><i class="fa fa-long-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+        $(document).ready(function () {
+
+        $(".category-link").on("click", function () {
+            var categoryId = $(this).data("category-id");
+
+            $.ajax({
+                url: '@Url.Action("GetProductsByCategory", "Customer63135414")',
+                type: 'GET',
+                data: { categoryId: categoryId },
+                success: function (data) {
+                    // Cập nhật danh sách sản phẩm
+                    updateProductList(data);
+                },
+                error: function () {
+                    console.error('Failed to retrieve products.');
+                }
+            });
+        });
+
+
+        $("#priceRangeDropdown, #categoryDropdown").change(function () {
+    var selectedPriceRange = $("#priceRangeDropdown").val();
+    var selectedCategory = $("#categoryDropdown").val();
+
+    // Trích xuất minPrice và maxPrice bằng biểu thức chính quy
+    var priceRegexResult = /(\d+)[^0-9]+(\d+)/.exec(selectedPriceRange);
+    var minPrice, maxPrice;
+
+    if (priceRegexResult) {
+        minPrice = parseFloat(priceRegexResult[1]);
+        maxPrice = parseFloat(priceRegexResult[2]);
+    }
+    // Xử lý khi chọn "All"
+    if (selectedCategory === "all") {
+        // Gửi yêu cầu Ajax để lấy toàn bộ sản phẩm
+        $.ajax({
+            url: '@Url.Action("GetAllProducts", "Customer63135414")',
+            type: 'GET',
+            success: function (data) {
+                // Cập nhật danh sách sản phẩm
+                updateProductList(data);
+            },
+            error: function () {
+                console.error('Lấy sản phẩm không thành công.');
+            }
+        });
+    }
+    else {
+        $.ajax({
+    url: '@Url.Action("GetProductsByFilters", "Customer63135414")',
+    type: 'GET',
+    data: { minPrice: minPrice, maxPrice: maxPrice, categoryId: selectedCategory },
+    success: function (data) {
+        // Cập nhật danh sách sản phẩm
+        updateProductList(data);
+    },
+    error: function () {
+        console.error('Lấy sản phẩm không thành công.');
+    }
+});
+    }
+
+});
+
+
+
+        function updateProductList(products) {
+        // Xóa danh sách sản phẩm hiện tại
+        $("#product-list").empty();
+        if (products.length === 0) {
+            // Hiển thị thông báo nếu không có sản phẩm
+            $("#product-list").append('<div class="col-12"><h3 >Không tìm thấy sản phẩm nào trong mục này.</h3></div>');
+            $("#product-count").text('0');
+        }
+        else {
+            // Thêm sản phẩm mới vào danh sách
+            for (var i = 0; i < products.length; i++) {
+                var product = products[i];
+                // Thêm mã HTML để hiển thị sản phẩm
+                var productHtml = '<div class="col-lg-4 col-md-6 col-sm-6">' +
+                    '<div class="product__item">' +
+                    '<div class="product__item__pic set-bg" data-setbg="../../assets/product/';
+
+                if (product.ImagePath != null) {
+                    productHtml += 'defaultImage.png';
+                } else {
+                    productHtml += 'defaultImage.png';
+                }
+
+                productHtml += '">' +
+                    '<ul class="product__item__pic__hover">' +
+                    '<li><a href="#"><i class="fa fa-heart"></i></a></li>' +
+                    '<li><a href="#"><i class="fa fa-retweet"></i></a></li>' +
+                    '<li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>' +
+                    '</ul>' +
+                    '</div>' +
+                    '<div class="product__item__text">';
+
+                if (product.CategoryName != null) {
+                    productHtml += '<span class="text-secondary">' + product.CategoryName + '</span>';
+                } else {
+                    productHtml += '<span>Không có danh mục</span>';
+                }
+                productHtml += '<h5><a href="/Customer63135414/DetailsProduct/' + product.Id + '" class="text-info text-uppercase">' + product.ProductName + '</a></h5>' +
+                    '<h5>$' + product.Price + '</h5>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>';
+                $("#product-list").append(productHtml);
+            }
+            // Hiển thị số lượng sản phẩm
+            $("#product-count").text(products.length);
+        }
+
+        updateSetBg();
+    }
+
+    // Hàm cập nhật set-bg cho tất cả các phần tử có class set-bg
+        function updateSetBg() {
+        $('.set-bg').each(function () {
+            var bg = $(this).data('setbg');
+            $(this).css('background-image', 'url(' + bg + ')');
+        });
+    }
+    });
+</script>
+

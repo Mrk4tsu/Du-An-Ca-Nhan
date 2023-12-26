@@ -1,0 +1,83 @@
+﻿@model ShopPhanMem_63135414.Models.Catalog.ProductSystem.ProductAndImageViewModel
+@{
+    ViewBag.Title = "CreateProductAndImage";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+@using (Html.BeginForm("CreateProductAndImage", "Product63135414", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+    <h4>Product</h4>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="form-group">
+        @Html.LabelFor(model => model.Product.id, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            <input type="text" value="@ViewBag.ProductID" disabled readonly class="form-control" />
+            @Html.ValidationMessageFor(model => model.Product.id, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Product.productName, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Product.productName, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Product.productName, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Product.productUrl, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Product.productUrl, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Product.productUrl, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Product.priceOriginal, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Product.priceOriginal, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Product.priceOriginal, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-floating m-2">
+        @Html.DropDownListFor(model => model.SelectedCategoryId, Model.Categories, "Chọn danh mục", new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.SelectedCategoryId, "", new { @class = "text-danger" })
+
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.Product.price, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Product.price, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Product.price, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Product.description, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Product.description, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Product.description, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="input-group">
+        <input class="form-control" id="imageUpload" type="file" name="imageUpload" accept="image/*" onchange="previewImage(this)" />
+        <label class="input-group-text" for="imageUpload">Ảnh minh họa</label>
+    </div>
+    <div class="form-group">
+        <label for="fileUpload">Chọn Tệp:</label>
+        <input type="file" name="files" id="fileUpload" multiple />
+    </div>
+    <img src="~/assets/product/productImgDefault.png" alt="Circular Image" class="rounded-5" id="imageUpload-preview" style="height:250px; border: 5px solid #fff;" />
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Create" class="btn btn-default" />
+        </div>
+    </div>
+</div>
+}
+

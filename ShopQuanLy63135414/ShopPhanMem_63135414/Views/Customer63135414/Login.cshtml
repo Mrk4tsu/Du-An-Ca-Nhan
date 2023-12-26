@@ -1,0 +1,64 @@
+﻿@model ShopPhanMem_63135414.Models.Catalog.UserSystem.UserLogin
+@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/_LayoutCustomer.cshtml";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="container">
+        <div class="row d-flex align-items-center justify-content-center">
+            <div class="col-md-6">
+                <div class="card mt-5 shadow">
+                    <div class="checkout__form">
+                        <section class="set-bg d-flex justify-content-center align-items-center" style="height:150px;" data-setbg="../../assets/admin/images/test/la.jpg">
+                            @*<h4 class="text-light font-weight-bolder text-uppercase">Đổi mật khẩu</h4>*@
+                        </section>
+                        <div class="card-body">
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                            @if (ViewBag.Message != "")
+                            {
+                                <div class="text-danger">@ViewBag.Message</div>
+                            }
+                            <div class="checkout__input">
+                                @Html.LabelFor(model => model.email, "Địa chỉ Email")
+                                @Html.EditorFor(model => model.email, new { htmlAttributes = new { @placeholder = "Nhập địa chỉ email" } })
+                                @Html.ValidationMessageFor(model => model.email, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="checkout__input">
+                                @Html.LabelFor(model => model.password, "Mật khẩu")
+                                @Html.EditorFor(model => model.password, new { htmlAttributes = new { @placeholder = "Nhập mật khẩu", type = "password" } })
+                                @Html.ValidationMessageFor(model => model.email, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="row d-flex justify-content-center">
+                                <div class="checkout__input__checkbox col-md-6 d-flex justify-content-start">
+                                    <label>
+                                        @Html.LabelFor(model => model.rememberMe, "Ghi nhớ đăng nhập")
+                                        @Html.EditorFor(model => model.rememberMe)
+                                        <span class="checkmark"></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.rememberMe, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-md-6 d-flex justify-content-end">
+                                    <a class="text-info" href="#">Quên mật khẩu</a>
+                                </div>
+                            </div>
+
+                            <div class="checkout__input text-white d-flex justify-content-center">
+                                <button type="submit" class="site-btn">Đăng nhập</button>
+                            </div>
+                            <div class="d-flex justify-content-end mt-2">
+                                <a class="text-info" href="@Url.Action("Register")"><span class="text-dark">Chưa có tài khoản?</span> Đăng ký ngay</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-success bg-opacity-50">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+

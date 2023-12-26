@@ -17,7 +17,7 @@ namespace QuanLyPhanMem__63135414.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Category()
         {
-            this.Products = new HashSet<Product>();
+            this.ProductInCategories = new HashSet<ProductInCategory>();
         }
     
         public string id { get; set; }
@@ -25,6 +25,6 @@ namespace QuanLyPhanMem__63135414.Models
         public string categoryImage { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Product> Products { get; set; }
+        public virtual ICollection<ProductInCategory> ProductInCategories { get; set; }
     }
 }
