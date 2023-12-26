@@ -197,7 +197,7 @@ namespace ShopPhanMem_63135414.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> CreateProductAndImage(ProductAndImageViewModel viewModel, HttpPostedFileBase imageUpload)
+        public async Task<ActionResult> CreateProductAndImage(ProductAndImageViewModel viewModel, HttpPostedFileBase imageUpload, IEnumerable<HttpPostedFileBase> files)
         {
             if (Session["User"] != null)
             {
@@ -271,8 +271,10 @@ namespace ShopPhanMem_63135414.Controllers
                         db.ProductInCategories.Add(productInCategory);
                         await db.SaveChangesAsync();
                         #endregion
-                        // Chuyển sang Action tạo ảnh thêm cho sản phẩm và truyền id của sản phẩm
-                        //return RedirectToAction("CreateImage", new { productId = productId });
+
+                        // Xử lý các tệp đã tải lên sử dụng phương thức SaveUploadedFiles hoặc logic khác
+                        SaveUploadedFiles(files, product.productName, "fail_message");
+
                         return RedirectToAction("ListProduct");
                     }
                     catch
@@ -376,6 +378,56 @@ namespace ShopPhanMem_63135414.Controllers
                 System.IO.Directory.Delete(folderPath);
             }
         }
+        public List<string> SaveUploadedFiles(IEnumerable<HttpPostedFileBase> files, string subFolder, string fail)
+        {
+            List<string> savedFileNames = new List<string>();
+
+            foreach (var file in files)
+            { 
+                if (file != null && file.ContentLength > 0)
+                {
+                    // Generate a unique file name using timestamp and Guid
+                    var fileName = $"{DateTime.Now:yyyyMMddHHmmssfff}_{Guid.NewGuid():N}{Path.GetExtension(file.FileName)}";
+
+                    var directoryPath = Server.MapPath($"~/assets/product/{subFolder}");
+
+                    // Create the directory if it doesn't exist
+                    if (!Directory.Exists(directoryPath))
+                    {
+                        Directory.CreateDirectory(directoryPath);
+                    }
+
+                    var filePath = Path.Combine(directoryPath, fileName);
+
+                    // Save the file to the server
+                    file.SaveAs(filePath);
+
+                    // Resize and crop the image to 540x460
+                    var settings = new ResizeSettings
+                    {
+                        Width = 540,
+                        Height = 460,
+                        Mode = FitMode.Crop,
+                        Scale = ScaleMode.Both,
+                        Anchor = ContentAlignment.MiddleCenter,
+                    };
+
+                    ImageBuilder.Current.Build(filePath, filePath, settings);
+
+                    // Add the saved file name to the list
+                    savedFileNames.Add(fileName);
+                }
+            }
+
+            if (savedFileNames.Count > 0)
+            {
+                return savedFileNames;
+            }
+
+            return new List<string> { fail };
+        }
+
+
         public string SaveUploadedFile(HttpPostedFileBase file, string subFolder, string fail)
         {
             if (file != null && file.ContentLength > 0)

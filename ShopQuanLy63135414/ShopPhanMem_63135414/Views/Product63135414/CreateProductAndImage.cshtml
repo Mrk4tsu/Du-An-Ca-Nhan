@@ -65,9 +65,12 @@
     </div>
     <div class="input-group">
         <input class="form-control" id="imageUpload" type="file" name="imageUpload" accept="image/*" onchange="previewImage(this)" />
-        <label class="input-group-text" for="imageUpload">Wallpaper</label>
+        <label class="input-group-text" for="imageUpload">Ảnh minh họa</label>
     </div>
-
+    <div class="form-group">
+        <label for="fileUpload">Chọn Tệp:</label>
+        <input type="file" name="files" id="fileUpload" multiple />
+    </div>
     <img src="~/assets/product/productImgDefault.png" alt="Circular Image" class="rounded-5" id="imageUpload-preview" style="height:250px; border: 5px solid #fff;" />
 
     <div class="form-group">

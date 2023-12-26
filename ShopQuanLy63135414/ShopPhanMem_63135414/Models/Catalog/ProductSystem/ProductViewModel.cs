@@ -19,5 +19,6 @@ namespace ShopPhanMem_63135414.Models.Catalog.ProductSystem
         public int? viewCount { get; set; }
         public int? sellCount { get; set; }
         public string description { get; set; }
+
     }
 }

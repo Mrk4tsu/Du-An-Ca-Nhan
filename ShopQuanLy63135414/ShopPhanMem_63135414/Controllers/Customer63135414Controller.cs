@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
+using static System.Net.WebRequestMethods;
 
 namespace QuanLyPhanMem__63135414.Controllers
 {
@@ -286,7 +287,7 @@ namespace QuanLyPhanMem__63135414.Controllers
                 // Lưu danh sách vào ViewBag
                 ViewBag.ProductList = productList;
 
-                
+
 
 
 
@@ -299,6 +300,165 @@ namespace QuanLyPhanMem__63135414.Controllers
             }
             return View();
         }
+        [HttpGet]
+        [Authorize]
+        public async Task<ActionResult> Products()
+        {
+            using (QLPM63135414Entities db = new QLPM63135414Entities())
+            {
+                ViewBag.Categories = db.Categories.ToList().OrderBy(c => c.categoryName);
+
+                var products = await db.Products
+                    .Include(i => i.ProductImages)
+                    .Include(pic => pic.ProductInCategories.Select(c => c.Category))
+                    .ToListAsync();
+                // Chuyển danh sách sản phẩm sang danh sách ViewModel
+                var productViewModels = products.Select(product => new ProductViewListVM(product)).ToList();
+                return View(productViewModels);
+            }
+        }
+        [HttpGet]
+        public ActionResult GetAllProducts()
+        {
+            using (QLPM63135414Entities db = new QLPM63135414Entities())
+            {
+                var productsWithImages = db.Products
+                    .Include(i => i.ProductImages)
+                    .Include(pic => pic.ProductInCategories.Select(c => c.Category))
+                    .ToList();
+
+                var productViewModels = productsWithImages.Select(product => new ProductViewListVM(product)).ToList();
+
+                return Json(productViewModels, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpGet]
+        public ActionResult GetProductsByFilters(decimal minPrice, decimal maxPrice, string categoryId)
+        {
+            using (QLPM63135414Entities db = new QLPM63135414Entities())
+            {
+                IQueryable<Product> products = db.Products;
+
+                // Áp dụng bộ lọc khoảng giá
+                if (maxPrice == 1501)
+                {
+                    products = products.Where(p => p.price >= minPrice);
+                }
+                else
+                {
+                    products = products.Where(p => p.price >= minPrice && p.price <= maxPrice);
+                }
+
+                // Áp dụng bộ lọc danh mục
+                if (!string.IsNullOrEmpty(categoryId))
+                {
+                    products = products.Where(p => p.ProductInCategories.Any(pc => pc.Category.id == categoryId));
+                }
+
+                var productsWithImages = products
+                    .Include(i => i.ProductImages)
+                    .Include(pic => pic.ProductInCategories.Select(c => c.Category))
+                    .ToList();
+
+                var productViewModels = productsWithImages.Select(product => new ProductViewListVM(product)).ToList();
+
+                return Json(productViewModels, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpGet]
+        public ActionResult GetProductsByCategory(string categoryId)
+        {
+            using (QLPM63135414Entities db = new QLPM63135414Entities())
+            {
+                
+                var products = db.Products
+                    .Where(p => p.ProductInCategories.Any(pc => pc.Category.id == categoryId))
+                    .Include(i => i.ProductImages)
+                    .Include(pic => pic.ProductInCategories.Select(c => c.Category))
+                    .ToList();
+
+                var productViewModels = products.Select(product => new ProductViewListVM(product)).ToList();
+                
+                return Json(productViewModels, JsonRequestBehavior.AllowGet);
+            }
+        }
+        [HttpGet]
+        public ActionResult GetProductsByPriceRange(decimal minPrice, decimal maxPrice)
+        {
+            using (QLPM63135414Entities db = new QLPM63135414Entities())
+            {
+                var products = db.Products
+                    .Where(p => p.price >= minPrice && p.price <= maxPrice)
+                    .Include(i => i.ProductImages)
+                    .Include(pic => pic.ProductInCategories.Select(c => c.Category))
+                    .ToList();
+
+                var productViewModels = products.Select(product => new ProductViewListVM(product)).ToList();
+
+                return Json(productViewModels, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+
+        #region[Xem chi tiết sản phẩm]
+        public async Task<ActionResult> DetailsProduct(string id)
+        {
+            using (QLPM63135414Entities db = new QLPM63135414Entities())
+            {
+                if (string.IsNullOrEmpty(id))
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+
+                var product = await db.Products.FindAsync(id);
+
+                if (product == null)
+                {
+                    return HttpNotFound();
+                }
+
+                // Lấy danh sách hình ảnh của sản phẩm
+                var productImages = await db.ProductImages.Where(pi => pi.productId == id).ToListAsync();
+
+                // Map thông tin sang ViewModel
+                var viewModel = new ProductAndImageViewModel
+                {
+                    Product = new ProductViewModel
+                    {
+                        productName = product.productName,
+                        userId = product.userId,
+                        dateUpload = product.dateUpload,
+                        dateUpdate = product.dateUpdate,
+                        viewCount = product.viewCount,
+                        sellCount = product.sellCount,
+                        description = product.description,
+                        price = product.price,
+                        priceOriginal = product.priceOriginal,
+                    },
+                    ProductImage = productImages.FirstOrDefault() // Lấy ảnh đầu tiên, bạn có thể thay đổi tùy theo yêu cầu
+                };
+                // Đường dẫn đến thư mục chứa ảnh
+                string folderPath = Server.MapPath($"~/assets/product/{product.productName}");
+                // Kiểm tra xem thư mục có tồn tại không
+                if (Directory.Exists(folderPath))
+                {
+                    // Lấy danh sách các đường dẫn của tất cả các tệp trong thư mục
+                    string[] imagePaths = Directory.GetFiles(folderPath);
+                    foreach (string filePath in imagePaths)
+                    {
+
+                        ViewBag.Image1 = Path.GetFileName(filePath);
+                        ViewBag.Image2 = Path.GetFileName(filePath);
+
+                    }
+                }
+
+                return View(viewModel);
+            }
+        }
+        #endregion
         public ActionResult Error()
         {
             return View();

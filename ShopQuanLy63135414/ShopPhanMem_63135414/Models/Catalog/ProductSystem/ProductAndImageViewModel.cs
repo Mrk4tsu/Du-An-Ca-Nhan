@@ -6,7 +6,7 @@ using System.Web.Mvc;
 
 namespace ShopPhanMem_63135414.Models.Catalog.ProductSystem
 {
-    public class ProductAndImageViewModel
+    public class ProductAndImageViewModel : ProductViewListVM
     {
         public ProductViewModel Product { get; set; }
         public ProductImage ProductImage { get; set; }

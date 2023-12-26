@@ -16,7 +16,7 @@
                     <ul>
                         @foreach (var category in ViewBag.Categories)
                         {
-                            <li><a href="#">@category.categoryName</a></li>
+                            <li><a href="@Url.Action("Products", "Customer63135414")">@category.categoryName</a></li>
                         }
                     </ul>
                 </div>
@@ -24,7 +24,7 @@
             <div class="col-lg-9">
                 <div class="hero__search">
                     <div class="hero__search__form">
-                        <form action="#">
+                        <form action="@Url.Action("Products", "Customer63135414")">
                             <div class="hero__search__categories">
                                 All Categories
                                 <span class="arrow_carrot-down"></span>
@@ -55,7 +55,7 @@
                     {
                         <div class="col-lg-3">
                             <div class="categories__item set-bg" data-setbg="../../assets/category/@category.categoryImage">
-                                <h5><a style="background-color: rgb(127, 173, 57)" class="text-light" href="#">@category.categoryName</a></h5>
+                                <h5><a style="background-color: rgb(127, 173, 57)" class="text-light" href="@Url.Action("Products", "Customer63135414")">@category.categoryName</a></h5>
                             </div>
                         </div>
                     }

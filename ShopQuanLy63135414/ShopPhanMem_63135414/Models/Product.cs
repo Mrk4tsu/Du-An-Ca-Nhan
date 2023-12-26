@@ -28,12 +28,12 @@ namespace ShopPhanMem_63135414.Models
         public string userId { get; set; }
         public string productName { get; set; }
         public string productUrl { get; set; }
-        public Nullable<decimal> priceOriginal { get; set; }
-        public Nullable<decimal> price { get; set; }
-        public System.DateTime dateUpload { get; set; }
-        public Nullable<System.DateTime> dateUpdate { get; set; }
-        public Nullable<int> viewCount { get; set; }
-        public Nullable<int> sellCount { get; set; }
+        public decimal? priceOriginal { get; set; }
+        public decimal? price { get; set; }
+        public DateTime dateUpload { get; set; }
+        public DateTime? dateUpdate { get; set; }
+        public int? viewCount { get; set; }
+        public int? sellCount { get; set; }
         public string description { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

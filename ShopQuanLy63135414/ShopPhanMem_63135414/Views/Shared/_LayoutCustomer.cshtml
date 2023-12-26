@@ -50,7 +50,7 @@
                     var user = (ShopPhanMem_63135414.Models.Catalog.UserSystem.UserViewModel)Session["User"];
                     using (Html.BeginForm("UserProfile", "Customer63135414", FormMethod.Get, new { id = "profileForm" }))
                     {
-                        <a href="javascript:document.getElementById('profileForm').submit()"><i class="fa fa-user"></i>@user.firstname @user.lastname</a>
+                        <a href="javascript:document.getElementById('profileForm').submit()"><i class="fa fa-user"></i>Xin chào @user.lastname</a>
                     }
                 }
                 else
@@ -66,7 +66,7 @@
         <nav class="humberger__menu__nav mobile-menu">
             <ul>
                 <li><a href="@Url.Action("Home", "Customer63135414")">Trang chủ</a></li>
-                <li><a href="./shop-grid.html">Sản phẩm</a></li>
+                <li><a href="@Url.Action("Products", "Customer63135414")">Sản phẩm</a></li>
                 <li>
                     <a href="#">Pages</a>
                     <ul class="header__menu__dropdown">
@@ -108,7 +108,7 @@
             <div class="row">
                 <div class="col-lg-3">
                     <div class="header__logo">
-                        <a href="./index.html"><img src="~/assets/customer/img/logo.png" alt=""></a>
+                        <a href="@Url.Action("Home", "Customer63135414")"><img src="~/assets/customer/img/logo.png" alt=""></a>
                     </div>
                 </div>
                 <div class="col-lg-6">
@@ -116,7 +116,7 @@
                         <ul>
                             <li><a href="@Url.Action("Home", "Customer63135414")">Trang chủ</a></li>
 
-                            <li><a href="./shop-grid.html">Sản phẩm</a></li>
+                            <li><a href="@Url.Action("Products", "Customer63135414")">Sản phẩm</a></li>
                             <li>
                                 <a href="#">Pages</a>
                                 <ul class="header__menu__dropdown">
@@ -143,7 +143,7 @@
                                 <div class="d-flex">
                                     @using (Html.BeginForm("UserProfile", "Customer63135414", FormMethod.Get, new { id = "profileForm" }))
                                     {
-                                        <a href="javascript:document.getElementById('profileForm').submit()"><i class="fa fa-user"></i>@user.firstname @user.lastname</a>
+                                        <a href="javascript:document.getElementById('profileForm').submit()"><i class="fa fa-user"></i>Xin chào <span class="text-info">@user.lastname</span></a>
                                     }
                                     @using (Html.BeginForm("Logout", "Customer63135414", FormMethod.Post, new { id = "logoutForm" }))
                                     {
