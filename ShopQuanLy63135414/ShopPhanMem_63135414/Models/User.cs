@@ -19,7 +19,7 @@ namespace ShopPhanMem_63135414.Models
         {
             this.Carts = new HashSet<Cart>();
             this.Histories = new HashSet<History>();
-            this.Orders = new HashSet<Order>();
+            this.OrderProducts = new HashSet<OrderProduct>();
             this.Products = new HashSet<Product>();
         }
     
@@ -43,7 +43,7 @@ namespace ShopPhanMem_63135414.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<History> Histories { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Order> Orders { get; set; }
+        public virtual ICollection<OrderProduct> OrderProducts { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Product> Products { get; set; }
         public virtual UserRole UserRole { get; set; }

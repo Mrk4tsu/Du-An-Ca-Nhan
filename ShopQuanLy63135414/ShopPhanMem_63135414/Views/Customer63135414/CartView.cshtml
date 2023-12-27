@@ -1,0 +1,89 @@
+﻿@model List<ShopPhanMem_63135414.Models.Catalog.ProductSystem.ProductViewListVM>
+
+@{
+    ViewBag.Title = "Giỏ hàng";
+    Layout = "~/Views/Shared/_LayoutCustomer.cshtml";
+
+
+}
+
+<section class="shoping-cart spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="shoping__cart__table">
+                    @if (Model.Any())
+                    {
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th class="shoping__product">Products</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                    <th>Total</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var productViewModel in Model)
+                                {
+                                    <tr>
+                                        <td class="shoping__cart__item">
+                                            <img src="~/assets/product/@productViewModel.ProductName/@productViewModel.ImagePath" alt="@productViewModel.ProductName" style="width:100px; height:100%" />
+                                            <h5 class="text-info fw-semibold">@productViewModel.ProductName</h5>
+                                        </td>
+                                        <td class="shoping__cart__price">
+                                            $@productViewModel.Price
+                                        </td>
+                                        <td class="shoping__cart__quantity">
+                                            <div class="quantity">
+                                                <div class="pro-qty">
+                                                    <input type="text" value="@productViewModel.Quantity">
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="shoping__cart__total">
+                                            $@(productViewModel.Quantity * productViewModel.Price)
+                                        </td>
+                                        <td class="shoping__cart__item__close">
+                                            @using (Html.BeginForm("RemoveFromCart", "Customer63135414", FormMethod.Post))
+                                            {
+                                                @Html.Hidden("productId", productViewModel.Id)
+                                                <button type="submit" class="site-btn"><i class="fa fa-trash"></i></button>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                    else
+                    {
+                        <h2>Your shopping cart is empty.</h2>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="shoping__checkout">
+                    <h5>Cart Total</h5>
+                    <ul>
+                        <li>Subtotal <span>$@Model.Sum(p => p.Quantity * p.Price)</span></li>
+                        <li>Total <span>$@Model.Sum(p => p.Quantity * p.Price)</span></li>
+                    </ul>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <a href="#" style="background-color: #7FAD39" class="primary-btn cart-btn text-light shadow">PROCEED TO CHECKOUT</a>
+                        </div>
+                        <div class="col-md-6">
+                            <a href="@Url.Action("Products", "Customer63135414")" class="primary-btn cart-btn text-secondary shadow">CONTINUE SHOPPING</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>

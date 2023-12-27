@@ -10,6 +10,7 @@ namespace ShopPhanMem_63135414.Models
     public partial class User
     {
         public string confirmPassword { get; set; }
+
     }
     public class UserMetaData
     {

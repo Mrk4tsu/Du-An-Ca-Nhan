@@ -9,6 +9,7 @@ using System.Data.Entity;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Linq.Dynamic;
 using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
@@ -287,12 +288,6 @@ namespace QuanLyPhanMem__63135414.Controllers
                 // Lưu danh sách vào ViewBag
                 ViewBag.ProductList = productList;
 
-
-
-
-
-
-
                 // Lấy danh sách sản phẩm từ database
                 ViewBag.Products = db.Products.ToList();
 
@@ -306,6 +301,17 @@ namespace QuanLyPhanMem__63135414.Controllers
         {
             using (QLPM63135414Entities db = new QLPM63135414Entities())
             {
+                var topProducts = db.Products.OrderByDescending(p => p.viewCount ?? 0).Take(3).ToList();
+                var topProductsMore = db.Products.OrderByDescending(p => p.viewCount ?? 0).Skip(3).Take(3).ToList();
+
+                var comparer = new ProductEqualityComparer();
+
+                var distinctTopProducts = topProducts.Except(topProductsMore, comparer).ToList();
+                var distinctTopProductsMore = topProductsMore.Except(topProducts, comparer).ToList();
+
+                ViewBag.TopProducts = distinctTopProducts;
+                ViewBag.TopProductsMore = distinctTopProductsMore;
+
                 ViewBag.Categories = db.Categories.ToList().OrderBy(c => c.categoryName);
 
                 var products = await db.Products
@@ -313,7 +319,7 @@ namespace QuanLyPhanMem__63135414.Controllers
                     .Include(pic => pic.ProductInCategories.Select(c => c.Category))
                     .ToListAsync();
                 // Chuyển danh sách sản phẩm sang danh sách ViewModel
-                var productViewModels = products.Select(product => new ProductViewListVM(product)).ToList();
+                var productViewModels = products.Select(product => new ProductViewListVM(product, -1)).ToList();
                 return View(productViewModels);
             }
         }
@@ -327,7 +333,7 @@ namespace QuanLyPhanMem__63135414.Controllers
                     .Include(pic => pic.ProductInCategories.Select(c => c.Category))
                     .ToList();
 
-                var productViewModels = productsWithImages.Select(product => new ProductViewListVM(product)).ToList();
+                var productViewModels = productsWithImages.Select(product => new ProductViewListVM(product, -1)).ToList();
 
                 return Json(productViewModels, JsonRequestBehavior.AllowGet);
             }
@@ -361,7 +367,7 @@ namespace QuanLyPhanMem__63135414.Controllers
                     .Include(pic => pic.ProductInCategories.Select(c => c.Category))
                     .ToList();
 
-                var productViewModels = productsWithImages.Select(product => new ProductViewListVM(product)).ToList();
+                var productViewModels = productsWithImages.Select(product => new ProductViewListVM(product, -1)).ToList();
 
                 return Json(productViewModels, JsonRequestBehavior.AllowGet);
             }
@@ -372,15 +378,15 @@ namespace QuanLyPhanMem__63135414.Controllers
         {
             using (QLPM63135414Entities db = new QLPM63135414Entities())
             {
-                
+
                 var products = db.Products
                     .Where(p => p.ProductInCategories.Any(pc => pc.Category.id == categoryId))
                     .Include(i => i.ProductImages)
                     .Include(pic => pic.ProductInCategories.Select(c => c.Category))
                     .ToList();
 
-                var productViewModels = products.Select(product => new ProductViewListVM(product)).ToList();
-                
+                var productViewModels = products.Select(product => new ProductViewListVM(product, -1)).ToList();
+
                 return Json(productViewModels, JsonRequestBehavior.AllowGet);
             }
         }
@@ -395,70 +401,142 @@ namespace QuanLyPhanMem__63135414.Controllers
                     .Include(pic => pic.ProductInCategories.Select(c => c.Category))
                     .ToList();
 
-                var productViewModels = products.Select(product => new ProductViewListVM(product)).ToList();
+                var productViewModels = products.Select(product => new ProductViewListVM(product, -1)).ToList();
 
                 return Json(productViewModels, JsonRequestBehavior.AllowGet);
             }
         }
 
-
-        #region[Xem chi tiết sản phẩm]
-        public async Task<ActionResult> DetailsProduct(string id)
+        [HttpPost]
+        public ActionResult AddToCart(string productId)
         {
-            using (QLPM63135414Entities db = new QLPM63135414Entities())
+            if (Session["User"] != null)
             {
-                if (string.IsNullOrEmpty(id))
+                using (QLPM63135414Entities db = new QLPM63135414Entities())
                 {
-                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-                }
+                    var user = (UserViewModel)Session["User"];
+                    var userCart = db.Carts.Include(c => c.CartItems)
+                                             .FirstOrDefault(c => c.UserId == user.userId);
 
-                var product = await db.Products.FindAsync(id);
-
-                if (product == null)
-                {
-                    return HttpNotFound();
-                }
-
-                // Lấy danh sách hình ảnh của sản phẩm
-                var productImages = await db.ProductImages.Where(pi => pi.productId == id).ToListAsync();
-
-                // Map thông tin sang ViewModel
-                var viewModel = new ProductAndImageViewModel
-                {
-                    Product = new ProductViewModel
+                    if (userCart == null)
                     {
-                        productName = product.productName,
-                        userId = product.userId,
-                        dateUpload = product.dateUpload,
-                        dateUpdate = product.dateUpdate,
-                        viewCount = product.viewCount,
-                        sellCount = product.sellCount,
-                        description = product.description,
-                        price = product.price,
-                        priceOriginal = product.priceOriginal,
-                    },
-                    ProductImage = productImages.FirstOrDefault() // Lấy ảnh đầu tiên, bạn có thể thay đổi tùy theo yêu cầu
-                };
-                // Đường dẫn đến thư mục chứa ảnh
-                string folderPath = Server.MapPath($"~/assets/product/{product.productName}");
-                // Kiểm tra xem thư mục có tồn tại không
-                if (Directory.Exists(folderPath))
-                {
-                    // Lấy danh sách các đường dẫn của tất cả các tệp trong thư mục
-                    string[] imagePaths = Directory.GetFiles(folderPath);
-                    foreach (string filePath in imagePaths)
+                        // Create a new cart if the user doesn't have one
+                        userCart = new Cart
+                        {
+                            Id = Utilities.instance.getIdCart(),
+                            UserId = user.userId,
+                            DateCreate = DateTime.Now
+                        };
+                        db.Carts.Add(userCart);
+                    }
+
+                    // Check if the product is already in the cart
+                    var cartItem = userCart.CartItems.FirstOrDefault(ci => ci.ProductId == productId);
+
+                    if (cartItem != null)
                     {
+                        // Product already in cart, return a JSON result indicating the failure
+                        return Json(new { success = false, message = "Product already in cart." });
+                    }
+                    else
+                    {
+                        // Add a new item to the cart if the product is not present
+                        var product = db.Products.Find(productId);
 
-                        ViewBag.Image1 = Path.GetFileName(filePath);
-                        ViewBag.Image2 = Path.GetFileName(filePath);
+                        if (product != null)
+                        {
+                            userCart.CartItems.Add(new CartItem
+                            {
+                                Id = Utilities.instance.getIdCartItem(),
+                                ProductId = productId,
+                                Quantity = 1,
+                                Price = product.price
+                            });
 
+                            db.SaveChanges();
+
+                            // Return a JSON result indicating the success
+                            return Json(new { success = true, message = "Product added to cart successfully." });
+                        }
                     }
                 }
+            }
 
-                return View(viewModel);
+            // User not logged in, return a JSON result indicating the failure
+            return Json(new { success = false, message = "User not logged in." });
+        }
+
+
+        [HttpGet]
+        public ActionResult CartView()
+        {
+            if (Session["User"] != null)
+            {
+                using (QLPM63135414Entities db = new QLPM63135414Entities())
+                {
+                    var user = (UserViewModel)Session["User"];
+                    // Phương thức để lấy ID của người dùng (thực hiện phương thức này theo authentication của bạn)
+                    var userCart = db.Carts
+                        .Include(c => c.CartItems)
+                        .FirstOrDefault(c => c.UserId == user.userId);
+
+                    if (userCart == null)
+                    {
+                        // Người dùng chưa có giỏ hàng, tạo mới một giỏ hàng
+                        userCart = new Cart
+                        {
+                            Id = Utilities.instance.getIdCart(),
+                            UserId = user.userId,
+                            DateCreate = DateTime.Now
+                        };
+                        db.Carts.Add(userCart);
+                        db.SaveChanges(); // Lưu thay đổi để có ID của giỏ hàng mới tạo
+
+                        // Lấy lại giỏ hàng với thông tin đầy đủ bao gồm CartItems
+                        userCart = db.Carts
+                            .Include(c => c.CartItems)
+                            .FirstOrDefault(c => c.UserId == user.userId);
+                    }
+                    var cartViewModel = userCart.CartItems.Select(cartItem => new ProductViewListVM(cartItem.Product, cartItem.Quantity)).ToList();
+                    return View(cartViewModel);
+                }
+            }
+            return RedirectToAction("Login");
+        }
+        [HttpPost]
+        public ActionResult RemoveFromCart(string productId)
+        {
+            // Kiểm tra xem người dùng đã đăng nhập chưa
+            if (Session["User"] != null)
+            {
+                using (QLPM63135414Entities db = new QLPM63135414Entities())
+                {
+                    var user = (UserViewModel)Session["User"];
+                    var userCart = db.Carts.Include(c => c.CartItems)
+                        .FirstOrDefault(c => c.UserId == user.userId);
+
+                    if (userCart != null)
+                    {
+                        // Tìm kiếm và xóa sản phẩm khỏi giỏ hàng nếu tồn tại
+                        var cartItemToRemove = userCart.CartItems.FirstOrDefault(ci => ci.ProductId == productId);
+                        if (cartItemToRemove != null)
+                        {
+                            db.CartItems.Remove(cartItemToRemove);
+                            db.SaveChanges();
+                        }
+                    }
+
+                    // Chuyển hướng về trang giỏ hàng
+                    return RedirectToAction("CartView");
+                }
+            }
+            else
+            {
+                // Người dùng chưa đăng nhập, bạn có thể chuyển hướng đến trang đăng nhập hoặc xử lý theo ý của bạn
+                return RedirectToAction("Login");
             }
         }
-        #endregion
+
         public ActionResult Error()
         {
             return View();

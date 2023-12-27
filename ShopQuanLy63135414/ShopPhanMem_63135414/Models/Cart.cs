@@ -17,16 +17,15 @@ namespace ShopPhanMem_63135414.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Cart()
         {
-            this.CartDetails = new HashSet<CartDetail>();
+            this.CartItems = new HashSet<CartItem>();
         }
     
-        public int Id { get; set; }
-        public string userId { get; set; }
-        public Nullable<decimal> cartTotal { get; set; }
-        public Nullable<System.DateTime> dateCreate { get; set; }
+        public string Id { get; set; }
+        public string UserId { get; set; }
+        public Nullable<System.DateTime> DateCreate { get; set; }
     
         public virtual User User { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CartDetail> CartDetails { get; set; }
+        public virtual ICollection<CartItem> CartItems { get; set; }
     }
 }

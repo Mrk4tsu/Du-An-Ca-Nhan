@@ -40,7 +40,7 @@
         <div class="humberger__menu__cart">
             <ul>
                 <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
-                <li><a href="#"><i class="fa fa-shopping-bag"></i> <span>3</span></a></li>
+                <li><a href="@Url.Action("CartView", "Customer63135414")"><i class="fa fa-shopping-bag"></i> <span>3</span></a></li>
             </ul>
         </div>
         <div class="humberger__menu__widget">
@@ -134,7 +134,7 @@
                     <div class="header__cart">
                         <ul>
                             <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
-                            <li><a href="#"><i class="fa fa-shopping-bag"></i> <span>3</span></a></li>
+                            <li><a href="@Url.Action("CartView", "Customer63135414")"><i class="fa fa-shopping-bag"></i> <span>3</span></a></li>
                         </ul>
                         <div class="header__top__right__auth">
                             @if (Session["User"] != null)
@@ -235,5 +235,64 @@
     <script src="~/assets/customer/js/owl.carousel.min.js"></script>
     <script src="~/assets/customer/js/main.js"></script>
 
+    <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold text-success" id="successModalLabel">Success</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body ">
+                    <div class="row d-flex justify-content-center">
+                        <img src="~/assets/admin/images/1139.png" style="width:250px;" />
+                        <div class="py-2 text-center">
+                            <h5 class="text-info font-weight-bold">Đã thêm sản phẩm vào giỏ hàng!</h5>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    @using (Html.BeginForm("CartView", "Customer63135414", FormMethod.Get, new { id = "goCartView" }))
+                    {
+                        <a href="javascript:document.getElementById('goCartView').submit()" class="btn btn-success">Xem giỏ hàng</a>
+                    }
+                    <a class="btn btn-primary" data-dismiss="modal">OK</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-danger fw-semibold text-uppercase" id="errorModalLabel">Thêm sản phẩm thất bại</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body ">
+                    <div class="row d-flex justify-content-center">
+                        <img src="~/assets/admin/images/1139.png" style="width:250px;"/>
+                        <div class="py-2 text-center">
+                            <h5 class="text-info font-weight-bold">Đã có sản phẩm này trong giỏ hàng của bạn rồi!</h5>
+                        </div>
+                    </div>
+                   
+                    
+                </div>
+                <div class="modal-footer">
+                    @using (Html.BeginForm("CartView", "Customer63135414", FormMethod.Get, new { id = "goCartView" }))
+                    {
+                        <a href="javascript:document.getElementById('goCartView').submit()" style="background-color: #7FAD39" class="primary-btn cart-btn text-light shadow">Xem giỏ hàng</a>
+                    }
+
+                    <a href="#" class="primary-btn cart-btn text-light shadow" data-dismiss="modal" style="background-color: #8F0454">OK</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

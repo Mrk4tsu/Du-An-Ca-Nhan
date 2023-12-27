@@ -98,9 +98,44 @@ namespace ShopPhanMem_63135414
             {
                 var maMax = db.Categories.ToList().Select(n => n.id).Max();
                 //CATE001
-                int maNV = int.Parse(maMax.Substring(4)) + 1;
-                string NV = String.Concat("00", maNV.ToString());
-                return "CATE" + NV.Substring(maNV.ToString().Length - 1);
+                int categoryID = int.Parse(maMax.Substring(4)) + 1;
+                string cate = String.Concat("00", categoryID.ToString());
+                return "CATE" + cate.Substring(categoryID.ToString().Length - 1);
+            }
+        }
+        public string getIdCart()
+        {
+            using (QLPM63135414Entities db = new QLPM63135414Entities())
+            {
+                var carts = db.Carts.ToList();
+                if (carts.Any())
+                {
+                    var maMax = db.Carts.ToList().Select(n => n.Id).Max();
+                    int cardId = int.Parse(maMax.Substring(2)) + 1;
+                    string cart = string.Concat("00", cardId.ToString());
+
+                    return "CR" + cart.Substring(cardId.ToString().Length - 1);
+                }
+                else
+                    return "CR001";
+            }
+        }
+        public string getIdCartItem()
+        {
+            using (QLPM63135414Entities db = new QLPM63135414Entities())
+            {
+                var carts = db.CartItems.ToList();
+
+                if (carts.Any())
+                {
+                    var maMax = db.CartItems.ToList().Select(n => n.Id).Max();
+                    int cardItemId = int.Parse(maMax.Substring(2)) + 1;
+                    string item = string.Concat("00", cardItemId.ToString());
+
+                    return "IT" + item.Substring(cardItemId.ToString().Length - 1);
+                }
+                else
+                    return "IT001";
             }
         }
         public static string Hash(string value)

@@ -14,12 +14,11 @@ namespace ShopPhanMem_63135414.Models
     
     public partial class OrderDetail
     {
-        public int Id { get; set; }
-        public string orderId { get; set; }
-        public string productId { get; set; }
-        public decimal unitPrice { get; set; }
+        public int OrderId { get; set; }
+        public string ProductId { get; set; }
+        public Nullable<decimal> price { get; set; }
     
-        public virtual Order Order { get; set; }
+        public virtual OrderProduct OrderProduct { get; set; }
         public virtual Product Product { get; set; }
     }
 }

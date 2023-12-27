@@ -134,6 +134,12 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Models\Cart.cs">
+      <DependentUpon>Model63135414.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CartItem.cs">
+      <DependentUpon>Model63135414.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Catalog\ProductSystem\Product.cs" />
     <Compile Include="Models\Catalog\ProductSystem\ProductAndImageViewModel.cs" />
     <Compile Include="Models\Catalog\ProductSystem\ProductViewListVM.cs" />
@@ -141,28 +147,10 @@
     <Compile Include="Models\Catalog\UserSystem\User.cs" />
     <Compile Include="Models\Catalog\UserSystem\UserLogin.cs" />
     <Compile Include="Models\Catalog\UserSystem\UserViewModel.cs" />
-    <Compile Include="Utilities.cs" />
-    <Compile Include="WebGridExtensions.cs" />
-    <Compile Include="Controllers\Admin63135414Controller.cs" />
-    <Compile Include="Controllers\Category63135414Controller.cs" />
-    <Compile Include="Controllers\Customer63135414Controller.cs" />
-    <Compile Include="Controllers\Product63135414Controller.cs" />
-    <Compile Include="Global.asax.cs">
-      <DependentUpon>Global.asax</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Cart.cs">
-      <DependentUpon>Model63135414.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\CartDetail.cs">
-      <DependentUpon>Model63135414.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\Category.cs">
       <DependentUpon>Model63135414.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\History.cs">
-      <DependentUpon>Model63135414.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\HistoryPayment.cs">
       <DependentUpon>Model63135414.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Model63135414.Context.cs">
@@ -180,16 +168,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Model63135414.edmx</DependentUpon>
     </Compile>
-    <Compile Include="Models\Order.cs">
-      <DependentUpon>Model63135414.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\OrderDetail.cs">
       <DependentUpon>Model63135414.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\Payment.cs">
-      <DependentUpon>Model63135414.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\PaymentMethod.cs">
+    <Compile Include="Models\OrderProduct.cs">
       <DependentUpon>Model63135414.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Product.cs">
@@ -219,10 +201,20 @@
     <Compile Include="Models\UserRole.cs">
       <DependentUpon>Model63135414.tt</DependentUpon>
     </Compile>
+    <Compile Include="Utilities.cs" />
+    <Compile Include="WebGridExtensions.cs" />
+    <Compile Include="Controllers\Admin63135414Controller.cs" />
+    <Compile Include="Controllers\Category63135414Controller.cs" />
+    <Compile Include="Controllers\Customer63135414Controller.cs" />
+    <Compile Include="Controllers\Product63135414Controller.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="assets\admin\css\style.css" />
+    <Content Include="assets\admin\images\1139.png" />
     <Content Include="assets\admin\images\test\chicago.jpg" />
     <Content Include="assets\admin\images\test\la.jpg" />
     <Content Include="assets\admin\images\test\ny.jpg" />
@@ -352,8 +344,8 @@
     <Content Include="Content\Site.css" />
     <Content Include="Models\Model63135414.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Model63135414.Context.cs</LastGenOutput>
       <DependentUpon>Model63135414.edmx</DependentUpon>
+      <LastGenOutput>Model63135414.Context.cs</LastGenOutput>
     </Content>
     <Content Include="Models\Model63135414.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
@@ -366,13 +358,6 @@
     <Content Include="Scripts\bootstrap.esm.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <EntityDeploy Include="Models\Model63135414.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>Model63135414.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <Content Include="Models\Model63135414.edmx.diagram">
-      <DependentUpon>Model63135414.edmx</DependentUpon>
-    </Content>
     <Content Include="assets\admin\css\.DS_Store" />
     <Content Include="assets\admin\css\maps\style.css.map" />
     <Content Include="assets\admin\fonts\.DS_Store" />
@@ -465,6 +450,13 @@
     <Content Include="assets\customer\sass\_shoping-cart.scss" />
     <Content Include="assets\customer\sass\_sidebar.scss" />
     <Content Include="assets\customer\sass\_variable.scss" />
+    <EntityDeploy Include="Models\Model63135414.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>Model63135414.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\Model63135414.edmx.diagram">
+      <DependentUpon>Model63135414.edmx</DependentUpon>
+    </Content>
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -508,10 +500,10 @@
     <Content Include="Views\Product63135414\ListProduct.cshtml" />
     <Content Include="Views\Product63135414\CreateProductAndImage.cshtml" />
     <Content Include="Views\Product63135414\ListImage.cshtml" />
-    <Content Include="Views\Product63135414\DetailProduct.cshtml" />
     <Content Include="Views\Category63135414\AddProductToCategory.cshtml" />
-    <Content Include="Views\Customer63135414\DetailsProduct.cshtml" />
     <Content Include="Views\Customer63135414\Products.cshtml" />
+    <Content Include="Views\Customer63135414\CartView.cshtml" />
+    <Content Include="Views\Product63135414\DetailsProduct.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

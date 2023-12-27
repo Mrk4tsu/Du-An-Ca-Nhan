@@ -17,27 +17,28 @@ namespace ShopPhanMem_63135414.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Product()
         {
-            this.CartDetails = new HashSet<CartDetail>();
+            this.CartItems = new HashSet<CartItem>();
             this.OrderDetails = new HashSet<OrderDetail>();
             this.ProductImages = new HashSet<ProductImage>();
             this.ProductInCategories = new HashSet<ProductInCategory>();
             this.Promotions = new HashSet<Promotion>();
+            this.ViewedUserIds = new HashSet<string>();
         }
     
         public string id { get; set; }
         public string userId { get; set; }
         public string productName { get; set; }
         public string productUrl { get; set; }
-        public decimal? priceOriginal { get; set; }
-        public decimal? price { get; set; }
-        public DateTime dateUpload { get; set; }
-        public DateTime? dateUpdate { get; set; }
-        public int? viewCount { get; set; }
-        public int? sellCount { get; set; }
+        public Nullable<decimal> priceOriginal { get; set; }
+        public Nullable<decimal> price { get; set; }
+        public System.DateTime dateUpload { get; set; }
+        public Nullable<System.DateTime> dateUpdate { get; set; }
+        public Nullable<int> viewCount { get; set; }
+        public Nullable<int> sellCount { get; set; }
         public string description { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CartDetail> CartDetails { get; set; }
+        public virtual ICollection<CartItem> CartItems { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
         public virtual User User { get; set; }
@@ -47,5 +48,6 @@ namespace ShopPhanMem_63135414.Models
         public virtual ICollection<ProductInCategory> ProductInCategories { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Promotion> Promotions { get; set; }
+        public virtual ICollection<string> ViewedUserIds { get; set; }
     }
 }

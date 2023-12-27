@@ -12,14 +12,15 @@ namespace ShopPhanMem_63135414.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class HistoryPayment
+    public partial class CartItem
     {
-        public int Id { get; set; }
-        public Nullable<int> PaymentId { get; set; }
-        public string Status { get; set; }
-        public string Description { get; set; }
-        public System.DateTime CreatedAt { get; set; }
+        public string Id { get; set; }
+        public string CartId { get; set; }
+        public string ProductId { get; set; }
+        public int? Quantity { get; set; }
+        public Nullable<decimal> Price { get; set; }
     
-        public virtual Payment Payment { get; set; }
+        public virtual Cart Cart { get; set; }
+        public virtual Product Product { get; set; }
     }
 }
