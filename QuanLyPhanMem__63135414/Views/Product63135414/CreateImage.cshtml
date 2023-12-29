@@ -1,9 +1,0 @@
-﻿@model QuanLyPhanMem__63135414.Models.ProductImage
-
-<div class="form-group">
-    @Html.LabelFor(model => model.imagePath, htmlAttributes: new { @class = "control-label col-md-2" })
-    <div class="col-md-10">
-        @Html.EditorFor(model => model.imagePath, new { htmlAttributes = new { @class = "form-control" } })
-        @Html.ValidationMessageFor(model => model.imagePath, "", new { @class = "text-danger" })
-    </div>
-</div>

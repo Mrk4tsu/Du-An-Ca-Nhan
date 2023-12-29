@@ -14,23 +14,13 @@ namespace ShopPhanMem_63135414.Models
     
     public partial class Payment
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Payment()
-        {
-            this.HistoryPayments = new HashSet<HistoryPayment>();
-        }
+        public string PaymentId { get; set; }
+        public string OrderId { get; set; }
+        public System.DateTime PaymentDate { get; set; }
+        public decimal Amount { get; set; }
+        public string PaymentMethod { get; set; }
+        public string Status { get; set; }
     
-        public int Id { get; set; }
-        public string orderId { get; set; }
-        public string paymentMethodId { get; set; }
-        public decimal aMount { get; set; }
-        public string statusPayment { get; set; }
-        public System.DateTime createAt { get; set; }
-        public Nullable<System.DateTime> createUpdate { get; set; }
-    
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<HistoryPayment> HistoryPayments { get; set; }
         public virtual Order Order { get; set; }
-        public virtual PaymentMethod PaymentMethod { get; set; }
     }
 }

@@ -40,7 +40,7 @@
         <div class="humberger__menu__cart">
             <ul>
                 <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
-                <li><a href="#"><i class="fa fa-shopping-bag"></i> <span>3</span></a></li>
+                <li><a href="@Url.Action("CartView", "Customer63135414")"><i class="fa fa-shopping-bag"></i> <span>3</span></a></li>
             </ul>
         </div>
         <div class="humberger__menu__widget">
@@ -68,16 +68,20 @@
                 <li><a href="@Url.Action("Home", "Customer63135414")">Trang chủ</a></li>
                 <li><a href="@Url.Action("Products", "Customer63135414")">Sản phẩm</a></li>
                 <li>
-                    <a href="#">Pages</a>
-                    <ul class="header__menu__dropdown">
-                        <li><a href="#">Shop Details</a></li>
-                        <li><a href="#">Shoping Cart</a></li>
-                        <li><a href="#">Check Out</a></li>
-                        <li><a href="#">Blog Details</a></li>
-                    </ul>
+                    <a href="@Url.Action("CartView", "Customer63135414")">Giỏ Hàng</a>
                 </li>
-                <li><a href="#">Blog</a></li>
-                <li><a href="#">Contact</a></li>
+                @if (Session["User"] != null)
+                {
+                    var user = (ShopPhanMem_63135414.Models.Catalog.UserSystem.UserViewModel)Session["User"];
+                    if (user.roleId.Equals("R01") || user.roleId.Equals("R02"))
+                    {
+                        <li><a href="@Url.Action("AdminHome", "Admin63135414")">Trang admin</a></li>
+                    }
+                    else
+                    {
+                        <li><a href="@Url.Action("Home", "Customer63135414")">Lịch sử mua hàng</a></li>
+                    }
+                }
                 <br />
                 <li>
                     @using (Html.BeginForm("Logout", "Customer63135414", FormMethod.Post, new { id = "logoutForm" }))
@@ -106,27 +110,33 @@
     <header class="header">
         <div class="container">
             <div class="row">
-                <div class="col-lg-3">
+                <div class="col-lg-2">
                     <div class="header__logo">
                         <a href="@Url.Action("Home", "Customer63135414")"><img src="~/assets/customer/img/logo.png" alt=""></a>
                     </div>
                 </div>
-                <div class="col-lg-6">
+                <div class="col-lg-7">
                     <nav class="header__menu">
                         <ul>
                             <li><a href="@Url.Action("Home", "Customer63135414")">Trang chủ</a></li>
 
                             <li><a href="@Url.Action("Products", "Customer63135414")">Sản phẩm</a></li>
                             <li>
-                                <a href="#">Pages</a>
-                                <ul class="header__menu__dropdown">
-                                    <li><a href="./shop-details.html">Shop Details</a></li>
-                                    <li><a href="./shoping-cart.html">Shoping Cart</a></li>
-                                    <li><a href="./checkout.html">Check Out</a></li>
-                                    <li><a href="./blog-details.html">Blog Details</a></li>
-                                </ul>
+                                <a href="@Url.Action("CartView", "Customer63135414")">Giỏ hàng</a>
                             </li>
-                            <li><a href="./blog.html">Blog</a></li>
+                            @if (Session["User"] != null)
+                            {
+                                var user = (ShopPhanMem_63135414.Models.Catalog.UserSystem.UserViewModel)Session["User"];
+                                if (user.roleId.Equals("R01") || user.roleId.Equals("R02"))
+                                {
+                                    <li><a href="@Url.Action("AdminHome", "Admin63135414")">Trang admin</a></li>
+                                }
+                                else
+                                {
+                                    <li><a href="@Url.Action("Home", "Customer63135414")">Lịch sử mua hàng</a></li>
+                                }
+                            }
+
                         </ul>
                     </nav>
                 </div>
@@ -134,7 +144,7 @@
                     <div class="header__cart">
                         <ul>
                             <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
-                            <li><a href="#"><i class="fa fa-shopping-bag"></i> <span>3</span></a></li>
+                            <li><a href="@Url.Action("CartView", "Customer63135414")"><i class="fa fa-shopping-bag"></i> <span>3</span></a></li>
                         </ul>
                         <div class="header__top__right__auth">
                             @if (Session["User"] != null)
@@ -169,13 +179,7 @@
         </div>
     </header>
     <!-- Header Section End -->
-    <!-- Hero Section Begin -->
-    <section class="hero hero-normal">
-        <div class="container">
 
-        </div>
-    </section>
-    <!-- Hero Section End -->
     <section>
         <marquee>
             Chào mừng quý khách đến với <span class="fw-semibold text-success">MrKatsu Shop</span>. Chúc quý khác mua sắm vui vẻ!
@@ -206,6 +210,8 @@
             Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rerum, aspernatur doloremque repellat, nesciunt recusandae labore nihil velit ratione neque a amet ad laudantium optio fugiat officiis voluptatum consequatur debitis voluptas!
         </marquee>
     </section>
+
+
     <!-- Footer Section Begin -->
     <footer class="footer spad">
         <div class="container">
@@ -216,8 +222,7 @@
                             <p>
                                 <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
                                 Copyright &copy;
-                                <script>document.write(new Date().getFullYear());</script> All rights reserved | This
-                                template is made with <i class="fa fa-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+                                <script>document.write(new Date().getFullYear());</script> Bài tập dự án môn Phát triển ứng dụng Web 1 - <i class="fa fa-heart" aria-hidden="true"></i> By <a href="https://colorlib.com" target="_blank">Nguyễn Đức Thắng</a>
                         </div>
                     </div>
                 </div>
@@ -235,5 +240,64 @@
     <script src="~/assets/customer/js/owl.carousel.min.js"></script>
     <script src="~/assets/customer/js/main.js"></script>
 
+    <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold text-success" id="successModalLabel">Success</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body ">
+                    <div class="row d-flex justify-content-center">
+                        <img src="~/assets/admin/images/1139.png" style="width:250px;" />
+                        <div class="py-2 text-center">
+                            <h5 class="text-info font-weight-bold">Đã thêm sản phẩm vào giỏ hàng!</h5>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    @using (Html.BeginForm("CartView", "Customer63135414", FormMethod.Get, new { id = "goCartView" }))
+                    {
+                        <a href="javascript:document.getElementById('goCartView').submit()" class="btn btn-success">Xem giỏ hàng</a>
+                    }
+                    <a class="btn btn-primary" data-dismiss="modal">OK</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-danger fw-semibold text-uppercase" id="errorModalLabel">Thêm sản phẩm thất bại</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body ">
+                    <div class="row d-flex justify-content-center">
+                        <img src="~/assets/admin/images/1139.png" style="width:250px;" />
+                        <div class="py-2 text-center">
+                            <h5 class="text-info font-weight-bold">Đã có sản phẩm này trong giỏ hàng của bạn rồi!</h5>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+                    @using (Html.BeginForm("CartView", "Customer63135414", FormMethod.Get, new { id = "goCartView" }))
+                    {
+                        <a href="javascript:document.getElementById('goCartView').submit()" style="background-color: #7FAD39" class="primary-btn cart-btn text-light shadow">Xem giỏ hàng</a>
+                    }
+
+                    <a href="#" class="primary-btn cart-btn text-light shadow" data-dismiss="modal" style="background-color: #8F0454">OK</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

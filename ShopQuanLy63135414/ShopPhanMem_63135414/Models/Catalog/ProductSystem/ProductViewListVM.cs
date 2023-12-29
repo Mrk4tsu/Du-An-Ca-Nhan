@@ -15,16 +15,25 @@ namespace ShopPhanMem_63135414.Models.Catalog.ProductSystem
         public string CategoryNameFull { get; set; }
         public decimal? Price { get; set; }
         public decimal? OgPrice { get; set; }
+        public int? ViewCount { get; set; }
+        public int? SellCount { get; set; }
+        public int? Quantity { get; set; }
+        public string Description { get; set; }
+        public List<string> ImagePaths { get; set; }
         public ProductViewListVM()
         {
-
+            ImagePaths = new List<string>();
         }
-        public ProductViewListVM(Product product)
+        public ProductViewListVM(Product product, int? quantity)
         {
             Id = product.id;
             ProductName = product.productName;
             Price = product.price;
             OgPrice = product.priceOriginal;
+            Quantity = quantity;
+            ViewCount = product.viewCount;
+            SellCount = product.sellCount;
+            Description = product.description;
 
             if (product.ProductImages.Any())
             {
@@ -65,7 +74,7 @@ namespace ShopPhanMem_63135414.Models.Catalog.ProductSystem
             {
                 CategoryNameFull = null; // hoặc có thể đặt một giá trị mặc định khác
             }
-            // Gán các thuộc tính khác cần thiết
+            ImagePaths = new List<string>();
         }
     }
 }

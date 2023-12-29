@@ -72,6 +72,7 @@ namespace ShopPhanMem_63135414.Controllers
             var v = (from a in db.Users
                      where
                      (a.email.Contains(search) ||
+                      a.userId.Contains(search)||
                       a.address.Contains(search) ||
                       a.UserRole.roleName.Contains(search) ||
                       a.bio.Contains(search) ||

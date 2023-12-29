@@ -1,0 +1,43 @@
+﻿@model ShopPhanMem_63135414.Models.Order
+
+@{
+    ViewBag.Title = "OrderConfirmation";
+    Layout = "~/Views/Shared/_LayoutCustomer.cshtml";
+}
+<section class="card">
+    <div class="row d-flex py-5 justify-content-center">
+        <img src="~/assets/customer/img/thank.png" style="width:150px;" />
+        <div class="py-2 d-flex justify-content-center text-center">
+            <h5 class="text-info font-weight-bold alert alert-success" style="width:50%">Cảm ơn đã mua hàng!</h5>
+        </div>
+        <h6 class="text-info text-center py-2 font-weight-bold">Đơn hàng đã được gửi yêu cầu tới người bán, vui lòng đợi phản hồi!</h6>
+        <h6 class="text-center"><a class="text-secondary py-2 font-weight-bold" href="@Url.Action("Home", "Customer63135414")">Quay lại trang chủ</a></h6>
+    </div>
+</section>
+
+
+@*<p>Order ID: @Model.OrderId</p>
+<p>Total Amount: $@Model.TotalAmount</p>
+
+<h3>Order Items:</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Product Name</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var orderItem in Model.OrderItems)
+        {
+            <tr>
+                <td>@orderItem.Product.productName</td>
+                <td>@orderItem.Quantity</td>
+                <td>$@orderItem.Price</td>
+                <td>$@(orderItem.Quantity * orderItem.Price)</td>
+            </tr>
+        }
+    </tbody>
+</table>*@

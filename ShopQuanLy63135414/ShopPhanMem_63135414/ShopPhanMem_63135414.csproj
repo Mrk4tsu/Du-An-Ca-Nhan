@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" />
   <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -46,10 +47,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="ImageResizer, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ImageResizer.4.2.8\lib\net45\ImageResizer.dll</HintPath>
@@ -134,6 +135,15 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\Orders63135414Controller.cs" />
+    <Compile Include="Models\Cart.cs">
+      <DependentUpon>Model63135414.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CartItem.cs">
+      <DependentUpon>Model63135414.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Catalog\OrderSystem\CheckOutViewModel.cs" />
+    <Compile Include="Models\Catalog\OrderSystem\OrderDetail.cs" />
     <Compile Include="Models\Catalog\ProductSystem\Product.cs" />
     <Compile Include="Models\Catalog\ProductSystem\ProductAndImageViewModel.cs" />
     <Compile Include="Models\Catalog\ProductSystem\ProductViewListVM.cs" />
@@ -141,28 +151,10 @@
     <Compile Include="Models\Catalog\UserSystem\User.cs" />
     <Compile Include="Models\Catalog\UserSystem\UserLogin.cs" />
     <Compile Include="Models\Catalog\UserSystem\UserViewModel.cs" />
-    <Compile Include="Utilities.cs" />
-    <Compile Include="WebGridExtensions.cs" />
-    <Compile Include="Controllers\Admin63135414Controller.cs" />
-    <Compile Include="Controllers\Category63135414Controller.cs" />
-    <Compile Include="Controllers\Customer63135414Controller.cs" />
-    <Compile Include="Controllers\Product63135414Controller.cs" />
-    <Compile Include="Global.asax.cs">
-      <DependentUpon>Global.asax</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Cart.cs">
-      <DependentUpon>Model63135414.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\CartDetail.cs">
-      <DependentUpon>Model63135414.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\Category.cs">
       <DependentUpon>Model63135414.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\History.cs">
-      <DependentUpon>Model63135414.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\HistoryPayment.cs">
       <DependentUpon>Model63135414.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Model63135414.Context.cs">
@@ -183,13 +175,10 @@
     <Compile Include="Models\Order.cs">
       <DependentUpon>Model63135414.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\OrderDetail.cs">
+    <Compile Include="Models\OrderItem.cs">
       <DependentUpon>Model63135414.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Payment.cs">
-      <DependentUpon>Model63135414.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\PaymentMethod.cs">
       <DependentUpon>Model63135414.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Product.cs">
@@ -219,10 +208,20 @@
     <Compile Include="Models\UserRole.cs">
       <DependentUpon>Model63135414.tt</DependentUpon>
     </Compile>
+    <Compile Include="Utilities.cs" />
+    <Compile Include="WebGridExtensions.cs" />
+    <Compile Include="Controllers\Admin63135414Controller.cs" />
+    <Compile Include="Controllers\Category63135414Controller.cs" />
+    <Compile Include="Controllers\Customer63135414Controller.cs" />
+    <Compile Include="Controllers\Product63135414Controller.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="assets\admin\css\style.css" />
+    <Content Include="assets\admin\images\1139.png" />
     <Content Include="assets\admin\images\test\chicago.jpg" />
     <Content Include="assets\admin\images\test\la.jpg" />
     <Content Include="assets\admin\images\test\ny.jpg" />
@@ -273,6 +272,7 @@
     <Content Include="assets\customer\img\cart\cart-1.jpg" />
     <Content Include="assets\customer\img\cart\cart-2.jpg" />
     <Content Include="assets\customer\img\cart\cart-3.jpg" />
+    <Content Include="assets\customer\img\cart\cart.png" />
     <Content Include="assets\customer\img\categories\cat-1.jpg" />
     <Content Include="assets\customer\img\categories\cat-2.jpg" />
     <Content Include="assets\customer\img\categories\cat-3.jpg" />
@@ -320,6 +320,7 @@
     <Content Include="assets\customer\img\product\product-7.jpg" />
     <Content Include="assets\customer\img\product\product-8.jpg" />
     <Content Include="assets\customer\img\product\product-9.jpg" />
+    <Content Include="assets\customer\img\thank.png" />
     <Content Include="assets\customer\js\bootstrap.min.js" />
     <Content Include="assets\customer\js\jquery-3.3.1.min.js" />
     <Content Include="assets\customer\js\jquery-ui.min.js" />
@@ -352,8 +353,8 @@
     <Content Include="Content\Site.css" />
     <Content Include="Models\Model63135414.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Model63135414.Context.cs</LastGenOutput>
       <DependentUpon>Model63135414.edmx</DependentUpon>
+      <LastGenOutput>Model63135414.Context.cs</LastGenOutput>
     </Content>
     <Content Include="Models\Model63135414.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
@@ -366,13 +367,6 @@
     <Content Include="Scripts\bootstrap.esm.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <EntityDeploy Include="Models\Model63135414.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>Model63135414.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <Content Include="Models\Model63135414.edmx.diagram">
-      <DependentUpon>Model63135414.edmx</DependentUpon>
-    </Content>
     <Content Include="assets\admin\css\.DS_Store" />
     <Content Include="assets\admin\css\maps\style.css.map" />
     <Content Include="assets\admin\fonts\.DS_Store" />
@@ -465,6 +459,13 @@
     <Content Include="assets\customer\sass\_shoping-cart.scss" />
     <Content Include="assets\customer\sass\_sidebar.scss" />
     <Content Include="assets\customer\sass\_variable.scss" />
+    <EntityDeploy Include="Models\Model63135414.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>Model63135414.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\Model63135414.edmx.diagram">
+      <DependentUpon>Model63135414.edmx</DependentUpon>
+    </Content>
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -508,10 +509,16 @@
     <Content Include="Views\Product63135414\ListProduct.cshtml" />
     <Content Include="Views\Product63135414\CreateProductAndImage.cshtml" />
     <Content Include="Views\Product63135414\ListImage.cshtml" />
-    <Content Include="Views\Product63135414\DetailProduct.cshtml" />
     <Content Include="Views\Category63135414\AddProductToCategory.cshtml" />
-    <Content Include="Views\Customer63135414\DetailsProduct.cshtml" />
     <Content Include="Views\Customer63135414\Products.cshtml" />
+    <Content Include="Views\Customer63135414\CartView.cshtml" />
+    <Content Include="Views\Product63135414\DetailsProduct.cshtml" />
+    <Content Include="Views\Orders63135414\Create.cshtml" />
+    <Content Include="Views\Orders63135414\Delete.cshtml" />
+    <Content Include="Views\Orders63135414\Details.cshtml" />
+    <Content Include="Views\Orders63135414\Edit.cshtml" />
+    <Content Include="Views\Orders63135414\Index.cshtml" />
+    <Content Include="Views\Customer63135414\OrderConfirmation.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -582,7 +589,10 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.targets'))" />
   </Target>
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

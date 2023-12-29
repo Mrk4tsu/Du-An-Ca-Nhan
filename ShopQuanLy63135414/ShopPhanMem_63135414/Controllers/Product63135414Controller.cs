@@ -332,37 +332,37 @@ namespace ShopPhanMem_63135414.Controllers
         }
         #endregion
         #region[Xem chi tiết sản phẩm]
-        public async Task<ActionResult> DetailProduct(string id)
+        public async Task<ActionResult> DetailsProduct(string id)
         {
-            if (string.IsNullOrEmpty(id))
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
             var product = await db.Products.FindAsync(id);
+            // Kiểm tra xem sản phẩm có tồn tại không
             if (product == null)
             {
                 return HttpNotFound();
             }
-            // Lấy danh sách hình ảnh của sản phẩm
-            var productImages = await db.ProductImages.Where(pi => pi.productId == id).ToListAsync();
-
-            // Map thông tin sang ViewModel
-            var viewModel = new ProductAndImageViewModel
+            if (Session["User"] != null)
             {
-                Product = new ProductViewModel
+                var user = (UserViewModel)Session["User"];
+                if (!product.ViewedUserIds.Contains(user.userId))
                 {
-                    productName = product.productName,
-                    userId = product.userId,
-                    dateUpload = product.dateUpload,
-                    dateUpdate = product.dateUpdate,
-                    viewCount = product.viewCount,
-                    sellCount = product.sellCount,
-                    description = product.description,
-                    price = product.price,
-                    priceOriginal = product.priceOriginal,
-                },
-                ProductImage = productImages.FirstOrDefault() // Lấy ảnh đầu tiên, bạn có thể thay đổi tùy theo yêu cầu
-            };
+                    // Người dùng chưa xem sản phẩm, cập nhật viewCount và thêm id người dùng vào danh sách đã xem
+                    product.viewCount++;
+                    product.ViewedUserIds.Add(user.userId);
+                    await db.SaveChangesAsync(); // Lưu thay đổi vào cơ sở dữ liệu
+                }
+            }
+            // Tạo một đối tượng ViewModel từ sản phẩm
+            ProductViewListVM viewModel = new ProductViewListVM(product, null);
+            // Lấy danh sách hình ảnh từ thư mục trên máy chủ
+            string imagePath = Server.MapPath("~/assets/product/" + product.productName + "/");
+            string[] imageFiles = Directory.GetFiles(imagePath);
+            // Thêm đường dẫn của các hình ảnh vào ViewModel
+            viewModel.ImagePaths = imageFiles.Select(Path.GetFileName).ToList();
+            // Chuyển đến View để hiển thị thông tin chi tiết sản phẩm
+
+
+            var topProducts = db.Products.OrderByDescending(p => p.viewCount ?? 0).Take(4).ToList();
+            ViewBag.TopProducts = topProducts;
             return View(viewModel);
         }
         #endregion
@@ -383,7 +383,7 @@ namespace ShopPhanMem_63135414.Controllers
             List<string> savedFileNames = new List<string>();
 
             foreach (var file in files)
-            { 
+            {
                 if (file != null && file.ContentLength > 0)
                 {
                     // Generate a unique file name using timestamp and Guid
