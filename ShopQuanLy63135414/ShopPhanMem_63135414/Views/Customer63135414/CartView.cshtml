@@ -4,7 +4,6 @@
     ViewBag.Title = "Giỏ hàng";
     Layout = "~/Views/Shared/_LayoutCustomer.cshtml";
 
-
 }
 
 <section class="shoping-cart spad">
@@ -59,7 +58,11 @@
                     }
                     else
                     {
-                        <h2>Your shopping cart is empty.</h2>
+                        <div class="row text-center d-flex justify-content-center">
+                            <img src="~/assets/customer/img/cart/cart.png" style="width:200px" />
+                            <br />
+                            <h2 class="text-secondary fw-bold text-uppercase">Giỏ hàng đang trống. Bỏ vào cái gì đó đi!</h2>
+                        </div>
                     }
                 </div>
             </div>
@@ -74,10 +77,14 @@
                     </ul>
                     <div class="row">
                         <div class="col-md-6">
-                            <a href="#" style="background-color: #7FAD39" class="primary-btn cart-btn text-light shadow">PROCEED TO CHECKOUT</a>
+                            @using (Html.BeginForm("ProcessCheckout", "Customer63135414", FormMethod.Post))
+                            {
+                                <button type="submit" style="background-color: #7FAD39; border:0px; width:100%" class="primary-btn cart-btn text-light shadow py-2">Proceed to Checkout</button>
+                                @*<a href="@Url.Action("Checkout", "Customer63135414")"  class="primary-btn cart-btn text-light shadow">PROCEED TO CHECKOUT</a>*@
+                            }
                         </div>
                         <div class="col-md-6">
-                            <a href="@Url.Action("Products", "Customer63135414")" class="primary-btn cart-btn text-secondary shadow">CONTINUE SHOPPING</a>
+                            <a href="@Url.Action("Products", "Customer63135414")" class="primary-btn cart-btn text-secondary shadow py-2">Mua sắm tiếp</a>
                         </div>
                     </div>
 
@@ -86,4 +93,3 @@
         </div>
     </div>
 </section>
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>

@@ -1,0 +1,64 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<h5>Chưa xử lý</h5>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Order ID</th>
+            <th>Người đặt hàng</th>
+            <th>Thời gian Order</th>
+            <th>Tổng tiền</th>
+            <!-- Thêm các cột khác nếu cần -->
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var order in ViewBag.PaidOrders)
+        {
+            <tr>
+                <td>@order.OrderId</td>
+                <td>@order.User.firstname @order.User.lastname</td>
+                <td>@order.OrderDate </td>
+                <td>@order.TotalAmount $</td>
+                <!-- Thêm các cột khác nếu cần -->
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+
+<h5>All Orders</h5>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Order ID</th>
+            <th>Người đặt hàng</th>
+            <th>Thời gian Order</th>
+            <th>Tổng tiền</th>
+            <th>Trạng thái</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var order in ViewBag.AllOrders)
+        {
+            <tr>
+                <td>@order.OrderId</td>
+                <td>@order.User.firstname @order.User.lastname</td>
+                <td>@order.OrderDate </td>
+                <td>@order.TotalAmount $</td>
+                <td>@order.Status</td>
+            </tr>
+        }
+    </tbody>
+</table>

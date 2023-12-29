@@ -12,21 +12,25 @@ namespace ShopPhanMem_63135414.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class OrderProduct
+    public partial class Order
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public OrderProduct()
+        public Order()
         {
-            this.OrderDetails = new HashSet<OrderDetail>();
+            this.OrderItems = new HashSet<OrderItem>();
+            this.Payments = new HashSet<Payment>();
         }
     
-        public int Id { get; set; }
+        public string OrderId { get; set; }
+        public string UserId { get; set; }
         public System.DateTime OrderDate { get; set; }
-        public string userId { get; set; }
-        public string EmailGetProduct { get; set; }
+        public Nullable<decimal> TotalAmount { get; set; }
+        public string Status { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<OrderDetail> OrderDetails { get; set; }
+        public virtual ICollection<OrderItem> OrderItems { get; set; }
         public virtual User User { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Payment> Payments { get; set; }
     }
 }

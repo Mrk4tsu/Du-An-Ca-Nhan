@@ -2,17 +2,28 @@
     ViewBag.Title = "AddProductToCategory";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
-
-<h2>AddProductToCategory</h2>
-<p>@ViewBag.Message</p>
 @using (Html.BeginForm("AddProductToCategory", "Category63135414", FormMethod.Post))
 {
-    @Html.AntiForgeryToken()
-    <label for="productId">Product ID:</label>
-    @Html.TextBox("productId", null, new { required = "required" })
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title">Bổ sung sản phẩm</h5>
+        </div>
+        <div class="card-body">
+            <p>@ViewBag.Message</p>
 
-    <label for="categoryId">Category ID:</label>
-    @Html.TextBox("categoryId", null, new { required = "required" })
+            @Html.AntiForgeryToken()
 
-    <input type="submit" value="Add to Category" />
+            <div class="mb-3">
+                <label for="productId" class="form-label">Product ID:</label>
+                @Html.TextBox("productId", null, new { @class = "form-control", required = "required" })
+            </div>
+
+            <div class="mb-3">
+                <label for="categoryId" class="form-label">Category:</label>
+                @Html.DropDownList("categoryId", (IEnumerable<SelectListItem>)ViewBag.Categories, "Select a category", new { @class = "form-control", required = "required" })
+            </div>
+
+            <input type="submit" value="Add to Category" class="btn btn-primary" />
+        </div>
+    </div>
 }

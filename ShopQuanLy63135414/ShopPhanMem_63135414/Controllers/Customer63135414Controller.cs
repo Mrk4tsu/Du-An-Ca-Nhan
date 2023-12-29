@@ -1,10 +1,10 @@
 ﻿using ImageResizer;
 using ShopPhanMem_63135414;
 using ShopPhanMem_63135414.Models;
+using ShopPhanMem_63135414.Models.Catalog.OrderSystem;
 using ShopPhanMem_63135414.Models.Catalog.ProductSystem;
 using ShopPhanMem_63135414.Models.Catalog.UserSystem;
 using System;
-using System.Collections.Generic;
 using System.Data.Entity;
 using System.Drawing;
 using System.IO;
@@ -16,7 +16,6 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
-using static System.Net.WebRequestMethods;
 
 namespace QuanLyPhanMem__63135414.Controllers
 {
@@ -260,40 +259,41 @@ namespace QuanLyPhanMem__63135414.Controllers
             using (QLPM63135414Entities db = new QLPM63135414Entities())
             {
                 // Lấy danh sách sản phẩm từ database
-                List<ProductAndImageViewModel> productList = db.Products
-                    .Select(p => new ProductAndImageViewModel
-                    {
-                        Product = new ProductViewModel
-                        {
-                            productId = p.id,
-                            productName = p.productName,
-                            price = p.price
-                        },
-                        // Không tạo đối tượng ProductImage ở đây
-                    })
-                    .ToList();
+                var products = db.Products
+                     .Include(i => i.ProductImages)
+                     .Include(pic => pic.ProductInCategories.Select(c => c.Category))
+                     .OrderByDescending(p => p.viewCount ?? 0)
+                     .Take(4)
+                     .ToList();
 
-                // Tạo đối tượng ProductImage sau khi đã lấy dữ liệu từ database
-                foreach (var product in productList)
-                {
-                    // Bạn có thể thực hiện logic để lấy dữ liệu từ bảng ProductImage tương ứng
-                    // Ví dụ:
-                    var productImage = db.ProductImages.FirstOrDefault(pi => pi.productId == product.Product.id);
-                    if (productImage != null)
-                    {
-                        product.ProductImage = productImage;
-                    }
-                }
-
-                // Lưu danh sách vào ViewBag
-                ViewBag.ProductList = productList;
-
-                // Lấy danh sách sản phẩm từ database
-                ViewBag.Products = db.Products.ToList();
+                // Chuyển danh sách sản phẩm sang danh sách ViewModel
+                var productViewModels = products.Select(product => new ProductViewListVM(product, null)).ToList();
 
                 ViewBag.Categories = db.Categories.ToList().OrderBy(c => c.categoryName);
+
+                // Lấy 4 sản phẩm mới nhất
+                var productsList = db.Products
+                    .OrderByDescending(p => p.dateUpload)
+                    .Take(4)
+                    .ToList();
+
+
+                
+                // Chuyển đổi danh sách sản phẩm thành danh sách ProductViewListVM
+                var productUploadViewModels = productsList.Select(p => new ProductViewListVM(p, null)).ToList();
+
+
+                var productsMostSellList = db.Products
+                    .OrderByDescending(p => p.sellCount ?? 0)
+                    .Take(4)
+                    .ToList();
+                var productBestSellViewModels = productsMostSellList.Select(p => new ProductViewListVM(p, null)).ToList();
+                // Lưu danh sách sản phẩm mới nhất vào ViewBag
+                ViewBag.ProductUploadViewModels = productUploadViewModels;
+                ViewBag.ProductBestSellViewModels = productBestSellViewModels;
+
+                return View(productViewModels);
             }
-            return View();
         }
         [HttpGet]
         [Authorize]
@@ -416,7 +416,7 @@ namespace QuanLyPhanMem__63135414.Controllers
                 {
                     var user = (UserViewModel)Session["User"];
                     var userCart = db.Carts.Include(c => c.CartItems)
-                                             .FirstOrDefault(c => c.UserId == user.userId);
+                                      .FirstOrDefault(c => c.UserId == user.userId);
 
                     if (userCart == null)
                     {
@@ -436,7 +436,7 @@ namespace QuanLyPhanMem__63135414.Controllers
                     if (cartItem != null)
                     {
                         // Product already in cart, return a JSON result indicating the failure
-                        return Json(new { success = false, message = "Product already in cart." });
+                        return Json(new { success = false, message = "Sản phẩm đã tồn tại." });
                     }
                     else
                     {
@@ -445,18 +445,23 @@ namespace QuanLyPhanMem__63135414.Controllers
 
                         if (product != null)
                         {
-                            userCart.CartItems.Add(new CartItem
+                            // Create a new CartItem
+                            var newCartItem = new CartItem
                             {
                                 Id = Utilities.instance.getIdCartItem(),
                                 ProductId = productId,
                                 Quantity = 1,
-                                Price = product.price
-                            });
+                                Price = product.price,
+                                CartId = userCart.Id // Set the CartId here
+                            };
+
+                            userCart.CartItems.Add(newCartItem);
 
                             db.SaveChanges();
 
                             // Return a JSON result indicating the success
-                            return Json(new { success = true, message = "Product added to cart successfully." });
+                            return Json(new { success = true, message = "Thêm vào giỏ hàng thành công." });
+
                         }
                     }
                 }
@@ -465,7 +470,6 @@ namespace QuanLyPhanMem__63135414.Controllers
             // User not logged in, return a JSON result indicating the failure
             return Json(new { success = false, message = "User not logged in." });
         }
-
 
         [HttpGet]
         public ActionResult CartView()
@@ -536,111 +540,198 @@ namespace QuanLyPhanMem__63135414.Controllers
                 return RedirectToAction("Login");
             }
         }
-
-        public ActionResult Error()
+        [HttpPost]
+        public ActionResult ProcessCheckout()
         {
-            return View();
-        }
-        #region[Phương thức hỗ trợ]
-        [NonAction]
-        private string SaveUploadedFile(HttpPostedFileBase file, string subFolder)
-        {
-            if (file != null && file.ContentLength > 0)
+            if (Session["User"] != null)
             {
-                var fileName = Path.GetFileName(file.FileName);
-                var directoryPath = Server.MapPath($"~/assets/{subFolder}");
-
-                // Tạo thư mục nếu không tồn tại
-                if (!Directory.Exists(directoryPath))
+                using (QLPM63135414Entities db = new QLPM63135414Entities())
                 {
-                    Directory.CreateDirectory(directoryPath);
+                    var user = (UserViewModel)Session["User"];
+                    var userCart = db.Carts.Include(c => c.CartItems)
+                                           .FirstOrDefault(c => c.UserId == user.userId);
+
+                    if (userCart != null && userCart.CartItems.Any())
+                    {
+                        // Tạo đối tượng Order
+                        var order = new Order
+                        {
+                            OrderId = Utilities.instance.getIdOrder(),
+                            UserId = user.userId,
+                            OrderDate = DateTime.Now,
+                            TotalAmount = userCart.CartItems.Sum(ci => ci.Quantity * ci.Price),
+                            Status = "Đã thanh toán" ,// Có thể đặt trạng thái khác tùy thuộc vào logic của bạn
+                        };
+
+                        // Tạo đối tượng OrderItem cho mỗi sản phẩm trong giỏ hàng
+                        foreach (var cartItem in userCart.CartItems)
+                        {
+                            // Tăng sellCount của sản phẩm
+                            var product = db.Products.Find(cartItem.ProductId);
+                            if (product != null)
+                            {
+                                product.sellCount += 1;
+                            }
+                            var orderItem = new OrderItem
+                            {
+                                OrderItemId = cartItem.Id, // Đảm bảo giá trị mới mỗi lần được gọi
+                                OrderId = order.OrderId,
+                                ProductId = cartItem.ProductId,
+                                Quantity = cartItem.Quantity,
+                                Price = cartItem.Price
+                            };
+
+                            order.OrderItems.Add(orderItem);
+                        }
+
+                        // Lưu thay đổi vào cơ sở dữ liệu
+                        db.Orders.Add(order);
+                        db.SaveChanges();
+
+                        // Xóa các mục trong giỏ hàng, nhưng giữ nguyên giỏ hàng
+                        foreach (var cartItem in userCart.CartItems.ToList())
+                        {
+                            db.CartItems.Remove(cartItem);
+                        }
+
+                        db.SaveChanges();
+                        // Thêm thông tin đơn hàng vào ViewBag
+                        ViewBag.OrderId = order.OrderId;
+                        ViewBag.TotalAmount = order.TotalAmount;
+                        // Redirect đến trang xác nhận đơn hàng
+                        return RedirectToAction("OrderConfirmation", new { orderId = order.OrderId });
+                    }
                 }
-
-                var filePath = Path.Combine(directoryPath, fileName);
-
-                // Lưu tệp lên máy chủ
-                file.SaveAs(filePath);
-
-                // Resize và crop ảnh về kích thước 300x300
-                var settings = new ResizeSettings
-                {
-                    Width = 300,
-                    Height = 300,
-                    Mode = FitMode.Crop,
-                    Scale = ScaleMode.Both,
-                    Anchor = ContentAlignment.MiddleCenter,
-                };
-
-                ImageBuilder.Current.Build(filePath, filePath, settings);
-
-                return fileName;
             }
 
-            return "avatardefault.png";
+            // Người dùng chưa đăng nhập hoặc giỏ hàng trống, xử lý theo ý của bạn
+            return RedirectToAction("CartView");
         }
-        [NonAction]
-        private bool isEmailExist(string email)
+        public ActionResult OrderConfirmation(string orderId)
         {
             using (QLPM63135414Entities db = new QLPM63135414Entities())
             {
-                var v = db.Users.Where(e => e.email == email).FirstOrDefault();
-                return v != null;
+                // Lấy thông tin đơn hàng từ cơ sở dữ liệu
+                var order = db.Orders
+                    .Include(o => o.OrderItems)
+                    .FirstOrDefault(o => o.OrderId == orderId);
+
+                if (order != null)
+                {
+                    // Truyền thông tin đơn hàng đến view để hiển thị
+                    return View(order);
+                }
+                else
+                {
+                    // Đơn hàng không tồn tại, xử lý theo ý của bạn, ví dụ: chuyển hướng về trang chính
+                    return RedirectToAction("Home");
+                }
             }
         }
-        [NonAction]
-        private UserViewModel getUserViewModel(User user)
+        public ActionResult Error()
+    {
+        return View();
+    }
+    #region[Phương thức hỗ trợ]
+    [NonAction]
+    private string SaveUploadedFile(HttpPostedFileBase file, string subFolder)
+    {
+        if (file != null && file.ContentLength > 0)
         {
-            return new UserViewModel
+            var fileName = Path.GetFileName(file.FileName);
+            var directoryPath = Server.MapPath($"~/assets/{subFolder}");
+
+            // Tạo thư mục nếu không tồn tại
+            if (!Directory.Exists(directoryPath))
             {
-                userId = user.userId,
-                roleId = user.roleId,
-                email = user.email,
-                password = user.password,
-                firstname = user.firstname,
-                lastname = user.lastname,
-                userAvatar = user.userAvatar,
-                userWallpaper = user.userWallpaper,
-                birthday = user.birthday,
-                address = user.address,
-                phoneNumber = user.phoneNumber,
-                bio = user.bio,
-                codeActive = user.codeActive,
-                isActive = user.isActive,
-                UserRole = user.UserRole
+                Directory.CreateDirectory(directoryPath);
+            }
+
+            var filePath = Path.Combine(directoryPath, fileName);
+
+            // Lưu tệp lên máy chủ
+            file.SaveAs(filePath);
+
+            // Resize và crop ảnh về kích thước 300x300
+            var settings = new ResizeSettings
+            {
+                Width = 300,
+                Height = 300,
+                Mode = FitMode.Crop,
+                Scale = ScaleMode.Both,
+                Anchor = ContentAlignment.MiddleCenter,
             };
+
+            ImageBuilder.Current.Build(filePath, filePath, settings);
+
+            return fileName;
         }
-        #endregion
-        [NonAction]
-        //Gửi email xác nhận link
-        public void sendVerificationLinkEmail(string emailID, string activationCode)
+
+        return "avatardefault.png";
+    }
+    [NonAction]
+    private bool isEmailExist(string email)
+    {
+        using (QLPM63135414Entities db = new QLPM63135414Entities())
         {
-            var verifyUrl = "/Customer63135414/VerifyAccount/" + activationCode;
-            var link = Request.Url.AbsoluteUri.Replace(Request.Url.PathAndQuery, verifyUrl);
-
-            var fromEmail = new MailAddress("thang.ndu.63cntt@ntu.edu.vn", "MrKatsu Shop");
-            var toEmail = new MailAddress(emailID);
-            var fromEmailPassword = "thangnguyen2212"; // Replace with actual password
-            string subject = "Tài khoản của bạn đã được tạo thành công!";
-
-            string body = "<br/><br/>Chúng tôi vui mừng thông báo với bạn rằng tài khoản MrKatsu Shop của bạn được tạo thành công. Vui lòng nhấp vào liên kết bên dưới để xác minh tài khoản của bạn" +
-                " <br/><br/><a href='" + link + "'>" + link + "</a> ";
-            var smtp = new SmtpClient
-            {
-                Host = "smtp.gmail.com",
-                Port = 587,
-                EnableSsl = true,
-                DeliveryMethod = SmtpDeliveryMethod.Network,
-                UseDefaultCredentials = false,
-                Credentials = new NetworkCredential(fromEmail.Address, fromEmailPassword)
-            };
-
-            using (var message = new MailMessage(fromEmail, toEmail)
-            {
-                Subject = subject,
-                Body = body,
-                IsBodyHtml = true
-            })
-                smtp.Send(message);
+            var v = db.Users.Where(e => e.email == email).FirstOrDefault();
+            return v != null;
         }
     }
+    [NonAction]
+    private UserViewModel getUserViewModel(User user)
+    {
+        return new UserViewModel
+        {
+            userId = user.userId,
+            roleId = user.roleId,
+            email = user.email,
+            password = user.password,
+            firstname = user.firstname,
+            lastname = user.lastname,
+            userAvatar = user.userAvatar,
+            userWallpaper = user.userWallpaper,
+            birthday = user.birthday,
+            address = user.address,
+            phoneNumber = user.phoneNumber,
+            bio = user.bio,
+            codeActive = user.codeActive,
+            isActive = user.isActive,
+            UserRole = user.UserRole
+        };
+    }
+    #endregion
+    [NonAction]
+    //Gửi email xác nhận link
+    public void sendVerificationLinkEmail(string emailID, string activationCode)
+    {
+        var verifyUrl = "/Customer63135414/VerifyAccount/" + activationCode;
+        var link = Request.Url.AbsoluteUri.Replace(Request.Url.PathAndQuery, verifyUrl);
+
+        var fromEmail = new MailAddress("thang.ndu.63cntt@ntu.edu.vn", "MrKatsu Shop");
+        var toEmail = new MailAddress(emailID);
+        var fromEmailPassword = "thangnguyen2212"; // Replace with actual password
+        string subject = "Tài khoản của bạn đã được tạo thành công!";
+
+        string body = "<br/><br/>Chúng tôi vui mừng thông báo với bạn rằng tài khoản MrKatsu Shop của bạn được tạo thành công. Vui lòng nhấp vào liên kết bên dưới để xác minh tài khoản của bạn" +
+            " <br/><br/><a href='" + link + "'>" + link + "</a> ";
+        var smtp = new SmtpClient
+        {
+            Host = "smtp.gmail.com",
+            Port = 587,
+            EnableSsl = true,
+            DeliveryMethod = SmtpDeliveryMethod.Network,
+            UseDefaultCredentials = false,
+            Credentials = new NetworkCredential(fromEmail.Address, fromEmailPassword)
+        };
+
+        using (var message = new MailMessage(fromEmail, toEmail)
+        {
+            Subject = subject,
+            Body = body,
+            IsBodyHtml = true
+        })
+            smtp.Send(message);
+    }
+}
 }

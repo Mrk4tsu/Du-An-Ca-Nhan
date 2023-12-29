@@ -18,7 +18,7 @@ namespace ShopPhanMem_63135414.Models
         public Product()
         {
             this.CartItems = new HashSet<CartItem>();
-            this.OrderDetails = new HashSet<OrderDetail>();
+            this.OrderItems = new HashSet<OrderItem>();
             this.ProductImages = new HashSet<ProductImage>();
             this.ProductInCategories = new HashSet<ProductInCategory>();
             this.Promotions = new HashSet<Promotion>();
@@ -40,7 +40,7 @@ namespace ShopPhanMem_63135414.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CartItem> CartItems { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<OrderDetail> OrderDetails { get; set; }
+        public virtual ICollection<OrderItem> OrderItems { get; set; }
         public virtual User User { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductImage> ProductImages { get; set; }

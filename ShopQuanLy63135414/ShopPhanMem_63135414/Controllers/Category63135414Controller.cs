@@ -1,18 +1,16 @@
-﻿using ShopPhanMem_63135414.Models;
+﻿using ImageResizer;
+using ShopPhanMem_63135414.Models;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity.Validation;
 using System.Data.Entity;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Linq.Dynamic;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using ImageResizer;
-using System.Linq.Dynamic;
-using System.Web.Configuration;
 
 namespace ShopPhanMem_63135414.Controllers
 {
@@ -151,6 +149,7 @@ namespace ShopPhanMem_63135414.Controllers
         #region[Thêm sản phẩm vào danh mục]
         public ActionResult AddProductToCategory()
         {
+            ViewBag.Categories = new SelectList(db.Categories, "id", "categoryName");
             return View();
         }
         [HttpPost]
@@ -192,7 +191,7 @@ namespace ShopPhanMem_63135414.Controllers
             }
 
             // Redirect or return a view
-            return RedirectToAction("AdminHome"); // Redirect to the product list or any other action
+            return RedirectToAction("DetailsProduct", "Product63135414", new {id = product.id}); // Redirect to the product list or any other action
 
         }
         #endregion

@@ -47,14 +47,14 @@ else
                             </div>
 
                             <div class="form-floating mt-3 mb-3">
-                                @Html.EditorFor(model => model.password, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.EditorFor(model => model.password, new { htmlAttributes = new { @class = "form-control", type = "password" } })
                                 @*<input type="password" name="password" class="form-control" />*@
                                 <label for="password" class="control-label">Mật khẩu <span class="text-danger">*</span></label>
 
                                 @Html.ValidationMessageFor(model => model.password, "", new { @class = "text-danger" })
                             </div>
                             <div class="form-floating mt-3 mb-3">
-                                @Html.EditorFor(model => model.confirmPassword, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.EditorFor(model => model.confirmPassword, new { htmlAttributes = new { @class = "form-control" , type = "password"} })
                                 @*<input type="password" name="confirmPassword" class="form-control" />*@
                                 <label for="confirmPassword" class="control-label">Xác nhận mật khẩu <span class="text-danger">*</span></label>
 
@@ -84,7 +84,7 @@ else
                             <div class="col-md-offset-2 d-flex justify-content-center">
                                 <input type="submit" value="Đăng ký" class="site-btn" />
                             </div>
-                            @using (Html.BeginForm("Login", "Customer63135414", FormMethod.Get, new { id = "goLogin" }))
+                            @using(Html.BeginForm("Login", "Customer63135414", FormMethod.Get, new { id = "goLogin" }))
                             {
                                 <div class="d-flex justify-content-end mt-2">
                                     <a class="text-info" href="javascript:document.getElementById('goLogin').submit()"><span class="text-dark">Đã có tài khoản?</span> Đăng nhập ngay</a>

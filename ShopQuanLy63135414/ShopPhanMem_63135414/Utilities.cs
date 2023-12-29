@@ -19,6 +19,19 @@ namespace ShopPhanMem_63135414
         const string characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
         //Singleton
         public static Utilities instance { get; } = new Utilities();
+        public string randomCharacter(int length)
+        {
+            Random random = new Random();
+            StringBuilder first = new StringBuilder(length);
+            for (int i = 0; i < length; i++)
+            {
+                char randomChar = characters[random.Next(characters.Length)];
+
+                //Thêm kí tự vào chuỗi kết quả
+                first.Append(randomChar);
+            }
+            return first.ToString();
+        }
         public bool isEmailExist(string email)
         {
             using (QLPM63135414Entities db = new QLPM63135414Entities())
@@ -31,29 +44,19 @@ namespace ShopPhanMem_63135414
         {
             using (QLPM63135414Entities db = new QLPM63135414Entities())
             {
-                Random random = new Random();
-                StringBuilder first = new StringBuilder(length);//Tối đa 5 kí tự vì trong database set mã tối đa 10 kí tự
-                for (int i = 0; i < length; i++)
-                {
-                    char randomChar = characters[random.Next(characters.Length)];
-
-                    //Thêm kí tự vào chuỗi kết quả
-                    first.Append(randomChar);
-                }
-
                 var products = db.Products.ToList();
                 if (products.Any())
                 {
                     var max = products.Select(p => p.id).Max();
                     int productId = int.Parse(max.Substring(length)) + 1;
 
-                    string product = String.Concat("000", productId.ToString());
-                    return first.ToString() + product.Substring(productId.ToString().Length - 1);
+                    string product = string.Concat("000", productId.ToString());
+                    return randomCharacter(5) + product.Substring(productId.ToString().Length - 1);
                 }
                 else
                 {
                     // If the database is empty, generate the first ID
-                    return first.ToString() + "00001";
+                    return randomCharacter(5) + "00001";
                 }
             }
         }
@@ -120,6 +123,24 @@ namespace ShopPhanMem_63135414
                     return "CR001";
             }
         }
+        public string getIdOrder()
+        {
+            using (QLPM63135414Entities db = new QLPM63135414Entities())
+            {
+                var latestOrder = db.Orders.OrderByDescending(o => o.OrderId).FirstOrDefault();
+                if (latestOrder != null)
+                {
+                    int orderId = int.Parse(latestOrder.OrderId.Substring(2)) + 1;
+                    return $"OD{orderId:D3}";
+                }
+                else
+                {
+                    return "OD001";
+                }
+            }
+        }
+        private static int orderIdCounter = 1;
+       
         public string getIdCartItem()
         {
             using (QLPM63135414Entities db = new QLPM63135414Entities())
@@ -129,13 +150,13 @@ namespace ShopPhanMem_63135414
                 if (carts.Any())
                 {
                     var maMax = db.CartItems.ToList().Select(n => n.Id).Max();
-                    int cardItemId = int.Parse(maMax.Substring(2)) + 1;
+                    int cardItemId = int.Parse(maMax.Substring(5)) + 1;
                     string item = string.Concat("00", cardItemId.ToString());
 
-                    return "IT" + item.Substring(cardItemId.ToString().Length - 1);
+                    return randomCharacter(5) + item.Substring(cardItemId.ToString().Length - 1);
                 }
                 else
-                    return "IT001";
+                    return randomCharacter(5) + "001";
             }
         }
         public static string Hash(string value)
