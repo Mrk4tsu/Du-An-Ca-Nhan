@@ -136,7 +136,6 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\Orders63135414Controller.cs" />
-    <Compile Include="Controllers\PromotionsController.cs" />
     <Compile Include="Models\Cart.cs">
       <DependentUpon>Model63135414.tt</DependentUpon>
     </Compile>
@@ -523,11 +522,6 @@
     <Content Include="Views\Orders63135414\Edit.cshtml" />
     <Content Include="Views\Orders63135414\Index.cshtml" />
     <Content Include="Views\Customer63135414\OrderConfirmation.cshtml" />
-    <Content Include="Views\Promotions\Create.cshtml" />
-    <Content Include="Views\Promotions\Delete.cshtml" />
-    <Content Include="Views\Promotions\Details.cshtml" />
-    <Content Include="Views\Promotions\Edit.cshtml" />
-    <Content Include="Views\Promotions\Index.cshtml" />
     <Content Include="Views\Product63135414\CreatePromotion.cshtml" />
     <Content Include="Views\Product63135414\AddProductToPromotion.cshtml" />
   </ItemGroup>
