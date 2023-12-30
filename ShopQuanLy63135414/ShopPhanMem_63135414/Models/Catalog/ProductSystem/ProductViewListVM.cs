@@ -19,6 +19,8 @@ namespace ShopPhanMem_63135414.Models.Catalog.ProductSystem
         public int? SellCount { get; set; }
         public int? Quantity { get; set; }
         public string Description { get; set; }
+        public int? DiscountPercent { get; set; }
+        public decimal? DiscountedAmount { get; set; }
         public List<string> ImagePaths { get; set; }
         public ProductViewListVM()
         {
@@ -34,6 +36,13 @@ namespace ShopPhanMem_63135414.Models.Catalog.ProductSystem
             ViewCount = product.viewCount;
             SellCount = product.sellCount;
             Description = product.description;
+            DiscountedAmount = product.price;
+
+            if (product.priceOriginal.HasValue && product.price.HasValue)
+            {
+                DiscountPercent = CalculateDiscountPercent(product.priceOriginal.Value, product.price.Value);
+                DiscountedAmount = CalculateDiscountedAmount(product.priceOriginal.Value, product.price.Value);
+            }
 
             if (product.ProductImages.Any())
             {
@@ -75,6 +84,21 @@ namespace ShopPhanMem_63135414.Models.Catalog.ProductSystem
                 CategoryNameFull = null; // hoặc có thể đặt một giá trị mặc định khác
             }
             ImagePaths = new List<string>();
+        }
+        // Helper method to calculate discount percentage
+        private int CalculateDiscountPercent(decimal originalPrice, decimal discountedPrice)
+        {
+            if (originalPrice > 0)
+            {
+                return (int)(((originalPrice - discountedPrice) / originalPrice) * 100);
+            }
+            return 0;
+        }
+
+        // Helper method to calculate discounted amount
+        private decimal CalculateDiscountedAmount(decimal originalPrice, decimal discountedPrice)
+        {
+            return originalPrice - discountedPrice;
         }
     }
 }

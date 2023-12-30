@@ -37,6 +37,7 @@ namespace ShopPhanMem_63135414.Models
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<ProductImage> ProductImages { get; set; }
         public virtual DbSet<ProductInCategory> ProductInCategories { get; set; }
+        public virtual DbSet<ProductPromotion> ProductPromotions { get; set; }
         public virtual DbSet<Promotion> Promotions { get; set; }
         public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
         public virtual DbSet<UserRole> UserRoles { get; set; }

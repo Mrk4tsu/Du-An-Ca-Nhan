@@ -5,8 +5,10 @@ using ShopPhanMem_63135414.Models.Catalog.OrderSystem;
 using ShopPhanMem_63135414.Models.Catalog.ProductSystem;
 using ShopPhanMem_63135414.Models.Catalog.UserSystem;
 using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Drawing;
+using System.Drawing.Printing;
 using System.IO;
 using System.Linq;
 using System.Linq.Dynamic;
@@ -14,8 +16,11 @@ using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Configuration;
 using System.Web.Mvc;
 using System.Web.Security;
+using System.Web.Services.Description;
+using System.Web.UI;
 
 namespace QuanLyPhanMem__63135414.Controllers
 {
@@ -238,6 +243,7 @@ namespace QuanLyPhanMem__63135414.Controllers
         }
         #endregion
         [Authorize]
+        [HttpPost]
         public ActionResult LogOut()
         {
             FormsAuthentication.SignOut();
@@ -278,7 +284,7 @@ namespace QuanLyPhanMem__63135414.Controllers
                     .ToList();
 
 
-                
+
                 // Chuyển đổi danh sách sản phẩm thành danh sách ProductViewListVM
                 var productUploadViewModels = productsList.Select(p => new ProductViewListVM(p, null)).ToList();
 
@@ -295,9 +301,42 @@ namespace QuanLyPhanMem__63135414.Controllers
                 return View(productViewModels);
             }
         }
+        public async Task<(List<ProductViewListVM>, int)> getProductAsync(string search, string sort, string sortDir, int skip, int pageSize)
+        {
+            using (QLPM63135414Entities db = new QLPM63135414Entities())
+            {
+                var query = from a in db.Products
+                            where
+                            (a.id.Contains(search) ||
+                             a.productName.Contains(search) ||
+                             a.price.ToString().Contains(search))
+                            select a;
+
+                // Count total records
+                int totalRecord = await query.CountAsync();
+
+                // Apply sorting
+                query = query.OrderBy(sort + " " + sortDir);
+
+                // Apply pagination
+                if (pageSize > 0)
+                {
+                    query = query.Skip(skip).Take(pageSize);
+                }
+
+                // Materialize the results
+                var products = await query.ToListAsync();
+
+                // Create ProductViewListVM instances
+                var result = products.Select(p => new ProductViewListVM(p, null)).ToList();
+                var resultCount = result.Count();
+                // Return the result along with the total record count
+                return (result, resultCount);
+            }
+        }
         [HttpGet]
         [Authorize]
-        public async Task<ActionResult> Products()
+        public async Task<ActionResult> Products(string search = "", int page = 1, string sort = "ProductName", string sortDir = "asc", int pageSize = 10)
         {
             using (QLPM63135414Entities db = new QLPM63135414Entities())
             {
@@ -312,17 +351,37 @@ namespace QuanLyPhanMem__63135414.Controllers
                 ViewBag.TopProducts = distinctTopProducts;
                 ViewBag.TopProductsMore = distinctTopProductsMore;
 
+
+                // Retrieve products with promotions using Include to load related entities
+                var productsWithPromotions = db.Products
+                    .Include(p => p.ProductPromotions.Select(pp => pp.Promotion))
+                    .Where(p => p.ProductPromotions.Any())
+                    .ToList();
+                var productViewModels = productsWithPromotions.Select(product => new ProductViewListVM(product, null)).ToList();
+                ViewBag.ProductsWithPromotions = productViewModels;
+
+
+
                 ViewBag.Categories = db.Categories.ToList().OrderBy(c => c.categoryName);
 
-                var products = await db.Products
-                    .Include(i => i.ProductImages)
-                    .Include(pic => pic.ProductInCategories.Select(c => c.Category))
-                    .ToListAsync();
-                // Chuyển danh sách sản phẩm sang danh sách ViewModel
-                var productViewModels = products.Select(product => new ProductViewListVM(product, -1)).ToList();
-                return View(productViewModels);
+                //Logic phân trang khi truy vấn danh sách
+                int totalRecord = 0;
+                if (page < 1) page = 1;
+                int skip = (page * pageSize) - pageSize;
+
+                //Gọi phương thức getUserAsync và nhận kết quả về
+                var dataResult = await getProductAsync(search, sort, sortDir, skip, pageSize);
+
+                // Trích xuất dữ liệu và số lượng bản ghi từ kết quả
+                var data = dataResult.Item1;
+                totalRecord = dataResult.Item2;
+
+                ViewBag.TotalRows = totalRecord;
+                ViewBag.PageSize = pageSize; // Đưa giá trị pageSize vào ViewBag để sử dụng trong view
+                return View(data);
             }
         }
+
         [HttpGet]
         public ActionResult GetAllProducts()
         {
@@ -560,7 +619,7 @@ namespace QuanLyPhanMem__63135414.Controllers
                             UserId = user.userId,
                             OrderDate = DateTime.Now,
                             TotalAmount = userCart.CartItems.Sum(ci => ci.Quantity * ci.Price),
-                            Status = "Đã thanh toán" ,// Có thể đặt trạng thái khác tùy thuộc vào logic của bạn
+                            Status = "Đã xử lý",// Có thể đặt trạng thái khác tùy thuộc vào logic của bạn
                         };
 
                         // Tạo đối tượng OrderItem cho mỗi sản phẩm trong giỏ hàng
@@ -629,109 +688,109 @@ namespace QuanLyPhanMem__63135414.Controllers
             }
         }
         public ActionResult Error()
-    {
-        return View();
-    }
-    #region[Phương thức hỗ trợ]
-    [NonAction]
-    private string SaveUploadedFile(HttpPostedFileBase file, string subFolder)
-    {
-        if (file != null && file.ContentLength > 0)
         {
-            var fileName = Path.GetFileName(file.FileName);
-            var directoryPath = Server.MapPath($"~/assets/{subFolder}");
-
-            // Tạo thư mục nếu không tồn tại
-            if (!Directory.Exists(directoryPath))
+            return View();
+        }
+        #region[Phương thức hỗ trợ]
+        [NonAction]
+        private string SaveUploadedFile(HttpPostedFileBase file, string subFolder)
+        {
+            if (file != null && file.ContentLength > 0)
             {
-                Directory.CreateDirectory(directoryPath);
+                var fileName = Path.GetFileName(file.FileName);
+                var directoryPath = Server.MapPath($"~/assets/{subFolder}");
+
+                // Tạo thư mục nếu không tồn tại
+                if (!Directory.Exists(directoryPath))
+                {
+                    Directory.CreateDirectory(directoryPath);
+                }
+
+                var filePath = Path.Combine(directoryPath, fileName);
+
+                // Lưu tệp lên máy chủ
+                file.SaveAs(filePath);
+
+                // Resize và crop ảnh về kích thước 300x300
+                var settings = new ResizeSettings
+                {
+                    Width = 300,
+                    Height = 300,
+                    Mode = FitMode.Crop,
+                    Scale = ScaleMode.Both,
+                    Anchor = ContentAlignment.MiddleCenter,
+                };
+
+                ImageBuilder.Current.Build(filePath, filePath, settings);
+
+                return fileName;
             }
 
-            var filePath = Path.Combine(directoryPath, fileName);
-
-            // Lưu tệp lên máy chủ
-            file.SaveAs(filePath);
-
-            // Resize và crop ảnh về kích thước 300x300
-            var settings = new ResizeSettings
+            return "avatardefault.png";
+        }
+        [NonAction]
+        private bool isEmailExist(string email)
+        {
+            using (QLPM63135414Entities db = new QLPM63135414Entities())
             {
-                Width = 300,
-                Height = 300,
-                Mode = FitMode.Crop,
-                Scale = ScaleMode.Both,
-                Anchor = ContentAlignment.MiddleCenter,
+                var v = db.Users.Where(e => e.email == email).FirstOrDefault();
+                return v != null;
+            }
+        }
+        [NonAction]
+        private UserViewModel getUserViewModel(User user)
+        {
+            return new UserViewModel
+            {
+                userId = user.userId,
+                roleId = user.roleId,
+                email = user.email,
+                password = user.password,
+                firstname = user.firstname,
+                lastname = user.lastname,
+                userAvatar = user.userAvatar,
+                userWallpaper = user.userWallpaper,
+                birthday = user.birthday,
+                address = user.address,
+                phoneNumber = user.phoneNumber,
+                bio = user.bio,
+                codeActive = user.codeActive,
+                isActive = user.isActive,
+                UserRole = user.UserRole
+            };
+        }
+        #endregion
+        [NonAction]
+        //Gửi email xác nhận link
+        public void sendVerificationLinkEmail(string emailID, string activationCode)
+        {
+            var verifyUrl = "/Customer63135414/VerifyAccount/" + activationCode;
+            var link = Request.Url.AbsoluteUri.Replace(Request.Url.PathAndQuery, verifyUrl);
+
+            var fromEmail = new MailAddress("thang.ndu.63cntt@ntu.edu.vn", "MrKatsu Shop");
+            var toEmail = new MailAddress(emailID);
+            var fromEmailPassword = "thangnguyen2212"; // Replace with actual password
+            string subject = "Tài khoản của bạn đã được tạo thành công!";
+
+            string body = "<br/><br/>Chúng tôi vui mừng thông báo với bạn rằng tài khoản MrKatsu Shop của bạn được tạo thành công. Vui lòng nhấp vào liên kết bên dưới để xác minh tài khoản của bạn" +
+                " <br/><br/><a href='" + link + "'>" + link + "</a> ";
+            var smtp = new SmtpClient
+            {
+                Host = "smtp.gmail.com",
+                Port = 587,
+                EnableSsl = true,
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                UseDefaultCredentials = false,
+                Credentials = new NetworkCredential(fromEmail.Address, fromEmailPassword)
             };
 
-            ImageBuilder.Current.Build(filePath, filePath, settings);
-
-            return fileName;
-        }
-
-        return "avatardefault.png";
-    }
-    [NonAction]
-    private bool isEmailExist(string email)
-    {
-        using (QLPM63135414Entities db = new QLPM63135414Entities())
-        {
-            var v = db.Users.Where(e => e.email == email).FirstOrDefault();
-            return v != null;
+            using (var message = new MailMessage(fromEmail, toEmail)
+            {
+                Subject = subject,
+                Body = body,
+                IsBodyHtml = true
+            })
+                smtp.Send(message);
         }
     }
-    [NonAction]
-    private UserViewModel getUserViewModel(User user)
-    {
-        return new UserViewModel
-        {
-            userId = user.userId,
-            roleId = user.roleId,
-            email = user.email,
-            password = user.password,
-            firstname = user.firstname,
-            lastname = user.lastname,
-            userAvatar = user.userAvatar,
-            userWallpaper = user.userWallpaper,
-            birthday = user.birthday,
-            address = user.address,
-            phoneNumber = user.phoneNumber,
-            bio = user.bio,
-            codeActive = user.codeActive,
-            isActive = user.isActive,
-            UserRole = user.UserRole
-        };
-    }
-    #endregion
-    [NonAction]
-    //Gửi email xác nhận link
-    public void sendVerificationLinkEmail(string emailID, string activationCode)
-    {
-        var verifyUrl = "/Customer63135414/VerifyAccount/" + activationCode;
-        var link = Request.Url.AbsoluteUri.Replace(Request.Url.PathAndQuery, verifyUrl);
-
-        var fromEmail = new MailAddress("thang.ndu.63cntt@ntu.edu.vn", "MrKatsu Shop");
-        var toEmail = new MailAddress(emailID);
-        var fromEmailPassword = "thangnguyen2212"; // Replace with actual password
-        string subject = "Tài khoản của bạn đã được tạo thành công!";
-
-        string body = "<br/><br/>Chúng tôi vui mừng thông báo với bạn rằng tài khoản MrKatsu Shop của bạn được tạo thành công. Vui lòng nhấp vào liên kết bên dưới để xác minh tài khoản của bạn" +
-            " <br/><br/><a href='" + link + "'>" + link + "</a> ";
-        var smtp = new SmtpClient
-        {
-            Host = "smtp.gmail.com",
-            Port = 587,
-            EnableSsl = true,
-            DeliveryMethod = SmtpDeliveryMethod.Network,
-            UseDefaultCredentials = false,
-            Credentials = new NetworkCredential(fromEmail.Address, fromEmailPassword)
-        };
-
-        using (var message = new MailMessage(fromEmail, toEmail)
-        {
-            Subject = subject,
-            Body = body,
-            IsBodyHtml = true
-        })
-            smtp.Send(message);
-    }
-}
 }

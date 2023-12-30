@@ -17,7 +17,7 @@ namespace ShopPhanMem_63135414.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Promotion()
         {
-            this.Products = new HashSet<Product>();
+            this.ProductPromotions = new HashSet<ProductPromotion>();
         }
     
         public int id { get; set; }
@@ -28,6 +28,6 @@ namespace ShopPhanMem_63135414.Models
         public string description { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Product> Products { get; set; }
+        public virtual ICollection<ProductPromotion> ProductPromotions { get; set; }
     }
 }

@@ -105,10 +105,18 @@
                                      data-setbg="../../assets/product/defaultImage.png">
                                     <div class="product__discount__percent">New</div>
                                     <ul class="product__item__pic__hover">
-                                        <form action="@Url.Action("AddToCart", "Customer63135414")" method="post">
-                                            <input type="hidden" name="productId" value="@productUpload.Id" />
-                                            <button type="submit" class="site-btn"><i class="fa fa-shopping-cart"></i> Add To Cart</button>
-                                        </form>
+                                        @if (Session["User"] == null)
+                                        {
+                                            <button type="submit" data-toggle="modal" data-target="#loginRequestModal" class="site-btn"><i class="fa fa-shopping-cart"></i> Add To Cart</button>
+                                        }
+                                        else
+                                        {
+                                            <form id="add_to_card" action="@Url.Action("AddToCart", "Customer63135414")" method="post">
+                                                <input type="hidden" name="productId" value="@productUpload.Id" />
+                                                <button type="submit" class="site-btn"><i class="fa fa-shopping-cart"></i> Add To Cart</button>
+                                            </form>
+                                        }
+
                                     </ul>
                                 </div>
                                 <div class="product__discount__item__text">
@@ -157,10 +165,17 @@
                                      data-setbg="../../assets/product/defaultImage.png">
                                     <div class="product__discount__percent">Hot</div>
                                     <ul class="product__item__pic__hover">
-                                        <form action="@Url.Action("AddToCart", "Customer63135414")" method="post">
-                                            <input type="hidden" name="productId" value="@productUpload.Id" />
-                                            <button type="submit" class="site-btn"><i class="fa fa-shopping-cart"></i> Add To Cart</button>
-                                        </form>
+                                        @if (Session["User"] == null)
+                                        {
+                                            <button type="submit" data-toggle="modal" data-target="#loginRequestModal" class="site-btn"><i class="fa fa-shopping-cart"></i> Add To Cart</button>
+                                        }
+                                        else
+                                        {
+                                            <form id="add_to_card" action="@Url.Action("AddToCart", "Customer63135414")" method="post">
+                                                <input type="hidden" name="productId" value="@productUpload.Id" />
+                                                <button type="submit" class="site-btn"><i class="fa fa-shopping-cart"></i> Add To Cart</button>
+                                            </form>
+                                        }
                                     </ul>
                                 </div>
                                 <div class="product__discount__item__text">
@@ -208,10 +223,17 @@
                                  data-setbg="../../assets/product/defaultImage.png">
                                 <div class="product__discount__percent">Hot</div>
                                 <ul class="product__item__pic__hover">
-                                    <form action="@Url.Action("AddToCart", "Customer63135414")" method="post">
-                                        <input type="hidden" name="productId" value="@productViewModel.Id" />
-                                        <button type="submit" class="site-btn"><i class="fa fa-shopping-cart"></i> Add To Cart</button>
-                                    </form>
+                                    @if (Session["User"] == null)
+                                    {
+                                        <button type="submit" data-toggle="modal" data-target="#loginRequestModal" class="site-btn"><i class="fa fa-shopping-cart"></i> Add To Cart</button>
+                                    }
+                                    else
+                                    {
+                                        <form id="add_to_card" action="@Url.Action("AddToCart", "Customer63135414")" method="post">
+                                            <input type="hidden" name="productId" value="@productViewModel.Id" />
+                                            <button type="submit" class="site-btn"><i class="fa fa-shopping-cart"></i> Add To Cart</button>
+                                        </form>
+                                    }
                                 </ul>
                             </div>
                             <div class="product__discount__item__text">
@@ -235,7 +257,31 @@
     </section>
 </div>
 
+<script>
+    $(document).ready(function () {
+        $("#add_to_card").submit(function (e) {
+            e.preventDefault();
 
+            $.ajax({
+                url: $(this).attr("action"),
+                type: $(this).attr("method"),
+                data: $(this).serialize(),
+                success: function (response) {
+                    if (response.success) {
+                        // Product added successfully, show success modal
+                        $('#successModal').modal('show');
+                    } else {
+                        // Product not added, show error modal
+                        $('#errorModal').modal('show');
+                    }
+                },
+                error: function () {
+                    // Handle the error case
+                }
+            });
+        });
+    };
+</script>
 
 
 

@@ -1,0 +1,32 @@
+﻿
+@{
+    ViewBag.Title = "AddProductToPromotion";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+@using (Html.BeginForm("AddProductToPromotion", "Product63135414", FormMethod.Post))
+{
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title">Khuyến mãi sản phẩm</h5>
+        </div>
+        <div class="card-body">
+            <p>@ViewBag.Message</p>
+
+            @Html.AntiForgeryToken()
+
+            <div class="mb-3">
+                <label for="productId" class="form-label">Product ID:</label>
+                @Html.TextBox("productId", null, new { @class = "form-control", required = "required" })
+            </div>
+
+            <div class="mb-3">
+                <label for="promotionID" class="form-label">Category:</label>
+                @Html.DropDownList("promotionID", (IEnumerable<SelectListItem>)ViewBag.Promotions, "Select a promotion", new { @class = "form-control", required = "required" })
+            </div>
+
+            <input type="submit" value="Add to Category" class="btn btn-primary" />
+        </div>
+    </div>
+}
+

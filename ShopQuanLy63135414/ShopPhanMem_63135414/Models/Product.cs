@@ -21,7 +21,7 @@ namespace ShopPhanMem_63135414.Models
             this.OrderItems = new HashSet<OrderItem>();
             this.ProductImages = new HashSet<ProductImage>();
             this.ProductInCategories = new HashSet<ProductInCategory>();
-            this.Promotions = new HashSet<Promotion>();
+            this.ProductPromotions = new HashSet<ProductPromotion>();
             this.ViewedUserIds = new HashSet<string>();
         }
     
@@ -47,7 +47,7 @@ namespace ShopPhanMem_63135414.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductInCategory> ProductInCategories { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Promotion> Promotions { get; set; }
+        public virtual ICollection<ProductPromotion> ProductPromotions { get; set; }
         public virtual ICollection<string> ViewedUserIds { get; set; }
     }
 }

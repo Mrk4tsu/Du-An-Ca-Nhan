@@ -268,7 +268,34 @@
             </div>
         </div>
     </div>
+    <!-- Logout Modal-->
+    <div class="modal fade" id="loginRequestModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Thông báo!</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="row d-flex justify-content-center">
+                    <img src="~/assets/admin/images/1139.png" style="width:250px;" />
+                    <div class="py-2 text-center">
+                        <h5 class="text-info font-weight-bold">Yêu cầu đăng nhập mới thực hiện thao tác này!</h5>
+                    </div>
+                </div>
 
+                <div class="modal-footer">
+                    <a href="#" class="primary-btn cart-btn text-light shadow" data-dismiss="modal" style="background-color: #8F0454">Hủy</a>
+                    @using (Html.BeginForm("Login", "Customer63135414", FormMethod.Get, new { id = "goLogin" }))
+                    {
+                        <a href="javascript:document.getElementById('goLogin').submit()" style="background-color: #7FAD39" class="primary-btn cart-btn text-light shadow">Đăng nhập</a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">

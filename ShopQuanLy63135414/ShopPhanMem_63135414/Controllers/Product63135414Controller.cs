@@ -366,6 +366,74 @@ namespace ShopPhanMem_63135414.Controllers
             return View(viewModel);
         }
         #endregion
+        // Phương thức để thêm sản phẩm vào khuyến mãi
+        #region[Khuyến mãi]
+        public ActionResult CreatePromotion()
+        {
+            return View();
+        }
+       [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> CreatePromotion([Bind(Include = "id,dateFrom,dateTo,applyAll,promotionPercent,description")] Promotion promotion)
+        {
+            if (ModelState.IsValid)
+            {
+                promotion.applyAll = false;
+                db.Promotions.Add(promotion);
+                await db.SaveChangesAsync();
+                return RedirectToAction("ListProduct");
+            }
+
+            return View(promotion);
+        }
+        public ActionResult AddProductToPromotion()
+        {
+            ViewBag.Promotions = new SelectList(db.Promotions, "id", "description");
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> AddProductToPromotion(string productId, int promotionID)
+        {
+            // Retrieve the product and category from the database
+            Product product = db.Products.Find(productId);
+            Promotion promotion = db.Promotions.Find(promotionID);
+
+            if (product != null && promotion != null)
+            {
+                // Check if the product is already in the category
+                if (db.ProductPromotions.Any(p => p.productId == productId && p.promotionId == promotionID))
+                {
+                    // Product is already in the category, handle accordingly (e.g., show a message)
+                    ViewBag.Message = "Product này đã được giảm giá!";
+                }
+                else
+                {
+                    // Add the product to the category
+                    ProductPromotion productPromotion = new ProductPromotion
+                    {
+                        promotionId = promotionID,
+                        productId = productId,
+                        description = promotion.description // You can set the description accordingly
+                    };
+
+                    db.ProductPromotions.Add(productPromotion);
+                    await db.SaveChangesAsync();
+
+                    ViewBag.Message = "Product added to the category successfully";
+                }
+            }
+            else
+            {
+                // Product or category not found, handle accordingly (e.g., show an error message)
+                ViewBag.Message = "Product or category not found";
+            }
+
+            // Redirect or return a view
+            return RedirectToAction("DetailsProduct", "Product63135414", new { id = product.id }); // Redirect to the product list or any other action
+
+        }
+        #endregion
         #region[Phương thức hỗ trỡ]
         public void deteleFileProduct(string fileDelete)
         {

@@ -5,60 +5,101 @@
 
 }
 
-<h2>Index</h2>
+<div class="card">
+    <div class="card-header py-3">
+        <h4 class="m-0 font-weight-bold text-primary">
+            DANH SÁCH ĐƠN HÀNG CHƯA XỬ LÝ
+        </h4>
+    </div>
+    <div class="card-body text-center">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Người đặt hàng</th>
+                        <th>Thời gian Order</th>
+                        <th>Tổng tiền</th>
+                        <th>Hành động</th>
+                        <!-- Thêm các cột khác nếu cần -->
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var order in ViewBag.PaidOrders)
+                    {
+                        <tr>
+                            <td>@order.OrderId</td>
+                            <td><a href="@Url.Action("DetailsUser", new {id = order.User.userId})"><img class="rounded-circle" src="~/assets/avatar/@order.User.userAvatar" title="@order.User.firstname @order.User.lastname" width="30px" /></a></td>
+                            <td>@order.OrderDate </td>
+                            <td>@order.TotalAmount $</td>
+                            <td>
+                                <a href="#" class="btn btn-sm btn-warning" title="Cập nhật dữ liệu">
+                                    <i class="fas fa-user-edit"></i>
+                                    Xử lý
+                                </a>
+                            </td>
+                            <!-- Thêm các cột khác nếu cần -->
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<h5>Chưa xử lý</h5>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Order ID</th>
-            <th>Người đặt hàng</th>
-            <th>Thời gian Order</th>
-            <th>Tổng tiền</th>
-            <!-- Thêm các cột khác nếu cần -->
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var order in ViewBag.PaidOrders)
-        {
-            <tr>
-                <td>@order.OrderId</td>
-                <td>@order.User.firstname @order.User.lastname</td>
-                <td>@order.OrderDate </td>
-                <td>@order.TotalAmount $</td>
-                <!-- Thêm các cột khác nếu cần -->
-            </tr>
-        }
-    </tbody>
-</table>
+    </div>
+</div>
 
+<div class="card">
+    <div class="card-header py-3">
+        <h4 class="m-0 font-weight-bold text-primary">
+            DANH SÁCH ĐƠN HÀNG
+        </h4>
+    </div>
+    <div class="card-body text-center">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Người đặt hàng</th>
+                        <th>Thời gian Order</th>
+                        <th>Tổng tiền</th>
+                        <th>Trạng thái</th>
 
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var order in ViewBag.AllOrders)
+                    {
+                        <tr>
+                            <td>@order.OrderId</td>
+                            <td>@order.User.firstname @order.User.lastname</td>
+                            <td>@order.OrderDate </td>
+                            <td>@order.TotalAmount $</td>
+                            @if (order.Status == "Đã thanh toán")
+                            {
+                                <td>
+                                    <p class="badge badge-warning">Chưa xử lý</p>
+                                </td>
+                            }
+                            else if (order.Status == "Đã xử lý")
+                            {
+                                <td>
+                                    <p class="badge badge-success">Đã xử lý</p>
+                                </td>
+                            }
+                            else
+                            {
+                                <td>
+                                    <p class="badge badge-danger">Đơn hàng lỗi</p>
+                                </td>
+                            }
 
-<h5>All Orders</h5>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Order ID</th>
-            <th>Người đặt hàng</th>
-            <th>Thời gian Order</th>
-            <th>Tổng tiền</th>
-            <th>Trạng thái</th>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
 
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var order in ViewBag.AllOrders)
-        {
-            <tr>
-                <td>@order.OrderId</td>
-                <td>@order.User.firstname @order.User.lastname</td>
-                <td>@order.OrderDate </td>
-                <td>@order.TotalAmount $</td>
-                <td>@order.Status</td>
-            </tr>
-        }
-    </tbody>
-</table>
+    </div>
+</div>
+
